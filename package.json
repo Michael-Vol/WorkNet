@@ -1,0 +1,11 @@
+{
+  "name": "worknet",
+  "version": "1.0.0",
+  "description": "A Social Network for Professionals",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael Volakis, Miltos Kartalas",
+  "license": "MIT"
+}
