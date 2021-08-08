@@ -12,7 +12,7 @@ const path = require('path');
 
 connectDB();
 
-const PORT = process.env.PORT || 1999;
+const PORT = process.env.PORT || 1998;
 
 //Use json body parser
 app.use(express.json());
