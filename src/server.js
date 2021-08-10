@@ -15,10 +15,12 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 //Setup Routes
-app.use('/users/', userRouter);
+//app.use('/users/', userRouter);
+// εδω αλλαξα το / και δουλευει, πρεπει να ειναι λαθος να μπαινει εδω γιατι το βαζουμε στο αιτημα μετα
+app.use("/users", userRouter)
 app.use('/posts/', postRouter);
 app.use('/conversations/', conversationRouter);
 
 app.listen(PORT, () => {
-	console.log(`Server is up on port ${PORT}`);
+    console.log(`Server is up on port ${PORT}`);
 });
