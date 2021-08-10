@@ -23,8 +23,18 @@ router.post('/signup', async(req, res) => {
 // to problhma me to date htan to format sto aitima
 
 //  na prostesoume auth otan ftiaxtei
-router.get('/users/me', async(req, res) => {
+router.get('/me', async(req, res) => {
     res.send(req.user)
 })
 
+// na prostesoume token pou tha dimiourgeitai otan sindethei
+router.post("/login", async(req, res) => {
+    try {
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+
+        res.send({ user, token })
+    } catch (e) {
+        res.status(400).send()
+    }
+})
 module.exports = router;
