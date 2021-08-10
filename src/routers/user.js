@@ -6,7 +6,6 @@ const router = express.Router();
 router.post('/signup', async (req, res) => {
 	try {
 		const user = new User(req.body);
-		// user.dateOfBirth = new Date(req.body.dateOfBirth)
 		const token = user.generateAuthToken();
 		res.status(201).json({
 			user,
