@@ -21,4 +21,10 @@ router.post('/signup', async(req, res) => {
     }
 });
 // to problhma me to date htan to format sto aitima
+
+//  na prostesoume auth otan ftiaxtei
+router.get('/users/me', async(req, res) => {
+    res.send(req.user)
+})
+
 module.exports = router;
