@@ -2,6 +2,7 @@ const express = require('express');
 const { Mongoose } = require('mongoose');
 const User = require('../models/User');
 const router = express.Router();
+const auth = require('../middleware/auth');
 
 router.post('/signup', async (req, res) => {
 	const user = new User(req.body);
@@ -27,7 +28,7 @@ router.post('/signup', async (req, res) => {
 // to problhma me to date htan to format sto aitima
 
 //  na prostesoume auth otan ftiaxtei
-router.get('/me', async (req, res) => {
+router.get('/me', auth, async (req, res) => {
 	res.send(req.user);
 });
 
@@ -40,9 +41,10 @@ router.post('/login', async (req, res) => {
 		const token = await user.generateAuthToken();
 		res.send({ user, token });
 	} catch (error) {
-		if (error === 'Wrong Credentials') {
-			res.status(400).json({
-				message: 'Unable to login',
+		console.error(error.message);
+		if (error.message === 'Unable to login') {
+			return res.status(400).json({
+				message: 'Unable to login - Wrong Credentials',
 			});
 		}
 		res.status(500).json({

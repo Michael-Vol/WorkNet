@@ -86,7 +86,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 	const user = await User.findOne({ email }); //check if user with given email exists
 
 	if (!user) {
-		throw new Error('Wrong Credentials');
+		throw new Error('Unable to login');
 	}
 
 	//check if password given is same with hashed password
