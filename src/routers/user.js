@@ -3,6 +3,8 @@ const { Mongoose } = require('mongoose');
 const User = require('../models/User');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const multer = require('multer');
+const sharp = require('sharp');
 
 router.post('/signup', async (req, res) => {
 	const user = new User(req.body);
@@ -47,6 +49,67 @@ router.post('/login', async (req, res) => {
 				message: 'Unable to login - Wrong Credentials',
 			});
 		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+//Setup multer upload properties
+
+const upload = multer({
+	limits: {
+		fileSize: 3000000,
+	},
+	fileFilter(req, file, cb) {
+		if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+			return cb(new Error('Please upload an image'));
+		}
+		cb(undefined, true);
+	},
+});
+router.post(
+	'/me/avatar',
+	auth,
+	upload.single('avatar'),
+	async (req, res) => {
+		try {
+			const avatarBuffer = await sharp(req.file.buffer)
+				.resize({
+					width: 400,
+					height: 400,
+				})
+				.png()
+				.toBuffer();
+			req.user.avatar = avatarBuffer;
+			console.log(req.user);
+			await req.user.save();
+			res.set('Content-Type', 'image/png');
+			res.send(req.user.avatar);
+		} catch (error) {
+			console.error(error);
+
+			res.status(500).json({
+				message: 'Server error',
+			});
+		}
+	},
+	(error, req, res, next) => {
+		res.status(400).json({
+			message: error.message,
+		});
+	}
+);
+
+router.delete('/me/avatar', auth, async (req, res) => {
+	try {
+		req.user.avatar = undefined;
+		await req.user.save();
+		res.json({
+			message: 'Avatar Deleted!',
+		});
+	} catch (error) {
+		console.error(error.message);
 		res.status(500).json({
 			message: 'Server Error',
 		});
