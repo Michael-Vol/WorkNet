@@ -3,38 +3,51 @@ const { Mongoose } = require('mongoose');
 const User = require('../models/User');
 const router = express.Router();
 
-router.post('/signup', async(req, res) => {
-    try {
-        const user = new User(req.body);
-        const token = user.generateAuthToken();
-        res.status(201).json({
-            user,
-            token,
-        });
-
-        await user.save();
-    } catch (error) {
-        res.status(500).send(error);
-        res.status(500).json({
-            message: 'Server Error',
-        });
-    }
+router.post('/signup', async (req, res) => {
+	const user = new User(req.body);
+	try {
+		const token = await user.generateAuthToken();
+		await user.save();
+		res.status(201).json({
+			user,
+			token,
+		});
+	} catch (error) {
+		console.log(error);
+		if (error.code === 11000) {
+			res.status(409).json({
+				message: 'Email already taken',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
 });
 // to problhma me to date htan to format sto aitima
 
 //  na prostesoume auth otan ftiaxtei
-router.get('/me', async(req, res) => {
-    res.send(req.user)
-})
+router.get('/me', async (req, res) => {
+	res.send(req.user);
+});
 
 // na prostesoume token pou tha dimiourgeitai otan sindethei
-router.post("/login", async(req, res) => {
-    try {
-        const user = await User.findByCredentials(req.body.email, req.body.password)
+router.post('/login', async (req, res) => {
+	try {
+		const { email, password } = req.body;
+		const user = await User.findByCredentials(email, password);
 
-        res.send({ user, token })
-    } catch (e) {
-        res.status(400).send()
-    }
-})
+		const token = await user.generateAuthToken();
+		res.send({ user, token });
+	} catch (error) {
+		if (error === 'Wrong Credentials') {
+			res.status(400).json({
+				message: 'Unable to login',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
 module.exports = router;
