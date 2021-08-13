@@ -186,7 +186,6 @@ router.post('/:post_id/likes', auth, async (req, res) => {
 		const userID = req.user.id;
 		const post = await Post.findOne({
 			_id: postID,
-			creator: userID,
 		});
 		if (!post) {
 			return res.status(400).json({
@@ -212,7 +211,43 @@ router.post('/:post_id/likes', auth, async (req, res) => {
 			message: 'Post Liked!',
 		});
 	} catch (error) {
-		console.error(error);
+		console.error(error.name);
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'No Post found.',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET /{post_id}/likes
+ * @desc Retrieves the number of likes of a specific post
+ * @access public
+ * @memberof post
+ */
+
+router.get('/:post_id/likes', async (req, res) => {
+	try {
+		const postID = req.params.post_id;
+		const post = await Post.findOne({
+			_id: postID,
+		});
+		if (!post) {
+			return res.status(400).json({
+				message: 'No Post found.',
+			});
+		}
+
+		const likes = await Like.countDocuments({ post: postID });
+		res.json({
+			likes,
+		});
+	} catch (error) {
+		console.error(error.name);
 		if (error.name === 'CastError') {
 			return res.status(400).json({
 				message: 'No Post found.',
