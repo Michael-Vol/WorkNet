@@ -55,13 +55,14 @@ const userSchema = new mongoose.Schema(
 	},
 	{
 		timestamps: true,
+		virtuals: true,
 	}
 );
 
 userSchema.virtual('posts', {
 	ref: 'Post',
 	localField: '_id',
-	foreignField: 'user',
+	foreignField: 'creator',
 });
 
 userSchema.methods.toJSON = function () {
