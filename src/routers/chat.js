@@ -64,4 +64,26 @@ router.post('/', auth, async (req, res) => {
 	}
 });
 
+/**
+ * @name GET /
+ * @desc get all chats of a user
+ * @access private
+ * @memberof chat
+ */
+
+router.get('/', auth, async (req, res) => {
+	try {
+		const chats = await Chat.find({ $or: [{ userOne: req.user.id }, { userTwo: req.user.id }] });
+		res.json({
+			chats,
+		});
+	} catch (error) {
+		console.error(error.name);
+
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
 module.exports = router;
