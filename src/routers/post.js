@@ -24,18 +24,18 @@ router.post('/', auth, async (req, res) => {
 
 		const post = new Post({
 			body,
-			user: req.user._id,
+			creator: req.user._id,
 		});
 		await post.save();
 
 		res.status(201).send(post);
 	} catch (error) {
 		if (error.name === 'ValidationError') {
-			return res.status(400).send({
+			return res.status(400).json({
 				message: 'No post body provided.',
 			});
 		}
-		res.status(500).send({
+		res.status(500).json({
 			message: 'Server Error',
 		});
 	}
@@ -54,12 +54,42 @@ router.get('/', auth, async (req, res) => {
 				path: 'posts',
 			})
 			.execPopulate();
-		console.log(req.user);
 		res.json({
 			posts: req.user.posts,
 		});
 	} catch (error) {
 		console.error(error);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET /{post_id}
+ * @desc Allows anyone to get any post
+ * @access public
+ * @memberof post
+ */
+
+router.get('/:post_id', async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.post_id);
+		if (!post) {
+			return res.status(400).json({
+				message: 'Post not found.',
+			});
+		}
+		res.json({
+			post,
+		});
+	} catch (error) {
+		console.error(error.name);
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'Post not found.',
+			});
+		}
 		res.status(500).json({
 			message: 'Server Error',
 		});
