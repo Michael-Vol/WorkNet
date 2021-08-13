@@ -2,7 +2,7 @@ const express = require('express');
 const auth = require('../middleware/auth');
 const Post = require('../models/Post');
 const User = require('../models/User');
-
+const Like = require('../models/Like');
 const router = express.Router();
 
 /**
@@ -173,4 +173,55 @@ router.patch('/:post_id', auth, async (req, res) => {
 		});
 	}
 });
+/**
+ * @name POST /{post_id}/likes
+ * @desc Allows user to like a specific post
+ * @access private
+ * @memberof post
+ */
+
+router.post('/:post_id/likes', auth, async (req, res) => {
+	try {
+		const postID = req.params.post_id;
+		const userID = req.user.id;
+		const post = await Post.findOne({
+			_id: postID,
+			creator: userID,
+		});
+		if (!post) {
+			return res.status(400).json({
+				message: 'No Post found.',
+			});
+		}
+		//Check if post has already been liked
+		const likeData = {
+			post: postID,
+			creator: userID,
+		};
+		console.log(likeData);
+		let like = await Like.findOne(likeData);
+		if (like) {
+			return res.status(400).json({
+				message: 'Post is already liked!',
+			});
+		}
+
+		like = new Like(likeData);
+		await like.save();
+		res.status(201).json({
+			message: 'Post Liked!',
+		});
+	} catch (error) {
+		console.error(error);
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'No Post found.',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
 module.exports = router;
