@@ -1,14 +1,13 @@
 const mongoose = require('mongoose');
-const User = require('./User');
 
 const Post = new mongoose.Schema({
 	body: {
 		type: String,
-		required: true,
+		required: [true, 'No Body'],
 	},
 	user: {
 		type: mongoose.Types.ObjectId,
-		ref: User,
+		ref: 'User',
 	},
 });
 
