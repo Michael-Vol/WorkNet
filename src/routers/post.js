@@ -126,4 +126,51 @@ router.delete('/:post_id', auth, async (req, res) => {
 		});
 	}
 });
+
+/**
+ * @name PATCH /{post_id}
+ * @desc Update a specific post
+ * @access private
+ * @memberof post
+ */
+
+router.patch('/:post_id', auth, async (req, res) => {
+	try {
+		const allowedUpdates = ['body'];
+		const userUpdates = Object.keys(req.body);
+		userUpdates.forEach((update) => {
+			if (!allowedUpdates.includes(update)) {
+				return res.status(400).json({
+					message: `Update: ${update} is invalid.`,
+				});
+			}
+		});
+		const post = await Post.findOne({
+			_id: req.params.post_id,
+			creator: req.user._id,
+		});
+		if (!post) {
+			return res.status(400).json({
+				message: 'No post found.',
+			});
+		}
+		userUpdates.forEach((update) => {
+			post[update] = req.body[update];
+		});
+		await post.save();
+		res.json({
+			post,
+		});
+	} catch (error) {
+		console.error(error.name);
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'No Post found.',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
 module.exports = router;
