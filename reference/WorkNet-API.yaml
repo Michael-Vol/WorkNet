@@ -114,6 +114,27 @@ paths:
         '500':
           description: Internal Server Error
       description: Retrieves the user's info.
+  /users/me/profile:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-users-me-profile
+      description: Retrieves a user's profile
+    post:
+      summary: ''
+      operationId: post-users-me-profile
+      responses:
+        '200':
+          description: OK
+      description: Creates a user's profile
+    patch:
+      summary: ''
+      operationId: patch-users-me-profile
+      responses:
+        '200':
+          description: OK
+      description: Updates a user's profile
   '/users/{user_id}/connect':
     parameters:
       - schema:
@@ -147,6 +168,34 @@ paths:
         '200':
           description: OK
       description: Accepts a new Connection Request to the user with the id of user_id.
+  '/users/{user_id}/avatar':
+    parameters:
+      - schema:
+          type: string
+        name: user_id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-users-user_id-avatar
+      description: Allows public access to a user's avatar.
+  /users/me/avatar:
+    post:
+      summary: ''
+      operationId: post-users-me-avatar
+      responses:
+        '200':
+          description: OK
+      description: Allows user to upload an avatar to its personal info.
+    delete:
+      summary: ''
+      operationId: delete-users-me-avatar
+      responses:
+        '200':
+          description: OK
+      description: Allows user to delete avatar.
   /posts:
     get:
       summary: Your GET endpoint
@@ -199,21 +248,7 @@ paths:
         '200':
           description: OK
       description: Retrieves a specific post with an id of post_id
-  '/post/{post_id}/likes':
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
-      operationId: get-post-likes
-      description: Returns a list of users that have liked a post.
-    parameters:
-      - schema:
-          type: string
-        name: post_id
-        in: path
-        required: true
-        description: Post ID
-  '/post/{post_id}/like':
+  '/posts/{post_id}/like':
     post:
       summary: ''
       operationId: post-post-like
@@ -235,7 +270,14 @@ paths:
         in: path
         required: true
         description: Post ID
-  '/post/{post_id}/comments':
+    get:
+      summary: ''
+      operationId: get-posts-post_id-like
+      responses:
+        '200':
+          description: OK
+      description: Returns a list of users that have liked a post.
+  '/posts/{post_id}/comments':
     post:
       summary: ''
       operationId: post-post-comment
@@ -257,7 +299,7 @@ paths:
         '200':
           description: OK
       description: Get all comments of a post with an id of post_id.
-  '/post/{post_id}/comments/{cmnt_id}':
+  '/posts/{post_id}/comments/{cmnt_id}':
     parameters:
       - schema:
           type: string
