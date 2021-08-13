@@ -129,7 +129,7 @@ router.delete('/:post_id', auth, async (req, res) => {
 
 /**
  * @name PATCH /{post_id}
- * @desc Update a specific post of a user
+ * @desc Update a post of a user
  * @access private
  * @memberof post
  */
