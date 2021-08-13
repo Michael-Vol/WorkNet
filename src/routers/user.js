@@ -1,11 +1,17 @@
 const express = require('express');
-const { Mongoose } = require('mongoose');
+const Mongoose = require('mongoose');
 const User = require('../models/User');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const multer = require('multer');
 const sharp = require('sharp');
 
+/**
+ * @name signup
+ * @desc Allows user to create a new account
+ * @access public
+ * @memberof user
+ */
 router.post('/signup', async (req, res) => {
 	const user = new User(req.body);
 	try {
@@ -27,14 +33,23 @@ router.post('/signup', async (req, res) => {
 		});
 	}
 });
-// to problhma me to date htan to format sto aitima
 
-//  na prostesoume auth otan ftiaxtei
+/**
+ * @name me
+ * @desc Allows user to get his account info
+ * @access private
+ * @memberof user
+ */
 router.get('/me', auth, async (req, res) => {
 	res.send(req.user);
 });
 
-// na prostesoume token pou tha dimiourgeitai otan sindethei
+/**
+ * @name login
+ * @desc Allows user to login and get an auth token
+ * @access public
+ * @memberof user
+ */
 router.post('/login', async (req, res) => {
 	try {
 		const { email, password } = req.body;
@@ -68,6 +83,13 @@ const upload = multer({
 		cb(undefined, true);
 	},
 });
+
+/**
+ * @name /me/avatar
+ * @desc Allows user to upload an avatar to account info
+ * @access private
+ * @memberof user
+ */
 router.post(
 	'/me/avatar',
 	auth,
@@ -101,6 +123,12 @@ router.post(
 	}
 );
 
+/**
+ * @name /me/avatar
+ * @desc Allows user to delete the avatar
+ * @access private
+ * @memberof user
+ */
 router.delete('/me/avatar', auth, async (req, res) => {
 	try {
 		req.user.avatar = undefined;
@@ -110,6 +138,44 @@ router.delete('/me/avatar', auth, async (req, res) => {
 		});
 	} catch (error) {
 		console.error(error.message);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name /{user_id}/avatar
+ * @desc Allows user to get another user's avatar
+ * @access public
+ * @memberof user
+ */
+
+router.get('/:user_id/avatar', async (req, res) => {
+	try {
+		const user_id = req.params.user_id;
+		if (!Mongoose.Types.ObjectId.isValid(user_id)) {
+			return res.status(400).json({
+				message: 'Wrong UserID',
+			});
+		}
+		const user = await User.findById(user_id);
+
+		if (!user) {
+			return res.status(400).json({
+				message: 'User not Found',
+			});
+		}
+
+		if (user.avatar === undefined) {
+			return res.status(400).json({
+				message: 'No Avatar has been uploaded',
+			});
+		}
+		res.set('Content-Type', 'image/png');
+		res.send(user.avatar);
+	} catch (error) {
+		console.error(error.name);
 		res.status(500).json({
 			message: 'Server Error',
 		});
