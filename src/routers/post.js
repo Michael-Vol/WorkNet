@@ -96,4 +96,34 @@ router.get('/:post_id', async (req, res) => {
 	}
 });
 
+/**
+ * @name DELETE /post_id
+ * @desc Delete a specific post
+ * @access private
+ * @memberof post
+ */
+router.delete('/:post_id', auth, async (req, res) => {
+	try {
+		const post = await Post.findOneAndRemove({ _id: req.params.post_id, creator: req.user._id });
+		if (!post) {
+			return res.status(400).json({
+				message: 'No post found.',
+			});
+		}
+		await post.remove();
+		res.json({
+			message: 'Post Deleted.',
+		});
+	} catch (error) {
+		console.error(error.name);
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'Post not found.',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
 module.exports = router;
