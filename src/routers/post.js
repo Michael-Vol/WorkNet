@@ -197,7 +197,6 @@ router.post('/:post_id/likes', auth, async (req, res) => {
 			post: postID,
 			creator: userID,
 		};
-		console.log(likeData);
 		let like = await Like.findOne(likeData);
 		if (like) {
 			return res.status(400).json({
@@ -245,6 +244,53 @@ router.get('/:post_id/likes', async (req, res) => {
 		const likes = await Like.countDocuments({ post: postID });
 		res.json({
 			likes,
+		});
+	} catch (error) {
+		console.error(error.name);
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'No Post found.',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name DELETE /posts/{post_id}/likes
+ * @desc Allows a user to unlike a post
+ * @access private
+ * @memberof post
+ */
+
+router.delete('/:post_id/likes', auth, async (req, res) => {
+	try {
+		const postID = req.params.post_id;
+		const userID = req.user.id;
+		const post = await Post.findOne({
+			_id: postID,
+		});
+		if (!post) {
+			return res.status(400).json({
+				message: 'No Post found.',
+			});
+		}
+		//Check if post has not been liked
+		const likeData = {
+			post: postID,
+			creator: userID,
+		};
+		let like = await Like.findOne(likeData);
+		if (!like) {
+			return res.status(400).json({
+				message: 'Post has not been liked.',
+			});
+		}
+		await like.remove();
+		res.json({
+			message: 'Post Unliked!',
 		});
 	} catch (error) {
 		console.error(error.name);
