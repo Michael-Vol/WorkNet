@@ -3,6 +3,7 @@ const auth = require('../middleware/auth');
 const Post = require('../models/Post');
 const User = require('../models/User');
 const Like = require('../models/Like');
+const Comment = require('../models/Comment');
 const router = express.Router();
 
 /**
@@ -304,5 +305,92 @@ router.delete('/:post_id/likes', auth, async (req, res) => {
 		});
 	}
 });
+/**
+ * @name POST /{post_id}/likes
+ * @desc Allows user to like a specific post
+ * @access private
+ * @memberof post
+ */
+router.post('/:post_id/comments', auth, async (req, res) => {
+	try {
+		const { body } = req.body;
+		const postID = req.params.post_id;
+		const userID = req.user.id;
+		const post = await Post.findOne({
+			_id: postID,
+		});
 
+		if (!post) {
+			return res.status(400).json({
+				message: 'No Post Found',
+			});
+		}
+
+		const comment = new Comment({
+			body,
+			post: postID,
+			creator: userID,
+		});
+
+		await comment.save();
+		res.status(201).json({
+			message: 'Post Commented',
+		});
+	} catch (error) {
+		console.error(error.name);
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'No Post found',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET /{post_id}/comments?limit=<value>&skip=<value2>
+ * @desc Retrieves the number of comments of a specific post
+ * @access public
+ * @memberof post
+ */
+router.get('/:post_id/comments', auth, async (req, res) => {
+	try {
+		const postID = req.params.post_id;
+		const post = await Post.findOne({
+			_id: postID,
+		});
+
+		if (!post) {
+			return res.status(400).json({
+				message: 'No Post found.',
+			});
+		}
+		const limit = req.query.limit === undefined ? 10 : parseInt(req.query.limit);
+		const skip = req.query.skip === undefined ? 0 : parseInt(req.query.skip);
+		console.log(limit, skip);
+
+		await post
+			.populate({
+				path: 'comments',
+				options: {
+					limit,
+					skip,
+				},
+			})
+			.execPopulate();
+		res.json({ comments: post.comments });
+	} catch (error) {
+		console.log(error);
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'No Comment found.',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
 module.exports = router;
