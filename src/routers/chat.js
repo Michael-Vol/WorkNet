@@ -118,6 +118,7 @@ router.get('/:chat_id', auth, async (req, res) => {
 			})
 			.execPopulate();
 
+		console.log(chat);
 		res.json({
 			chat,
 		});

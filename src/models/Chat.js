@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Message = require('./Message');
+const User = require('./User');
 const chatSchema = new mongoose.Schema(
 	{
 		userOne: {
@@ -12,10 +13,8 @@ const chatSchema = new mongoose.Schema(
 		},
 		messages: [
 			{
-				message: {
-					type: mongoose.Schema.Types.ObjectId,
-					ref: 'Message',
-				},
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Message',
 			},
 		],
 	},
