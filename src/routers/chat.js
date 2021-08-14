@@ -1,5 +1,6 @@
 const express = require('express');
 const Chat = require('../models/Chat');
+const Message = require('../models/Message');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
 const mongoose = require('mongoose');
@@ -87,7 +88,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 /**
- * @name GET /chats/{chat_id}
+ * @name GET /{chat_id}
  * @desc get a specific chat with a limited amount of messages in descending order
  * @params limit = the number of messages to send back, skip = the number of messages to skip
  * @access private
@@ -97,7 +98,11 @@ router.get('/', auth, async (req, res) => {
 router.get('/:chat_id', auth, async (req, res) => {
 	try {
 		const chat = await Chat.findOne({ _id: req.params.chat_id, $or: [{ userOne: req.user.id }, { userTwo: req.user.id }] });
-
+		if (!chat) {
+			return res.status(400).json({
+				message: 'Chat not found.',
+			});
+		}
 		//Check for required query params
 		const limit = req.query.limit === undefined ? 10 : parseInt(req.query.limit);
 		const skip = req.query.skip === undefined ? 0 : parseInt(req.query.skip);
@@ -130,7 +135,7 @@ router.get('/:chat_id', auth, async (req, res) => {
 });
 
 /**
- * @name DELETE /chats/{chat_id}
+ * @name DELETE /{chat_id}
  * @desc Deletes a specific chat
  * @access private
  * @memberof post
@@ -160,4 +165,47 @@ router.delete('/:chat_id', auth, async (req, res) => {
 	}
 });
 
+/**
+ * @name POST /{chat_id}/messages
+ * @desc Allows user to create a new post
+ * @access private
+ * @memberof chat
+ */
+
+router.post('/:chat_id/messages', auth, async (req, res) => {
+	try {
+		const chat = await Chat.findOne({ _id: req.params.chat_id, $or: [{ userOne: req.user.id }, { userTwo: req.user.id }] });
+		if (!chat) {
+			return res.status(400).json({
+				message: 'Chat not found.',
+			});
+		}
+		const { body } = req.body;
+		if (!body || body === '') {
+			return res.status(400).json({
+				message: 'No message body.',
+			});
+		}
+		const message = new Message({
+			chat: chat._id,
+			sender: req.user.id,
+			body,
+		});
+
+		await message.save();
+
+		res.status(201).json({
+			message,
+		});
+	} catch (error) {
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'Chat not found.',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
 module.exports = router;
