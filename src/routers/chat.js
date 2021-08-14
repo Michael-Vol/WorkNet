@@ -86,4 +86,78 @@ router.get('/', auth, async (req, res) => {
 	}
 });
 
+/**
+ * @name GET /chats/{chat_id}
+ * @desc get a specific chat with a limited amount of messages in descending order
+ * @params limit = the number of messages to send back, skip = the number of messages to skip
+ * @access private
+ * @memberof chat
+ */
+
+router.get('/:chat_id', auth, async (req, res) => {
+	try {
+		const chat = await Chat.findOne({ _id: req.params.chat_id, $or: [{ userOne: req.user.id }, { userTwo: req.user.id }] });
+
+		//Check for required query params
+		const limit = req.query.limit === undefined ? 10 : parseInt(req.query.limit);
+		const skip = req.query.skip === undefined ? 0 : parseInt(req.query.skip);
+
+		console.log(limit, skip);
+		await chat
+			.populate({
+				path: 'messages',
+				options: {
+					limit,
+					skip,
+				},
+			})
+			.execPopulate();
+
+		res.json({
+			chat,
+		});
+	} catch (error) {
+		console.error(error.name);
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'Chat not found.',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name DELETE /chats/{chat_id}
+ * @desc Deletes a specific chat
+ * @access private
+ * @memberof post
+ */
+
+router.delete('/:chat_id', auth, async (req, res) => {
+	try {
+		const chat = await Chat.findOne({ _id: req.params.chat_id, $or: [{ userOne: req.user.id }, { userTwo: req.user.id }] });
+		if (!chat) {
+			return res.status(400).json({
+				message: 'Chat not found.',
+			});
+		}
+		await chat.remove();
+		res.json({
+			message: 'Chat Deleted',
+		});
+	} catch (error) {
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'Chat not found.',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
 module.exports = router;

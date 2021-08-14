@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const Message = require('./Message');
 const chatSchema = new mongoose.Schema(
 	{
 		userOne: {
