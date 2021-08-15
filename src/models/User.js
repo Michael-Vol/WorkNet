@@ -3,6 +3,7 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const Post = require('./Post');
+const Job = require('./Job');
 const userSchema = new mongoose.Schema(
 	{
 		firstName: {
@@ -52,6 +53,14 @@ const userSchema = new mongoose.Schema(
 		avatar: {
 			type: Buffer,
 		},
+		jobApplications: [
+			{
+				job: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'Job',
+				},
+			},
+		],
 	},
 	{
 		timestamps: true,
