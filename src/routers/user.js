@@ -1,11 +1,12 @@
 const express = require('express');
 const Mongoose = require('mongoose');
 const User = require('../models/User');
+const ConnectRequest = require('../models/ConnectRequest');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const validateUserID = require('../middleware/userValidation');
 const multer = require('multer');
 const sharp = require('sharp');
-
 /**
  * @name signup
  * @desc Allows user to create a new account
@@ -181,4 +182,163 @@ router.get('/:user_id/avatar', async (req, res) => {
 		});
 	}
 });
+
+/**
+ * @name POST /{user_id}/connect
+ * @desc Creates a new connect request to a specified user
+ * @access private
+ * @memberof user
+ */
+
+router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
+	try {
+		const senderID = req.user.id;
+		const receiverID = req.params.user_id;
+
+		let connectRequest = await ConnectRequest.findOne({
+			sender: senderID,
+			receiver: receiverID,
+		});
+
+		if (connectRequest) {
+			return res.status(400).json({
+				message: 'Request already sent.',
+			});
+		}
+
+		connectRequest = new ConnectRequest({
+			sender: senderID,
+			receiver: receiverID,
+			status: 'Pending',
+		});
+
+		await connectRequest.save();
+
+		res.status(201).json({
+			message: 'Connect Request sent!',
+			requestID: connectRequest._id,
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name PATCH /{user_id}/connect
+ * @desc Allows user to accept a connect request
+ * @access private
+ * @memberof user
+ */
+
+router.patch('/:user_id/connect', auth, validateUserID, async (req, res) => {
+	try {
+		const senderID = req.params.user_id;
+		const receiverID = req.user.id;
+
+		const connectRequest = await ConnectRequest.findOne({
+			sender: senderID,
+			receiver: receiverID,
+		});
+		if (!connectRequest) {
+			return res.status(400).json({
+				message: 'No Connect Request exists.',
+			});
+		} else if (connectRequest.status === 'Accepted') {
+			return res.status(400).json({
+				message: 'Connect Request has already been accepted',
+			});
+		}
+
+		connectRequest.status = 'Accepted';
+		await connectRequest.save();
+
+		res.json({
+			message: 'Connect Request Accepted',
+			requestID: connectRequest._id,
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name DELETE /{user_id}/connect
+ * @desc Allows user to delete a connect request if it hasn't already been accepted
+ * @access private
+ * @memberof user
+ */
+
+router.delete('/:user_id/connect', auth, validateUserID, async (req, res) => {
+	try {
+		const senderID = req.user.id;
+		const receiverID = req.params.user_id;
+
+		let connectRequest = await ConnectRequest.findOne({
+			sender: senderID,
+			receiver: receiverID,
+		});
+
+		if (!connectRequest) {
+			return res.status(400).json({
+				message: 'No Connect Request exists or has already been deleted.',
+			});
+		} else if (connectRequest.status === 'Accepted') {
+			return res.status(400).json({
+				message: 'Connect Request has already been accepted',
+			});
+		}
+		await connectRequest.remove();
+
+		res.json({
+			message: 'Connect Request deleted.',
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET /{user_id}/connect/status
+ * @desc Allows user to get the status of an existing connect request
+ * @access private
+ * @memberof user
+ */
+
+router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) => {
+	try {
+		const senderID = req.user.id;
+		const receiverID = req.params.user_id;
+
+		let connectRequest = await ConnectRequest.findOne({
+			sender: senderID,
+			receiver: receiverID,
+		});
+
+		if (!connectRequest) {
+			return res.status(400).json({
+				message: 'No Connect Request exists or has already been deleted.',
+			});
+		}
+
+		res.json({
+			status: connectRequest.status,
+			requestID: connectRequest._id,
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
 module.exports = router;
