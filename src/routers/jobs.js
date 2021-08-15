@@ -89,4 +89,31 @@ router.get('/:job_id', validateJobID, async (req, res) => {
 	}
 });
 
+/**
+ * @name DELETE /:job_id
+ * @description Delete a specific job
+ * @access private
+ * @memberof job
+ */
+
+router.delete('/:job_id', auth, validateJobID, async (req, res) => {
+	try {
+		//Check if job creator is same as the authenticated user
+		if (!req.job.creator.equals(req.user.id)) {
+			return res.status(400).json({
+				message: 'You are not authenticated to delete this job.',
+			});
+		}
+		await req.job.remove();
+
+		res.json({
+			message: 'Job Deleted.',
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
 module.exports = router;
