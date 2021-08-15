@@ -306,4 +306,39 @@ router.delete('/:user_id/connect', auth, validateUserID, async (req, res) => {
 	}
 });
 
+/**
+ * @name GET /{user_id}/connect/status
+ * @desc Allows user to get the status of an existing connect request
+ * @access private
+ * @memberof user
+ */
+
+router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) => {
+	try {
+		const senderID = req.user.id;
+		const receiverID = req.params.user_id;
+
+		let connectRequest = await ConnectRequest.findOne({
+			sender: senderID,
+			receiver: receiverID,
+		});
+
+		if (!connectRequest) {
+			return res.status(400).json({
+				message: 'No Connect Request exists or has already been deleted.',
+			});
+		}
+
+		res.json({
+			status: connectRequest.status,
+			requestID: connectRequest._id,
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
 module.exports = router;
