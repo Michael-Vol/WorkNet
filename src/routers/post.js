@@ -5,7 +5,6 @@ const User = require('../models/User');
 const Like = require('../models/Like');
 const Comment = require('../models/Comment');
 const router = express.Router();
-
 /**
  * @name POST /
  * @desc Allows an authenticated user to create a post
@@ -351,7 +350,7 @@ router.post('/:post_id/comments', auth, async (req, res) => {
 
 /**
  * @name GET /{post_id}/comments?limit=<value>&skip=<value2>
- * @desc Retrieves the number of comments of a specific post
+ * @desc Retrieves  comments of a specific post
  * @access public
  * @memberof post
  */
@@ -394,7 +393,111 @@ router.get('/:post_id/comments', auth, async (req, res) => {
 	}
 });
 
-//TODO - update job by id
-//TODO - handle job application requests
+/**
+ * @name DELETE /{post_id}/comments?limit=<value>&skip=<value2>
+ * @desc Delete a specific comment from a post
+ * @access private
+ * @memberof post
+ */
+router.delete('/:post_id/comments/:cmnt_id', auth, async (req, res) => {
+	try {
+		const postID = req.params.post_id;
+		const userID = req.user.id;
+		const commentID = req.params.cmnt_id;
+
+		const post = await Post.findOne({
+			_id: postID,
+		});
+		if (!post) {
+			return res.status(400).json({
+				message: 'No post found',
+			});
+		}
+		// Check if comment exits
+		const commentData = {
+			_id: commentID,
+			post: postID,
+			creator: userID,
+		};
+		let comment = await Comment.findOne(commentData);
+
+		if (!comment) {
+			return res.status(400).json({
+				message: 'Comment not found',
+			});
+		}
+		await comment.remove();
+		res.json({
+			message: 'Comment Removed!',
+		});
+	} catch (error) {
+		console.error(error.name);
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'Post not found',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name PATCH{post_id}/comments/:cmnt_id
+ * @desc updating specific comment from a post
+ * @access private
+ * @memberof post
+ */
+
+router.patch('/:post_id/comments/:cmnt_id', auth, async (req, res) => {
+	try {
+		const postID = req.params.post_id;
+		const userID = req.user.id;
+		const commentID = req.params.cmnt_id;
+		const allowedUpdates = ['body'];
+		const userUpdates = Object.keys(req.body);
+
+		userUpdates.forEach((update) => {
+			if (!allowedUpdates.includes(update)) {
+				return res.status(400).json({
+					message: `Update: ${update} is invalid.`,
+				});
+			}
+		});
+
+		const post = await Post.findOne({
+			_id: postID,
+		});
+		if (!post) {
+			return res.status(400).json({
+				message: 'No post found',
+			});
+		}
+		const commentData = {
+			_id: commentID,
+			post: postID,
+			creator: userID,
+		};
+		let comment = await Comment.findOne(commentData);
+		userUpdates.forEach((update) => {
+			comment[update] = req.body[update];
+		});
+		await comment.save();
+		res.json({
+			comment,
+		});
+	} catch (error) {
+		console.error(error.name);
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'No Comment found.',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
 
 module.exports = router;
