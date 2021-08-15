@@ -44,4 +44,43 @@ router.post('/', auth, body('title').not().isEmpty(), body('body').not().isEmpty
 	}
 });
 
+/**
+ * @name GET /
+ * @desc get all jobs created by the user authenticated
+ * @access private
+ * @memberof job
+ */
+
+router.get('/', auth, async (req, res) => {
+	try {
+		const jobs = await Job.find({ creator: req.user.id });
+
+		res.json({
+			jobs,
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET /:job_id
+ * @description Get a specific job
+ * @access public
+ * @memberof job
+ */
+
+router.get('/:job_id', async (req, res) => {
+	try {
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
 module.exports = router;
