@@ -4,6 +4,7 @@ const User = require('../models/User');
 const ConnectRequest = require('../models/ConnectRequest');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const validateUserID = require('../middleware/userValidation');
 const multer = require('multer');
 const sharp = require('sharp');
 /**
@@ -189,30 +190,16 @@ router.get('/:user_id/avatar', async (req, res) => {
  * @memberof user
  */
 
-router.post('/:user_id/connect', auth, async (req, res) => {
+router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 	try {
 		const senderID = req.user.id;
 		const receiverID = req.params.user_id;
 
-		//Check if receiverID is valid
-		if (!Mongoose.Types.ObjectId.isValid(receiverID)) {
-			return res.status(400).json({
-				message: 'Wrong UserID',
-			});
-		}
-
-		//Check if receiverID exists
-		const receiver = await User.findById(receiverID);
-
-		if (!receiver) {
-			return res.status(400).json({
-				message: 'User not Found',
-			});
-		}
 		let connectRequest = await ConnectRequest.findOne({
 			sender: senderID,
 			receiver: receiverID,
 		});
+
 		if (connectRequest) {
 			return res.status(400).json({
 				message: 'Request already sent.',
