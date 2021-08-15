@@ -225,4 +225,85 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 		});
 	}
 });
+
+/**
+ * @name PATCH /{user_id}/connect
+ * @desc Allows user to accept a connect request
+ * @access private
+ * @memberof user
+ */
+
+router.patch('/:user_id/connect', auth, validateUserID, async (req, res) => {
+	try {
+		const senderID = req.params.user_id;
+		const receiverID = req.user.id;
+
+		const connectRequest = await ConnectRequest.findOne({
+			sender: senderID,
+			receiver: receiverID,
+		});
+		if (!connectRequest) {
+			return res.status(400).json({
+				message: 'No Connect Request exists.',
+			});
+		} else if (connectRequest.status === 'Accepted') {
+			return res.status(400).json({
+				message: 'Connect Request has already been accepted',
+			});
+		}
+
+		connectRequest.status = 'Accepted';
+		await connectRequest.save();
+
+		res.json({
+			message: 'Connect Request Accepted',
+			requestID: connectRequest._id,
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name DELETE /{user_id}/connect
+ * @desc Allows user to delete a connect request if it hasn't already been accepted
+ * @access private
+ * @memberof user
+ */
+
+router.delete('/:user_id/connect', auth, validateUserID, async (req, res) => {
+	try {
+		const senderID = req.user.id;
+		const receiverID = req.params.user_id;
+
+		let connectRequest = await ConnectRequest.findOne({
+			sender: senderID,
+			receiver: receiverID,
+		});
+
+		if (!connectRequest) {
+			return res.status(400).json({
+				message: 'No Connect Request exists or has already been deleted.',
+			});
+		} else if (connectRequest.status === 'Accepted') {
+			return res.status(400).json({
+				message: 'Connect Request has already been accepted',
+			});
+		}
+		await connectRequest.remove();
+
+		res.json({
+			message: 'Connect Request deleted.',
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
 module.exports = router;
