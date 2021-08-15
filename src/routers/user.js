@@ -1,11 +1,11 @@
 const express = require('express');
 const Mongoose = require('mongoose');
 const User = require('../models/User');
+const ConnectRequest = require('../models/ConnectRequest');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const multer = require('multer');
 const sharp = require('sharp');
-
 /**
  * @name signup
  * @desc Allows user to create a new account
@@ -174,6 +174,63 @@ router.get('/:user_id/avatar', async (req, res) => {
 		}
 		res.set('Content-Type', 'image/png');
 		res.send(user.avatar);
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name POST /{user_id}/connect
+ * @desc Creates a new connect request to a specified user
+ * @access private
+ * @memberof user
+ */
+
+router.post('/:user_id/connect', auth, async (req, res) => {
+	try {
+		const senderID = req.user.id;
+		const receiverID = req.params.user_id;
+
+		//Check if receiverID is valid
+		if (!Mongoose.Types.ObjectId.isValid(receiverID)) {
+			return res.status(400).json({
+				message: 'Wrong UserID',
+			});
+		}
+
+		//Check if receiverID exists
+		const receiver = await User.findById(receiverID);
+
+		if (!receiver) {
+			return res.status(400).json({
+				message: 'User not Found',
+			});
+		}
+		let connectRequest = await ConnectRequest.findOne({
+			sender: senderID,
+			receiver: receiverID,
+		});
+		if (connectRequest) {
+			return res.status(400).json({
+				message: 'Request already sent.',
+			});
+		}
+
+		connectRequest = new ConnectRequest({
+			sender: senderID,
+			receiver: receiverID,
+			status: 'Pending',
+		});
+
+		await connectRequest.save();
+
+		res.status(201).json({
+			message: 'Connect Request sent!',
+			requestID: connectRequest._id,
+		});
 	} catch (error) {
 		console.error(error.name);
 		res.status(500).json({
