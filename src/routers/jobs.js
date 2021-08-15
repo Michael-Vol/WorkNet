@@ -2,6 +2,8 @@ const express = require('express');
 const auth = require('../middleware/auth');
 const Job = require('../models/Job');
 const { body, validationResult } = require('express-validator');
+const validateJobID = require('../middleware/jobValidation');
+
 const router = express.Router();
 
 /**
@@ -73,8 +75,12 @@ router.get('/', auth, async (req, res) => {
  * @memberof job
  */
 
-router.get('/:job_id', async (req, res) => {
+router.get('/:job_id', validateJobID, async (req, res) => {
 	try {
+		//Job has already been found by job validation middleware
+		res.json({
+			job: req.job,
+		});
 	} catch (error) {
 		console.error(error.name);
 		res.status(500).json({
