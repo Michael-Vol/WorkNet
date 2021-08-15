@@ -394,4 +394,7 @@ router.get('/:post_id/comments', auth, async (req, res) => {
 	}
 });
 
+//TODO - update job by id
+//TODO - handle job application requests
+
 module.exports = router;
