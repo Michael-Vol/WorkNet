@@ -5,7 +5,7 @@ const connectDB = require('./config/db');
 const path = require('path');
 const userRouter = require('./routers/user');
 const postRouter = require('./routers/post');
-const conversationRouter = require('./routers/conversation');
+const chatRouter = require('./routers/chat');
 //Connect to Database
 connectDB();
 
@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use('/users', userRouter);
 app.use('/posts', postRouter);
-app.use('/conversations', conversationRouter);
+app.use('/chats', chatRouter);
 
 app.listen(PORT, () => {
 	console.log(`Server is up on port ${PORT}`);

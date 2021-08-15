@@ -24,7 +24,7 @@ router.post('/signup', async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		if (error.code === 11000) {
-			res.status(409).json({
+			return res.status(409).json({
 				message: 'Email already taken',
 			});
 		}
