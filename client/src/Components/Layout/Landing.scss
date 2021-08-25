@@ -1,0 +1,18 @@
+.landing {
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	text-align: center;
+	min-height: 100vh;
+	margin-top: 25vh;
+}
+
+.landing__btn {
+	display: flex;
+	justify-content: center;
+}
+
+.landing__background {
+	width: 60%;
+	height: 60%;
+}
