@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Landing from './Components/Layout/Landing';
 import NavBar from './Components/Layout/NavBar';
 import 'rsuite/dist/styles/rsuite-default.css';
