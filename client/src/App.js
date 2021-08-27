@@ -1,11 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Landing from './Components/Layout/Landing';
 import NavBar from './Components/Layout/NavBar';
+import Register from './Components/auth/Register';
 import 'rsuite/dist/styles/rsuite-default.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container, Header, Content, Footer, Sidebar } from 'rsuite';
-
 const App = (props) => {
 	return (
 		<div>
@@ -15,7 +14,10 @@ const App = (props) => {
 						<NavBar />
 					</Header>
 					<Container>
-						<Route exacth path='/' component={Landing} />
+						<Route exact path='/' component={Landing} />
+						<Switch>
+							<Route exact path='/register' component={Register} />
+						</Switch>
 					</Container>
 				</Container>
 			</Router>

@@ -1,4 +1,11 @@
+@import '../../Styles/main.scss';
+@import '../../Styles//components/links';
 .navbar-brand {
 	padding: 18px 20px;
 	display: inline-block;
+}
+
+.rs-navbar {
+	background-image: $color-teal-gradient;
+	background-size: cover;
 }
