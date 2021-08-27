@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Button, ButtonToolbar } from 'rsuite';
 import { Grid, Row, Col } from 'rsuite';
 import Typical from 'react-typical';
+import { Link } from 'react-router-dom';
+
 import './Landing.scss';
 const Landing = (props) => {
 	return (
@@ -38,12 +40,16 @@ const Landing = (props) => {
 						<Row className='show-grid'>
 							<Col xs={4}>
 								<Button className='landing__btn'>
-									<span className='btn'>Login</span>
+									<span className='btn'>
+										<Link to='/login'>Login</Link>
+									</span>
 								</Button>
 							</Col>
 							<Col xs={4}>
 								<Button className='landing__btn'>
-									<span className='btn'>Register</span>
+									<span className='btn'>
+										<Link to='/register'>Register</Link>
+									</span>
 								</Button>
 							</Col>
 						</Row>

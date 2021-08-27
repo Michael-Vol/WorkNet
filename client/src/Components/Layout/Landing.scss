@@ -1,5 +1,5 @@
 @import '../../Styles/main.scss';
-@import '../../Styles//components//buttons';
+@import '../../Styles//components/links';
 
 .landing {
 	display: flex;
@@ -38,13 +38,7 @@
 	background-repeat: no-repeat;
 	-webkit-box-reflect: right;
 	// background:
-	background: linear-gradient(
-			90deg,
-			rgba($color-purple-primary, 0.8),
-			rgba($color-orange-primary, 0.6),
-			rgba($color-orange-light, 0.8)
-		),
-		url('/Images/landing-background-vector.jpg');
+	background-image: $color-teal-gradient;
 	background-size: cover;
 }
 
