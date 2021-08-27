@@ -6,7 +6,7 @@ import Typical from 'react-typical';
 import './Landing.scss';
 const Landing = (props) => {
 	return (
-		<div className='landing__background' style={{}}>
+		<div className='landing__background'>
 			<section className='landing'>
 				<section className='landing__info'>
 					<Grid>
@@ -38,12 +38,12 @@ const Landing = (props) => {
 						<Row className='show-grid'>
 							<Col xs={4}>
 								<Button className='landing__btn'>
-									<span className='landing__btn--text'>Login</span>
+									<span className='btn'>Login</span>
 								</Button>
 							</Col>
 							<Col xs={4}>
 								<Button className='landing__btn'>
-									<span className='landing__btn--text'>Register</span>
+									<span className='btn'>Register</span>
 								</Button>
 							</Col>
 						</Row>

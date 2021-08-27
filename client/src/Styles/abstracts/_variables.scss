@@ -2,3 +2,10 @@ $color-white: rgb(255, 255, 255);
 $color-purple-primary: rgb(131, 58, 180);
 $color-orange-primary: rgb(253, 139, 29);
 $color-orange-light: rgb(252, 176, 69);
+
+$color-orange-purple-gradient: linear-gradient(
+	90deg,
+	rgba($color-purple-primary, 0.8),
+	rgba($color-orange-primary, 0.6),
+	rgba($color-orange-light, 0.8)
+);

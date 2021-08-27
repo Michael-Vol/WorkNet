@@ -1,4 +1,6 @@
 @import '../../Styles/main.scss';
+@import '../../Styles//components//buttons';
+
 .landing {
 	display: flex;
 	justify-content: center;
@@ -20,10 +22,7 @@
 	margin-top: 50px;
 	font-weight: 100;
 }
-.landing__btn--text {
-	font-weight: 100;
-	font-size: 20px;
-}
+
 .landing__title {
 	color: $color-white;
 	font-size: 80px;
