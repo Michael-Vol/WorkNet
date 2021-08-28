@@ -3,12 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@rsuite/schema-form": "^0.0.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "bootstrap": "^5.1.0",
+    "customize-cra": "^1.0.0",
+    "less": "^4.1.1",
+    "less-loader": "7.3.0",
     "moment": "^2.29.1",
     "react": "^17.0.2",
+    "react-app-rewired": "^2.1.8",
     "react-bootstrap": "^2.0.0-beta.6",
     "react-dom": "^17.0.2",
     "react-moment": "^1.1.1",
@@ -24,10 +29,10 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject"
   },
   "eslintConfig": {
     "extends": [

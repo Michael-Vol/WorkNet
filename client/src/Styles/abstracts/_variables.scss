@@ -5,4 +5,10 @@ $color-orange-light: rgb(252, 176, 69);
 
 $color-teal-primary: rgba(0, 152, 155, 1);
 $color-teal-secondary: rgba(0, 94, 120, 1);
-$color-teal-gradient: radial-gradient(circle farthest-corner at 10% 20%, rgba(0, 152, 155, 1) 0.1%, rgba(0, 94, 120, 1) 94.2%);
+$color-teal-gradient: linear-gradient(90deg, rgba(10, 85, 128, 1) 0%, rgba(9, 102, 105, 1) 50%, rgba(0, 70, 89, 1) 100%);
+$color-teal-gradient-opaque: linear-gradient(
+	90deg,
+	rgba(10, 85, 128, 0.7) 0%,
+	rgba(9, 102, 105, 0.7) 50%,
+	rgba(0, 70, 89, 0.7) 100%
+);

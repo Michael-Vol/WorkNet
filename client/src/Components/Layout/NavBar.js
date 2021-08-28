@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Navbar, Nav, Icon, FlexboxGrid } from 'rsuite';
 import { Link } from 'react-router-dom';
@@ -6,7 +6,7 @@ import './NavBar.scss';
 const NavBar = ({ onSelect, activeKey, ...props }) => {
 	return (
 		<div className='navbar__container'>
-			<Navbar {...props}>
+			<Navbar {...props} appearance='inverse'>
 				<Navbar.Header>
 					<Link to='/' className='navbar-brand logo link'>
 						WorkNet
