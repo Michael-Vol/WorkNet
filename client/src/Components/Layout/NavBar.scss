@@ -6,6 +6,7 @@
 }
 
 .rs-navbar {
-	background-image: $color-teal-gradient;
-	background-size: cover;
+	// background-size: cover;
+	background-color: transparent !important;
+	text-decoration: none;
 }
