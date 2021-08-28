@@ -82,10 +82,12 @@ const Register = (props) => {
 		<div>
 			<Container className='form--container'>
 				<section className='form--title'>
-					<h3>Register</h3>
+					<i className=' fas fa-pencil-alt fa-lg'></i>
+					<span className='form__title'>Register</span>
 				</section>
 
 				<Form
+					layout='horizontal'
 					ref={formRef}
 					model={model}
 					formValue={formData}
@@ -97,36 +99,54 @@ const Register = (props) => {
 						setFormError(formError);
 					}}>
 					<FormGroup key='form__name'>
-						<ControlLabel>Name</ControlLabel>
+						<ControlLabel className='form__label'>
+							<i className='fas fa-user form__icon'></i>
+							<span>Name</span>
+						</ControlLabel>
 						<FormControl name='name'></FormControl>
 						<HelpBlock>Required</HelpBlock>
 					</FormGroup>
 
 					<FormGroup key='form__email'>
-						<ControlLabel>Email</ControlLabel>
+						<ControlLabel className='form__label'>
+							<i className='fas fa-envelope form__icon'></i>
+							<span>Email</span>
+						</ControlLabel>{' '}
 						<FormControl name='email'></FormControl>
 						<HelpBlock>Required</HelpBlock>
 					</FormGroup>
 					<FormGroup key='form__password'>
-						<ControlLabel>Password</ControlLabel>
+						<ControlLabel className='form__label'>
+							<i className='fas fa-key form__icon'></i>
+							<span>Password</span>
+						</ControlLabel>
 						<FormControl name='password'></FormControl>
 						<HelpBlock>Required</HelpBlock>
 					</FormGroup>
 
 					<FormGroup key='form__password2'>
-						<ControlLabel>Verify Password</ControlLabel>
+						<ControlLabel className='form__label'>
+							<i className='fas fa-key form__icon'></i>
+							<span>Verify Password</span>
+						</ControlLabel>
 						<FormControl name='password2'></FormControl>
 						<HelpBlock>Required</HelpBlock>
 					</FormGroup>
 
 					<FormGroup key='form__tel'>
-						<ControlLabel>Phone Number</ControlLabel>
+						<ControlLabel className='form__label'>
+							<i className='fas fa-phone form__icon'></i>
+							<span>Phone Number</span>
+						</ControlLabel>{' '}
 						<FormControl name='phone'></FormControl>
 						<HelpBlock>Required</HelpBlock>
 					</FormGroup>
 
 					<FormGroup key='form__avatar'>
-						<ControlLabel>Profile Photo</ControlLabel>
+						<ControlLabel className='form__label'>
+							<i className='fas fa-portrait form__icon'></i>
+							<span>Profile Photo</span>
+						</ControlLabel>{' '}
 						<Uploader multiple listType='picture' action=''>
 							<button>
 								<Icon icon='camera-retro' size='lg' />
