@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import 'rsuite/lib/styles/index.less';
 import Landing from './Components/Layout/Landing';
 import NavBar from './Components/Layout/NavBar';
 import Register from './Components/auth/Register';
-import 'rsuite/dist/styles/rsuite-default.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Container, Header, Content, Footer, Sidebar } from 'rsuite';
+import { Container, Header, Content, Footer, Sidebar, Button } from 'rsuite';
+
+import './App.scss';
+
 const App = (props) => {
 	return (
 		<div>
