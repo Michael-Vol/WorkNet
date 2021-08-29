@@ -8,8 +8,7 @@ export const registerUser = async ({ firstName, lastName, email, password, phone
 			'Content-Type': 'application/json',
 		},
 	};
-
-	const body = JSON.stringify({ firstName, lastName, email, password, phone });
+	const body = JSON.stringify({ firstName, lastName, email, password, phoneNumber: phone });
 
 	try {
 		const res = await axios.post('/users/signup', body, config);
