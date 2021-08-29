@@ -7,6 +7,7 @@ const userRouter = require('./routers/user');
 const postRouter = require('./routers/post');
 const chatRouter = require('./routers/chat');
 const jobsRouter = require('./routers/jobs');
+const cors = require('cors');
 //Connect to Database
 connectDB();
 
@@ -15,6 +16,8 @@ const PORT = process.env.PORT || 5000;
 //Use json body parser
 app.use(express.json());
 
+//Setup CORS
+app.use(cors());
 //Setup Routes
 
 app.use('/users', userRouter);
