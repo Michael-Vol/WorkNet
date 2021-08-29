@@ -19,13 +19,15 @@ body {
 
 .form--container {
 	transition: box-shadow 0.3s;
-	position: relative;
+	position: absolute;
 	left: 35%;
 	margin-top: 5px;
+	// margin: 0 auto;
+	// place-self: center;
 	border: 2 0px;
 	border-radius: 20px;
 	padding: 30px 30px;
-	width: 35%;
+	width: fit-content;
 	text-align: center;
 	background-color: rgb(246, 246, 246);
 }
@@ -40,4 +42,12 @@ body {
 
 .form--submit-btn {
 	margin-right: 50px;
+}
+
+.rs-input {
+	width: auto;
+}
+
+.rs-help-block {
+	text-align: right;
 }
