@@ -1,15 +1,21 @@
 @import './Styles/abstracts/variables';
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;400&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+}
+
 body,
 html {
-	height: 100%;
-	margin: 0;
-	font-family: 'Source Sans Pro', sans-serif;
+    height: 100%;
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
 a:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
+
 a {
-	font-size: 20px;
+    font-size: 20px;
 }

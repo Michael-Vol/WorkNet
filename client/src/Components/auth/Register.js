@@ -1,7 +1,8 @@
 import React, { useState, useEffect, Fragment, useRef } from 'react';
-import PropTypes from 'prop-types';
 import './Register.scss';
 import toast, { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { registerUser } from '../../Actions/auth';
 import {
 	Container,
 	Uploader,
@@ -28,13 +29,13 @@ const Register = (props) => {
 	});
 
 	const containerRef = React.createRef();
-
+	const dispatch = useDispatch();
 	const [formError, setFormError] = useState({});
 	const [avatar, setAvatar] = useState({});
 
 	const formRef = useRef();
 
-	const { name, email, password, password2 } = formData;
+	const { name, email, password, password2, phone } = formData;
 	const { StringType } = Schema.Types;
 
 	const model = Schema.Model({
@@ -55,37 +56,6 @@ const Register = (props) => {
 		phone: StringType().isRequired('This field is required'),
 	});
 
-	function TextField(props) {
-		const { name, label, accepter, required, ...rest } = props;
-		return (
-			<FormGroup key='form'>
-				{rest.avatar ? (
-					<Fragment>
-						<ControlLabel>{label}</ControlLabel>
-						<Uploader
-							multiple
-							listType='picture'
-							action='/Images'
-							onSuccess={(response, file) => {
-								console.log('Uploaded successfully');
-								console.log(response);
-							}}>
-							<button>
-								<Icon icon='camera-retro' size='lg' />
-							</button>
-						</Uploader>
-					</Fragment>
-				) : (
-					<Fragment>
-						<ControlLabel>{label}</ControlLabel>
-
-						<FormControl name={name} accepter={accepter} {...rest}></FormControl>
-						{required && <HelpBlock>Required</HelpBlock>}
-					</Fragment>
-				)}
-			</FormGroup>
-		);
-	}
 	function open(funcName, description) {
 		Notification[funcName]({
 			title: funcName,
@@ -95,7 +65,6 @@ const Register = (props) => {
 
 	const handleSubmit = async (e) => {
 		console.log(formData);
-		console.log(formRef.current.check());
 
 		if (!formRef.current.check()) {
 			//open('error', 'Cannot create Account. Check your form information.');
@@ -104,10 +73,14 @@ const Register = (props) => {
 				position: 'top-right',
 			});
 		} else {
-			toast.success('Account Created', {
-				duration: 4000,
-				position: 'top-right',
-			});
+			const [firstName, lastName] = name.split(' ');
+			const res = await registerUser({ firstName, lastName, email, password, phone, avatar });
+			console.log(res);
+			//dispatch(res);
+			// toast.success('Account Created', {
+			// 	duration: 4000,
+			// 	position: 'top-right',
+			// });
 		}
 	};
 
@@ -188,17 +161,7 @@ const Register = (props) => {
 							multiple={false}
 							onChange={(fileList) => {
 								setAvatar(fileList[0]);
-								console.log(fileList[0], avatar);
-								//	console.log(fileList, avatar);
-							}}
-							onUpload={(file) => {
-								//setAvatar(file);
-								console.log(file);
-							}}
-							onSuccess={(response, file) => {
-								console.log(response);
-							}}
-							onError={(reason) => console.log(reason)}>
+							}}>
 							<button>
 								<Icon icon='camera-retro' size='lg' />
 							</button>
@@ -225,7 +188,5 @@ const Register = (props) => {
 		</div>
 	);
 };
-
-Register.propTypes = {};
 
 export default Register;
