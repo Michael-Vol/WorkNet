@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 //Use json body parser
 app.use(express.json());
 
-//Setup CORS
+//Setup CORS for Cross-Origin
 app.use(cors());
 //Setup Routes
 
