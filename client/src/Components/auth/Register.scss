@@ -1,53 +1,43 @@
 @import '../../Styles/abstracts/variables';
 body {
-    background-image: $color-teal-gradient;
+	background-image: $color-teal-gradient;
 }
 
 .form__title {
-    font-size: 20px;
-    margin-left: 20px;
+	font-size: 20px;
+	margin-left: 20px;
 }
 
 .form__label {
-    font-size: 24px;
+	font-size: 24px;
 }
 
 .form__icon {
-    position: relative;
-    right: 5px;
+	position: relative;
+	right: 5px;
 }
 
 .form--container {
-    transition: box-shadow 0.3s;
-    position: absolute;
-    left: 35%;
-    margin-top: 5px;
-    // margin: 0 auto;
-    // place-self: center;
-    border: 2 0px;
-    border-radius: 20px;
-    padding: 30px 30px;
-    width: fit-content;
-    text-align: center;
-    background-color: rgb(246, 246, 246);
+	transition: box-shadow 0.3s;
+	position: relative;
+	left: 35%;
+	margin-top: 5px;
+	border: 2 0px;
+	border-radius: 20px;
+	padding: 30px 30px;
+	width: 35%;
+	text-align: center;
+	background-color: rgb(246, 246, 246);
 }
 
 .form--container:hover {
-    box-shadow: #004855 20px 54px 55px, #004855 0px -12px 30px, #004855 0px 4px 6px, #004855 0px 12px 13px, #004855 0px -3px 5px;
+	box-shadow: #004855 20px 54px 55px, #004855 0px -12px 30px, #004855 0px 4px 6px, #004855 0px 12px 13px, #004855 0px -3px 5px;
 }
 
 .form--title {
-    margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .form--submit-btn {
-    margin-right: 50px;
-}
-
-.rs-input {
-    width: auto;
-}
-
-.rs-help-block {
-    text-align: right;
+	margin-right: 50px;
 }

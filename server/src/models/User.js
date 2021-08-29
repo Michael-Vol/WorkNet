@@ -37,18 +37,19 @@ const userSchema = new mongoose.Schema(
 		},
 		isAdmin: {
 			type: Boolean,
-			default: false,
+			required: true,
 		},
 		age: {
 			type: Number,
 		},
 		phoneNumber: {
-			type: Number,
+			type: String,
 			validate(value) {
-				if (!validator.isMobilePhone()) {
+				if (!validator.isMobilePhone(value)) {
 					throw new Error('Phone Number is not valid');
 				}
 			},
+			required: true,
 		},
 		avatar: {
 			type: Buffer,
