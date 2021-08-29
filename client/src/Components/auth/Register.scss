@@ -18,12 +18,12 @@ body {
 .form--container {
 	transition: box-shadow 0.3s;
 	position: absolute;
-	left: 35%;
+	left: 30%;
 	margin-top: 5px;
 	border: 2 0px;
 	border-radius: 20px;
 	padding: 30px 30px;
-	width: 70vh;
+	width: fit-content;
 
 	text-align: center;
 	background-color: rgb(246, 246, 246);
