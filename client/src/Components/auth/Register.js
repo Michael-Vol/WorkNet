@@ -77,6 +77,8 @@ const Register = (props) => {
 		}
 	};
 
+	//test comment
+
 	return (
 		<div>
 			<Container className='register--container'>
@@ -85,7 +87,6 @@ const Register = (props) => {
 					<i className=' fas fa-pencil-alt fa-lg'></i>
 					<span className='form__title'>Register</span>
 				</section>
-
 				<Form
 					layout='horizontal'
 					ref={formRef}
