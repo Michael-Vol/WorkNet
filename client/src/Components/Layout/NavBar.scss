@@ -3,10 +3,12 @@
 .navbar-brand {
 	padding: 18px 20px;
 	display: inline-block;
+	font-weight: 400;
 }
 
 .rs-navbar {
 	// background-size: cover;
-	background-color: transparent !important;
 	text-decoration: none;
+	border-radius: 0px 0px 4px 4px;
+	padding: 8px;
 }

@@ -3,6 +3,7 @@ import 'rsuite/lib/styles/index.less';
 import Landing from './Components/Layout/Landing';
 import NavBar from './Components/Layout/NavBar';
 import Register from './Components/auth/Register';
+import Login from './Components/auth/Login';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Container, Header, Content, Footer, Sidebar, Button } from 'rsuite';
 import axios from 'axios';
@@ -24,6 +25,7 @@ const App = (props) => {
 							<Route exact path='/' component={Landing} />
 							<Switch>
 								<Route exact path='/register' component={Register} />
+								<Route exact path='/login' component={Login} />
 							</Switch>
 						</Container>
 					</Container>

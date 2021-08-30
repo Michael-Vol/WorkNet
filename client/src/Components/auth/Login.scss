@@ -20,8 +20,9 @@ body {
 .form--container {
 	transition: box-shadow 0.3s;
 	position: absolute;
-	left: 35%;
-	margin-top: -20px;
+	display: inline-block;
+	margin: 0 auto;
+	margin-top: 20px;
 	border: 2 0px;
 	border-radius: 20px;
 	padding: 30px 30px;
@@ -48,4 +49,7 @@ body {
 
 .rs-help-block {
 	text-align: right;
+}
+.rs-form:not(.rs-form-inline) .rs-form-group:not(:last-child) {
+	margin-bottom: 45px;
 }
