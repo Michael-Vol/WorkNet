@@ -77,7 +77,7 @@ const Register = (props) => {
 
 	return (
 		<div>
-			<Container className='form--container'>
+			<Container className='register--container'>
 				<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
 				<section className='form--title'>
 					<i className=' fas fa-pencil-alt fa-lg'></i>
