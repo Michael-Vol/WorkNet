@@ -30,7 +30,6 @@ const Register = (props) => {
 
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-	const containerRef = React.createRef();
 	const dispatch = useDispatch();
 	const [formError, setFormError] = useState({});
 	const [avatar, setAvatar] = useState({});
@@ -62,37 +61,30 @@ const Register = (props) => {
 		phone: StringType().isRequired('This field is required'),
 	});
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async () => {
 		console.log(formData);
 
 		if (!formRef.current.check()) {
 			//open('error', 'Cannot create Account. Check your form information.');
-			toast.error('Cannot create Account. Check your form information.', {
-				duration: 4000,
-				position: 'top-right',
-			});
+			toast.error('Cannot create Account. Check your form information.');
 		} else {
 			const [firstName, lastName] = name.split(' ');
 			const res = await registerUser({ firstName, lastName, email, password, phone, avatar });
 			dispatch(res);
-			// toast.success('Account Created', {
-			// 	duration: 4000,
-			// 	position: 'top-right',
-			// });
+			toast.success('Account Created');
 		}
 	};
 
 	return (
 		<div>
 			<Container className='form--container'>
-				<Toaster />
+				<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
 				<section className='form--title'>
 					<i className=' fas fa-pencil-alt fa-lg'></i>
 					<span className='form__title'>Register</span>
 				</section>
 
 				<Form
-					ref={containerRef}
 					layout='horizontal'
 					ref={formRef}
 					model={model}
@@ -172,9 +164,9 @@ const Register = (props) => {
 							<Button
 								className='form--submit-btn'
 								type='submit'
-								onClick={() => handleSubmit(containerRef)}
+								onClick={() => handleSubmit()}
 								appearance='primary'>
-								Submit
+								Register
 							</Button>
 							<Button
 								className='form--cancel-btn'

@@ -22,6 +22,7 @@ const auth = function (state = initialState, action) {
 			break;
 		case REGISTER_FAIL:
 			console.log(payload);
+			localStorage.removeItem('token');
 			return {
 				...state,
 				isAuthenticated: false,
