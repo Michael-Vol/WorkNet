@@ -35,8 +35,7 @@ export const loginUser = async ({ email, password }) => {
 	const body = JSON.stringify({ email, password });
 
 	try {
-		const res = axios.post('/users/login', body, config);
-
+		const res = await axios.post('/users/login', body, config);
 		return {
 			type: LOGIN_SUCCESS,
 			payload: res.data,
@@ -46,6 +45,7 @@ export const loginUser = async ({ email, password }) => {
 
 		return {
 			type: LOGIN_FAIL,
+			payload: error.response.data,
 		};
 	}
 };

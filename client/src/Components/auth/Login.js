@@ -1,11 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Login.scss';
 import { loginUser } from '../../Actions/auth';
 import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Container, Form, FormGroup, FormControl, ControlLabel, Icon, Button, ButtonToolbar, Schema } from 'rsuite';
+import { Container, Form, FormGroup, FormControl, ControlLabel, Button, ButtonToolbar, Schema } from 'rsuite';
 const Login = () => {
+	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+	const authError = useSelector((state) => state.auth.error);
 	const [loginData, setLoginData] = useState({
 		email: '',
 		password: '',
@@ -15,8 +17,18 @@ const Login = () => {
 	const formRef = useRef();
 
 	const { email, password } = loginData;
-
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		console.log(authError);
+		if (authError) {
+			toast.error(authError.message);
+		}
+	}, [authError]);
+
+	if (isAuthenticated) {
+		return <Redirect to='/dashboard' />;
+	}
 
 	const { StringType } = Schema.Types;
 	const model = Schema.Model({
@@ -31,9 +43,12 @@ const Login = () => {
 			toast.error('Cannot create Account. Check your form information.');
 		} else {
 			const res = await loginUser({ email, password });
-			const reducerRes = dispatch(res);
-			console.log(reducerRes);
+			dispatch(res);
 		}
+	};
+
+	const cancel = () => {
+		return history.push('/');
 	};
 
 	return (
@@ -77,12 +92,7 @@ const Login = () => {
 								appearance='primary'>
 								Login
 							</Button>
-							<Button
-								className='form--cancel-btn'
-								appearance='default'
-								onClick={() => {
-									return <Redirect to='/' />;
-								}}>
+							<Button className='form--cancel-btn' appearance='default' onClick={() => {}}>
 								Cancel
 							</Button>
 						</ButtonToolbar>
