@@ -68,7 +68,6 @@ const Register = (props) => {
 		console.log(formData);
 
 		if (!formRef.current.check()) {
-			//open('error', 'Cannot create Account. Check your form information.');
 			toast.error('Cannot create Account. Check your form information.');
 		} else {
 			const [firstName, lastName] = name.split(' ');
