@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import './Login.scss';
+import { loginUser } from '../../Actions/auth';
 import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -14,6 +15,9 @@ const Login = () => {
 	const formRef = useRef();
 
 	const { email, password } = loginData;
+
+	const dispatch = useDispatch();
+
 	const { StringType } = Schema.Types;
 	const model = Schema.Model({
 		email: StringType().isRequired('This field is required.').isEmail('Please enter a valid email'),
@@ -25,12 +29,16 @@ const Login = () => {
 	const handleSubmit = async () => {
 		if (!formRef.current.check()) {
 			toast.error('Cannot create Account. Check your form information.');
+		} else {
+			const res = await loginUser({ email, password });
+			const reducerRes = dispatch(res);
+			console.log(reducerRes);
 		}
 	};
 
 	return (
 		<div>
-			<Container className='form--container'>
+			<Container className='login--container'>
 				<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
 				<section className='form--title'>
 					<i className='fas fa-sign-in-alt'></i>
