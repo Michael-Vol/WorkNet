@@ -17,18 +17,19 @@ body {
 	right: 5px;
 }
 
+
 .login--container {
-	transition: box-shadow 0.3s;
-	position: absolute;
-	display: inline-block;
-	margin: 0 auto;
-	margin-top: 20px;
+	margin-top: 40%;
 	border: 2 0px;
+	transition: box-shadow 0.3s;
 	border-radius: 20px;
-	padding: 30px 30px;
-	width: fit-content;
 	text-align: center;
 	background-color: rgb(246, 246, 246);
+	//position: absolute;
+	//display: inline-block;
+	//margin: 0 auto;
+	// padding: 30px 30px;
+	// width: fit-content;
 }
 
 .login--container:hover {
@@ -39,9 +40,9 @@ body {
 	margin-bottom: 20px;
 }
 
-.form--submit-btn {
-	margin-right: 50px;
-}
+// .form--submit-btn {
+// 	margin-right: 50px;
+// }
 
 .rs-input {
 	width: auto;
@@ -49,4 +50,11 @@ body {
 
 .rs-help-block {
 	text-align: right;
+}
+
+.rs-container {
+	place-self: center;
+}
+.rs-panel-bordered {
+    border: none;
 }
