@@ -3,7 +3,7 @@
 
 .landing {
 	display: flex;
-	justify-content: center;
+	 justify-content: center;
 	align-content: center;
 	text-align: center;
 	min-height: 80vh;
@@ -20,7 +20,7 @@
 	height: 55px;
 	width: 150px;
 	margin-top: 50px;
-	font-weight: 100;
+	font-weight: 400;
 }
 
 .landing__title {
@@ -33,12 +33,11 @@
 	color: $color-white;
 }
 .landing__background {
-	background-size: 100%;
-	max-height: 95vh;
-	background-repeat: no-repeat;
+	
 	// background:
 	background-image: $color-teal-gradient-opaque, url(/Images/landing-background-vector.jpg);
 	background-size: cover;
+	
 }
 
 .landing__info {
@@ -48,3 +47,7 @@
 .show-grid {
 	margin: 10px;
 }
+
+// .rs-container{
+// 	width: max-content;
+// }

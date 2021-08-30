@@ -1,8 +1,9 @@
 import React, { useState, useEffect, Fragment, useRef } from 'react';
 import './Register.scss';
 import toast, { Toaster } from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../Actions/auth';
+import { Redirect } from 'react-router-dom';
 import {
 	Container,
 	Uploader,
@@ -16,7 +17,6 @@ import {
 	ButtonToolbar,
 	Schema,
 	Notification,
-	Placeholder,
 } from 'rsuite';
 
 const Register = (props) => {
@@ -28,12 +28,20 @@ const Register = (props) => {
 		phone: '',
 	});
 
-	const containerRef = React.createRef();
+	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
 	const dispatch = useDispatch();
 	const [formError, setFormError] = useState({});
 	const [avatar, setAvatar] = useState({});
-
+	const [cancel, setCancel] = useState(false);
 	const formRef = useRef();
+
+	if (isAuthenticated) {
+		return <Redirect to='/dashboard' />;
+	}
+	if (cancel) {
+		return <Redirect to='/' />;
+	}
 
 	const { name, email, password, password2, phone } = formData;
 	const { StringType } = Schema.Types;
@@ -43,7 +51,7 @@ const Register = (props) => {
 		email: StringType().isRequired('This field is required').isEmail('Please enter a valid email address.'),
 		password: StringType()
 			.isRequired('This field is required')
-			.rangeLength(6, 20, 'The number of characters in password field must be between 6 and 20'),
+			.rangeLength(6, 20, 'The number of characters in the password field must be between 6 and 20'),
 		password2: StringType()
 			.addRule((value, data) => {
 				if (value !== data.password) {
@@ -56,45 +64,30 @@ const Register = (props) => {
 		phone: StringType().isRequired('This field is required'),
 	});
 
-	function open(funcName, description) {
-		Notification[funcName]({
-			title: funcName,
-			description,
-		});
-	}
-
-	const handleSubmit = async (e) => {
+	const handleSubmit = async () => {
 		console.log(formData);
 
 		if (!formRef.current.check()) {
 			//open('error', 'Cannot create Account. Check your form information.');
-			toast.error('Cannot create Account. Check your form information.', {
-				duration: 4000,
-				position: 'top-right',
-			});
+			toast.error('Cannot create Account. Check your form information.');
 		} else {
 			const [firstName, lastName] = name.split(' ');
 			const res = await registerUser({ firstName, lastName, email, password, phone, avatar });
-			console.log(res);
-			//dispatch(res);
-			// toast.success('Account Created', {
-			// 	duration: 4000,
-			// 	position: 'top-right',
-			// });
+			dispatch(res);
+			toast.success('Account Created');
 		}
 	};
 
 	return (
 		<div>
-			<Container className='form--container'>
-				<Toaster />
+			<Container className='register--container'>
+				<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
 				<section className='form--title'>
 					<i className=' fas fa-pencil-alt fa-lg'></i>
 					<span className='form__title'>Register</span>
 				</section>
 
 				<Form
-					ref={containerRef}
 					layout='horizontal'
 					ref={formRef}
 					model={model}
@@ -174,11 +167,16 @@ const Register = (props) => {
 							<Button
 								className='form--submit-btn'
 								type='submit'
-								onClick={() => handleSubmit(containerRef)}
+								onClick={() => handleSubmit()}
 								appearance='primary'>
-								Submit
+								Register
 							</Button>
-							<Button className='form--submit-btn' appearance='default'>
+							<Button
+								className='form--cancel-btn'
+								appearance='default'
+								onClick={() => {
+									setCancel(true);
+								}}>
 								Cancel
 							</Button>
 						</ButtonToolbar>
