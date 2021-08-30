@@ -25,7 +25,7 @@ const Login = () => {
 		password: '',
 	});
 	const [formError, setFormError] = useState({});
-
+	const [cancel, setCancel] = useState(false);
 	const formRef = useRef();
 
 	const { email, password } = loginData;
@@ -41,7 +41,9 @@ const Login = () => {
 	if (isAuthenticated) {
 		return <Redirect to='/dashboard' />;
 	}
-
+	if (cancel) {
+		return <Redirect to='/' />;
+	}
 	const { StringType } = Schema.Types;
 	const model = Schema.Model({
 		email: StringType().isRequired('This field is required.').isEmail('Please enter a valid email'),
@@ -57,10 +59,6 @@ const Login = () => {
 			const res = await loginUser({ email, password });
 			dispatch(res);
 		}
-	};
-
-	const cancel = () => {
-		//return history.push('/');
 	};
 
 	return (
@@ -106,7 +104,7 @@ const Login = () => {
 												// className='form--cancel-btn'
 												appearance='default'
 												onClick={() => {
-													return <Redirect to='/' />;
+													setCancel(true);
 												}}>
 												Cancel
 											</Button>
