@@ -12,27 +12,27 @@ import store from './store';
 import './App.scss';
 
 const App = (props) => {
-	axios.defaults.baseURL = 'http://localhost:5000';
-	return (
-		<div>
-			<Provider store={store}>
-				<Router>
-					<Container>
-						<Header>
-							<NavBar />
-						</Header>
-						<Container>
-							<Route exact path='/' component={Landing} />
-							<Switch>
-								<Route exact path='/register' component={Register} />
-								<Route exact path='/login' component={Login} />
-							</Switch>
-						</Container>
-					</Container>
-				</Router>
-			</Provider>
-		</div>
-	);
+    axios.defaults.baseURL = 'http://localhost:5000';
+    return (
+        <div>
+            <Provider store={store}>
+                <Router>
+                    <Container>
+                        <Header>
+                            <NavBar />
+                        </Header>
+                        <Route exact path='/' component={Landing} />
+                        <Container>
+                            <Switch>
+                                <Route exact path='/register' component={Register} />
+                                <Route exact path='/login' component={Login} />
+                            </Switch>
+                        </Container>
+                    </Container>
+                </Router>
+            </Provider>
+        </div>
+    );
 };
 
 App.propTypes = {};

@@ -19,7 +19,8 @@ body {
 
 
 .login--container {
-	margin-top: 40%;
+
+	margin-top: 20%;
 	border: 2 0px;
 	transition: box-shadow 0.3s;
 	border-radius: 20px;
@@ -29,7 +30,7 @@ body {
 	//display: inline-block;
 	//margin: 0 auto;
 	// padding: 30px 30px;
-	// width: fit-content;
+	width: fit-content;
 }
 
 .login--container:hover {
@@ -52,9 +53,14 @@ body {
 	text-align: right;
 }
 
-.rs-container {
+#login {
 	place-self: center;
 }
+
+.rs-container {
+ 	place-self: center; 
+}
+
 .rs-panel-bordered {
     border: none;
 }
