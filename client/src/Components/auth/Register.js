@@ -42,6 +42,13 @@ const Register = (props) => {
 	const [cancel, setCancel] = useState(false);
 	const formRef = useRef();
 
+	useEffect(() => {
+		if (authError) {
+			console.log(authError);
+			toast.error(authError.response.data.message);
+		}
+	}, [authError]);
+
 	if (isAuthenticated) {
 		return <Redirect to='/dashboard' />;
 	}
@@ -80,11 +87,6 @@ const Register = (props) => {
 			const [firstName, lastName] = name.split(' ');
 			const res = await registerUser({ firstName, lastName, email, password, phone, avatar });
 			dispatch(res);
-			if (authError) {
-				toast.error(authError.response.data.message);
-			} else {
-				toast.success('Account Created');
-			}
 		}
 	};
 

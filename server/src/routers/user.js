@@ -23,6 +23,7 @@ const upload = multer({
 		if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
 			return cb(new Error('Please upload an image'));
 		}
+
 		cb(undefined, true);
 	},
 });
@@ -31,7 +32,7 @@ router.post('/signup', upload.single('avatar'), async (req, res) => {
 	try {
 		if (!req.file) {
 			return res.status(400).json({
-				message: 'Please upload an avatar.',
+				message: 'Please upload an  avatar.',
 			});
 		}
 		const avatarBuffer = await sharp(req.file.buffer)
