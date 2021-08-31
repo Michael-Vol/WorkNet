@@ -1,5 +1,23 @@
 import axios from 'axios';
-import { REGISTER_SUCCESS, REGISTER_FAIL, LOGIN_SUCCESS, LOGIN_FAIL } from './types';
+import { REGISTER_SUCCESS, REGISTER_FAIL, LOGIN_SUCCESS, LOGIN_FAIL, USER_LOADED, AUTH_ERROR } from './types';
+
+//Load User
+
+export const loadUser = async () => {
+	if (localStorage.token) {
+		axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+	}
+	try {
+		const res = await axios.get('/users/me');
+		return { type: USER_LOADED, payload: res.data };
+	} catch (error) {
+		console.error(error);
+		return {
+			type: AUTH_ERROR,
+		};
+	}
+};
+
 //Register User
 
 export const registerUser = async ({ firstName, lastName, email, password, phone, avatar }) => {
