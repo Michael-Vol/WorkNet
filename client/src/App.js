@@ -10,6 +10,7 @@ import { Container, Header } from 'rsuite';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 import PrivateRoute from './Components/Routing/PrivateRoute';
+import PersonalInfo from './Components/PersonalInfo/PersonalInfo';
 import store from './store';
 import './App.scss';
 
@@ -28,6 +29,7 @@ const App = (props) => {
 							<Route exact path='/register' component={Register} />
 							<Route exact path='/login' component={Login} />
 							<PrivateRoute exact path='/dashboard' component={Dashboard} />
+							<PrivateRoute exact path='/personal-info' component={PersonalInfo} />
 						</Switch>
 					</Container>
 				</Container>
