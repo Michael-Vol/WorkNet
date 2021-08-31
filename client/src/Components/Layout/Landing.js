@@ -1,8 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, ButtonToolbar } from 'rsuite';
+import { Button } from 'rsuite';
 import { Grid, Row, Col } from 'rsuite';
-import Typical from 'react-typical';
 import { Link } from 'react-router-dom';
 
 import './Landing.scss';

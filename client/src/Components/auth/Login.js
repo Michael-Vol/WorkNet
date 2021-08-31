@@ -24,7 +24,6 @@ const Login = () => {
 		email: '',
 		password: '',
 	});
-	const [formError, setFormError] = useState({});
 	const [cancel, setCancel] = useState(false);
 	const formRef = useRef();
 
@@ -32,7 +31,6 @@ const Login = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		console.log(authError);
 		if (authError) {
 			toast.error(authError.message);
 		}
@@ -53,9 +51,7 @@ const Login = () => {
 	});
 
 	const handleSubmit = async () => {
-		if (!formRef.current.check()) {
-			toast.error('Cannot create Account. Check your form information.');
-		} else {
+		if (formRef.current.check()) {
 			const res = await loginUser({ email, password });
 			dispatch(res);
 		}
@@ -75,8 +71,7 @@ const Login = () => {
 									layout='horizontal'
 									model={model}
 									formValue={loginData}
-									onChange={(value) => setLoginData(value)}
-									onCheck={(formError) => setFormError(formError)}>
+									onChange={(value) => setLoginData(value)}>
 									<FormGroup key='form__email'>
 										<ControlLabel className='form__label'>
 											<i className='fas fa-envelope form__icon'></i>

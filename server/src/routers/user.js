@@ -13,10 +13,39 @@ const sharp = require('sharp');
  * @access public
  * @memberof user
  */
-router.post('/signup', async (req, res) => {
-	const user = new User(req.body);
+//Setup multer upload properties
+
+const upload = multer({
+	limits: {
+		fileSize: 3000000,
+	},
+	fileFilter(req, file, cb) {
+		if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+			return cb(new Error('Please upload an image'));
+		}
+
+		cb(undefined, true);
+	},
+});
+
+router.post('/signup', upload.single('avatar'), async (req, res) => {
 	try {
+		if (!req.file) {
+			return res.status(400).json({
+				message: 'Please upload an  avatar.',
+			});
+		}
+		const avatarBuffer = await sharp(req.file.buffer)
+			.resize({
+				width: 400,
+				height: 400,
+			})
+			.png()
+			.toBuffer();
+		console.log(req.body);
+		const user = new User({ ...req.body, avatar: avatarBuffer });
 		const token = await user.generateAuthToken();
+		user.avatar = avatarBuffer;
 		await user.save();
 		res.status(201).json({
 			user,
@@ -30,7 +59,7 @@ router.post('/signup', async (req, res) => {
 			});
 		}
 		res.status(500).json({
-			message: 'Server Error',
+			message: error.errors,
 		});
 	}
 });
@@ -69,20 +98,6 @@ router.post('/login', async (req, res) => {
 			message: 'Server Error',
 		});
 	}
-});
-
-//Setup multer upload properties
-
-const upload = multer({
-	limits: {
-		fileSize: 3000000,
-	},
-	fileFilter(req, file, cb) {
-		if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-			return cb(new Error('Please upload an image'));
-		}
-		cb(undefined, true);
-	},
 });
 
 /**

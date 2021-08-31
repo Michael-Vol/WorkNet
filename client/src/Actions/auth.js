@@ -1,17 +1,48 @@
 import axios from 'axios';
-import { REGISTER_SUCCESS, REGISTER_FAIL, LOGIN_SUCCESS, LOGIN_FAIL } from './types';
+import { REGISTER_SUCCESS, REGISTER_FAIL, LOGIN_SUCCESS, LOGIN_FAIL, USER_LOADED, AUTH_ERROR } from './types';
+
+//Load User
+
+export const loadUser = async () => {
+	if (localStorage.token) {
+		axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+	}
+	try {
+		const res = await axios.get('/users/me');
+		return { type: USER_LOADED, payload: res.data };
+	} catch (error) {
+		console.error(error);
+		return {
+			type: AUTH_ERROR,
+		};
+	}
+};
+
 //Register User
 
 export const registerUser = async ({ firstName, lastName, email, password, phone, avatar }) => {
 	const config = {
 		headers: {
-			'Content-Type': 'application/json',
+			'Content-Type': 'multipart/form-data',
 		},
 	};
-	const body = JSON.stringify({ firstName, lastName, email, password, phoneNumber: phone });
+	const textFields = {
+		firstName,
+		lastName,
+		email,
+		password,
+		phoneNumber: phone,
+	};
+	const formData = new FormData();
+	formData.append('avatar', avatar.blobFile);
+
+	for (const key in textFields) {
+		formData.append(key, textFields[key]);
+	}
+	//formData.append('data', { firstName, lastName, email, password, phoneNumber: phone });
 
 	try {
-		const res = await axios.post('/users/signup', body, config);
+		const res = await axios.post('/users/signup', formData, config);
 		return {
 			type: REGISTER_SUCCESS,
 			payload: res.data,
@@ -19,7 +50,7 @@ export const registerUser = async ({ firstName, lastName, email, password, phone
 	} catch (error) {
 		console.error(error);
 
-		return { type: REGISTER_FAIL };
+		return { type: REGISTER_FAIL, payload: error };
 	}
 };
 
