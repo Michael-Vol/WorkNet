@@ -1,7 +1,7 @@
 @import '../../Styles/main.scss';
 @import '../../Styles//components/links';
 .navbar-brand {
-	padding: 18px 20px;
+	padding: 16px 20px;
 	display: inline-block;
 	font-weight: 400;
 }
@@ -11,4 +11,14 @@
 	text-decoration: none;
 	border-radius: 0px 0px 4px 4px;
 	padding: 8px;
+}
+
+.link {
+	font-weight: 400;
+	text-decoration: none;
+	color: #fff !important;
+}
+
+.rs-nav-item > .rs-nav-item-content {
+	font-size: 18px;
 }

@@ -14,15 +14,11 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 				<Navbar.Body>
 					<FlexboxGrid justify='end'>
 						<Nav onSelect={onSelect} activeKey={activeKey}>
-							<Nav.Item>
-								<Link to='/login' className='link'>
-									Login
-								</Link>
+							<Nav.Item href='/login' className='link'>
+								Login
 							</Nav.Item>
-							<Nav.Item>
-								<Link to='/register' className='link'>
-									Register
-								</Link>
+							<Nav.Item href='/register' className='link'>
+								Register
 							</Nav.Item>
 						</Nav>
 					</FlexboxGrid>
