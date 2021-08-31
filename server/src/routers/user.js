@@ -41,7 +41,7 @@ router.post('/signup', upload.single('avatar'), async (req, res) => {
 			})
 			.png()
 			.toBuffer();
-		const user = new User({ ...req.body, avatar: avatarBuffer });
+		const user = new User({ ...req.body.data, avatar: avatarBuffer });
 		const token = await user.generateAuthToken();
 		user.avatar = avatarBuffer;
 		await user.save();
@@ -50,7 +50,7 @@ router.post('/signup', upload.single('avatar'), async (req, res) => {
 			token,
 		});
 	} catch (error) {
-		console.log(error.message);
+		console.log(error);
 		if (error.code === 11000) {
 			return res.status(409).json({
 				message: 'Email already taken',

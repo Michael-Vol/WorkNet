@@ -5,13 +5,17 @@ import { REGISTER_SUCCESS, REGISTER_FAIL, LOGIN_SUCCESS, LOGIN_FAIL } from './ty
 export const registerUser = async ({ firstName, lastName, email, password, phone, avatar }) => {
 	const config = {
 		headers: {
-			'Content-Type': 'application/json',
+			'Content-Type': 'multipart/form-data',
 		},
 	};
 	const body = JSON.stringify({ firstName, lastName, email, password, phoneNumber: phone });
+	const formData = new FormData();
+	console.log(avatar);
+	formData.append('avatar', avatar.blobFile);
+	formData.append('data', { firstName, lastName, email, password, phoneNumber: phone });
 
 	try {
-		const res = await axios.post('/users/signup', body, config);
+		const res = await axios.post('/users/signup', formData, config);
 		return {
 			type: REGISTER_SUCCESS,
 			payload: res.data,
