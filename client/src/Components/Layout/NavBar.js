@@ -1,6 +1,5 @@
-import React, { Fragment, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { Navbar, Nav, Icon, FlexboxGrid } from 'rsuite';
+import React from 'react';
+import { Navbar, Nav, FlexboxGrid } from 'rsuite';
 import { Link } from 'react-router-dom';
 import './NavBar.scss';
 const NavBar = ({ onSelect, activeKey, ...props }) => {

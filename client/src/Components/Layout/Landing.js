@@ -1,24 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, ButtonToolbar } from 'rsuite';
+import { Button } from 'rsuite';
 import { Grid, Row, Col } from 'rsuite';
-import Typical from 'react-typical';
 import { Link } from 'react-router-dom';
 
 import './Landing.scss';
 const Landing = (props) => {
-    return (
-        <div className='landing__background'>
-            <section className='landing'>
-                <section className='landing__info'>
-                    <Grid>
-                        <Row className='show-grid'>
-                            <h1 className='landing__title'>WorkNet</h1>
-                        </Row>
-                        <Row className='show-grid'>
-                            <h3 className='landing__subtitle'>
-                                The Social Network for Professionals
-                                {/* <Typical
+	return (
+		<div className='landing__background'>
+			<section className='landing'>
+				<section className='landing__info'>
+					<Grid>
+						<Row className='show-grid'>
+							<h1 className='landing__title'>WorkNet</h1>
+						</Row>
+						<Row className='show-grid'>
+							<h3 className='landing__subtitle'>
+								The Social Network for Professionals
+								{/* <Typical
 									steps={[
 										1000,
 										'Developers',
@@ -35,29 +33,29 @@ const Landing = (props) => {
 									]}
 									loop={1}
 								/> */}
-                            </h3>
-                        </Row>
-                        <Row className='show-grid'>
-                            <Col xs={4}>
-                                <Button className='landing__btn'>
-                                    <span className='btn'>
-                                        <Link to='/login'>Login</Link>
-                                    </span>
-                                </Button>
-                            </Col>
-                            <Col xs={4}>
-                                <Button className='landing__btn'>
-                                    <span className='btn'>
-                                        <Link to='/register'>Register</Link>
-                                    </span>
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Grid>
-                </section>
-            </section>
-        </div>
-    );
+							</h3>
+						</Row>
+						<Row className='show-grid'>
+							<Col xs={4}>
+								<Button className='landing__btn'>
+									<span className='btn'>
+										<Link to='/login'>Login</Link>
+									</span>
+								</Button>
+							</Col>
+							<Col xs={4}>
+								<Button className='landing__btn'>
+									<span className='btn'>
+										<Link to='/register'>Register</Link>
+									</span>
+								</Button>
+							</Col>
+						</Row>
+					</Grid>
+				</section>
+			</section>
+		</div>
+	);
 };
 
 Landing.propTypes = {};

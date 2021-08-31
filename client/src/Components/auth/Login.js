@@ -24,7 +24,6 @@ const Login = () => {
 		email: '',
 		password: '',
 	});
-	const [formError, setFormError] = useState({});
 	const [cancel, setCancel] = useState(false);
 	const formRef = useRef();
 
@@ -32,7 +31,6 @@ const Login = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		console.log(authError);
 		if (authError) {
 			toast.error(authError.message);
 		}
@@ -73,8 +71,7 @@ const Login = () => {
 									layout='horizontal'
 									model={model}
 									formValue={loginData}
-									onChange={(value) => setLoginData(value)}
-									onCheck={(formError) => setFormError(formError)}>
+									onChange={(value) => setLoginData(value)}>
 									<FormGroup key='form__email'>
 										<ControlLabel className='form__label'>
 											<i className='fas fa-envelope form__icon'></i>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Register.scss';
 import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,10 +16,8 @@ import {
 	Button,
 	ButtonToolbar,
 	Schema,
-	Notification,
 	Content,
 	FlexboxGrid,
-	Panel,
 } from 'rsuite';
 
 const Register = (props) => {
@@ -52,11 +50,12 @@ const Register = (props) => {
 	if (isAuthenticated) {
 		return <Redirect to='/dashboard' />;
 	}
+
 	if (cancel) {
 		return <Redirect to='/' />;
 	}
 
-	const { name, email, password, password2, phone } = formData;
+	const { name, email, password, phone } = formData;
 	const { StringType } = Schema.Types;
 
 	const model = Schema.Model({

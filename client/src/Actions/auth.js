@@ -67,7 +67,6 @@ export const loginUser = async ({ email, password }) => {
 
 	try {
 		const res = await axios.post('/users/login', body, config);
-		console.log(res);
 		return {
 			type: LOGIN_SUCCESS,
 			payload: res.data,
