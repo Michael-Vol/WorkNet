@@ -41,7 +41,8 @@ router.post('/signup', upload.single('avatar'), async (req, res) => {
 			})
 			.png()
 			.toBuffer();
-		const user = new User({ ...req.body.data, avatar: avatarBuffer });
+		console.log(req.body);
+		const user = new User({ ...req.body, avatar: avatarBuffer });
 		const token = await user.generateAuthToken();
 		user.avatar = avatarBuffer;
 		await user.save();

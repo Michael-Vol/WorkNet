@@ -8,11 +8,20 @@ export const registerUser = async ({ firstName, lastName, email, password, phone
 			'Content-Type': 'multipart/form-data',
 		},
 	};
-	const body = JSON.stringify({ firstName, lastName, email, password, phoneNumber: phone });
+	const textFields = {
+		firstName,
+		lastName,
+		email,
+		password,
+		phoneNumber: phone,
+	};
 	const formData = new FormData();
-	console.log(avatar);
 	formData.append('avatar', avatar.blobFile);
-	formData.append('data', { firstName, lastName, email, password, phoneNumber: phone });
+
+	for (const key in textFields) {
+		formData.append(key, textFields[key]);
+	}
+	//formData.append('data', { firstName, lastName, email, password, phoneNumber: phone });
 
 	try {
 		const res = await axios.post('/users/signup', formData, config);
