@@ -32,7 +32,7 @@ export const registerUser = async ({ firstName, lastName, email, password, phone
 	} catch (error) {
 		console.error(error);
 
-		return { type: REGISTER_FAIL };
+		return { type: REGISTER_FAIL, payload: error };
 	}
 };
 
