@@ -4,7 +4,7 @@
 // }
 
 .sidenav--container {
-	height: 100vh;
+	height: 100%;
 	// width: fit-content;
 }
 
@@ -21,3 +21,14 @@
 // 	background-color: rgb(246, 246, 246);
 // 	max-height: 30vh;
 // }
+.info--panel {
+	border-radius: 5px;
+	text-align: center;
+	width: 50%;
+	background-color: rgb(246, 246, 246);
+}
+
+.info--item {
+	margin: 10px;
+	border-radius: 5px;
+}

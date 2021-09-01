@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import './PersonalInfo.scss';
-import { PanelGroup, Container, Row, FlexboxGrid, Form, FormGroup, FormControl, ControlLabel, Button, Modal } from 'rsuite';
+import {
+	PanelGroup,
+	Container,
+	Row,
+	Col,
+	FlexboxGrid,
+	Form,
+	FormGroup,
+	List,
+	Panel,
+	FormControl,
+	ControlLabel,
+	Button,
+	Modal,
+} from 'rsuite';
 import PersonalInfoItem from './PersonalInfoItem';
 import PersonalInfoSideNav from './PersonalInfoSideNav';
 import { getPersonalInfo } from '../../Actions/personalInfo';
@@ -25,7 +39,7 @@ const PersonalInfo = () => {
 					<PersonalInfoSideNav />
 				</FlexboxGrid.Item>
 				<FlexboxGrid.Item colspan={20}>
-					<PanelGroup accordion>
+					<PanelGroup>
 						<Button className='add-item-btn' onClick={() => setAddExperience(!addExperience)}>
 							Add Experience
 						</Button>
@@ -59,12 +73,20 @@ const PersonalInfo = () => {
 								</Button>
 							</Modal.Footer>
 						</Modal>
-						<Row>
-							{personalInfo.workExperience &&
-								personalInfo.workExperience.map((work) => {
-									return <PersonalInfoItem key={work._id} headerName={work.name} text={work.description} />;
-								})}
-						</Row>
+						<Panel header='Personal Info' shaded className='info--panel'>
+							<List hover className='info--list'>
+								{personalInfo.workExperience &&
+									personalInfo.workExperience.map((work) => {
+										//return <PersonalInfoItem key={work._id} headerName={work.name} text={work.description} />;
+										return (
+											<List.Item className='info--item'>
+												<h3>{work.name}</h3>
+												<p>{work.description}</p>
+											</List.Item>
+										);
+									})}
+							</List>
+						</Panel>
 					</PanelGroup>
 				</FlexboxGrid.Item>
 			</FlexboxGrid>
