@@ -93,11 +93,11 @@ const Register = (props) => {
 
 	return (
 		<div>
-			<Container className='register--container'>
-				<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
-				<Content>
-					<FlexboxGrid justify='center'>
-						<FlexboxGrid.Item>
+			<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
+			<Content>
+				<FlexboxGrid justify='center'>
+					<FlexboxGrid.Item>
+						<div className='form--container register--container'>
 							<section className='form--title'>
 								<i className=' fas fa-pencil-alt fa-lg'></i>
 								<span className='form__title'>Register</span>
@@ -194,10 +194,10 @@ const Register = (props) => {
 									</ButtonToolbar>
 								</FormGroup>
 							</Form>
-						</FlexboxGrid.Item>
-					</FlexboxGrid>
-				</Content>
-			</Container>
+						</div>
+					</FlexboxGrid.Item>
+				</FlexboxGrid>
+			</Content>
 		</div>
 	);
 };

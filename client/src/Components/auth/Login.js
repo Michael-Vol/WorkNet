@@ -62,7 +62,7 @@ const Login = () => {
 			<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
 			<FlexboxGrid justify='center'>
 				<FlexboxGrid.Item colspan={8}>
-					<div className='form--container'>
+					<div className='form--container login--container'>
 						<Panel header={<h3>Login</h3>} bordered>
 							<Form
 								fluid
