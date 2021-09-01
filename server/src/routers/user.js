@@ -16,52 +16,52 @@ const sharp = require('sharp');
 //Setup multer upload properties
 
 const upload = multer({
-    limits: {
-        fileSize: 3000000,
-    },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload an image'));
-        }
+	limits: {
+		fileSize: 3000000,
+	},
+	fileFilter(req, file, cb) {
+		if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+			return cb(new Error('Please upload an image'));
+		}
 
-        cb(undefined, true);
-    },
+		cb(undefined, true);
+	},
 });
 
 router.post('/signup', upload.single('avatar'), async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({
-                message: 'Please upload an  avatar.',
-            });
-        }
-        const avatarBuffer = await sharp(req.file.buffer)
-            .resize({
-                width: 400,
-                height: 400,
-            })
-            .png()
-            .toBuffer();
-        console.log(req.body);
-        const user = new User({ ...req.body, avatar: avatarBuffer });
-        const token = await user.generateAuthToken();
-        user.avatar = avatarBuffer;
-        await user.save();
-        res.status(201).json({
-            user,
-            token,
-        });
-    } catch (error) {
-        console.log(error);
-        if (error.code === 11000) {
-            return res.status(409).json({
-                message: 'Email already taken',
-            });
-        }
-        res.status(500).json({
-            message: error.errors,
-        });
-    }
+	try {
+		if (!req.file) {
+			return res.status(400).json({
+				message: 'Please upload an  avatar.',
+			});
+		}
+		const avatarBuffer = await sharp(req.file.buffer)
+			.resize({
+				width: 400,
+				height: 400,
+			})
+			.png()
+			.toBuffer();
+		console.log(req.body);
+		const user = new User({ ...req.body, avatar: avatarBuffer });
+		const token = await user.generateAuthToken();
+		user.avatar = avatarBuffer;
+		await user.save();
+		res.status(201).json({
+			user,
+			token,
+		});
+	} catch (error) {
+		console.log(error);
+		if (error.code === 11000) {
+			return res.status(409).json({
+				message: 'Email already taken',
+			});
+		}
+		res.status(500).json({
+			message: error.errors,
+		});
+	}
 });
 
 /**
@@ -71,7 +71,7 @@ router.post('/signup', upload.single('avatar'), async (req, res) => {
  * @memberof user
  */
 router.get('/me', auth, async (req, res) => {
-    res.send(req.user);
+	res.send(req.user);
 });
 
 /**
@@ -82,47 +82,48 @@ router.get('/me', auth, async (req, res) => {
  */
 
 router.post('/me/personal-info', auth, async (req, res) => {
-    try {
-        console.log(req.body);
-        const allowedUpdates = ['workExperience', 'education', 'skills'];
-        const userUpdates = Object.keys(req.body);
-        userUpdates.forEach((update) => {
-            if (!allowedUpdates.includes(update)) {
-                return res.status(400).json({
-                    message: `Update: ${update} is  invalid.`,
-                });
-            }
+	try {
+		console.log(req.body);
+		const allowedUpdates = ['workExperience', 'education', 'skills'];
+		const userUpdates = Object.keys(req.body);
+		userUpdates.forEach((update) => {
+			if (!allowedUpdates.includes(update)) {
+				return res.status(400).json({
+					message: `Update: ${update} is  invalid.`,
+				});
+			}
 
-            const fieldAllowedUpdates = ['name', 'description'];
-            Object.keys(req.body[update]).forEach((fieldUpdate) => {
-                if (!fieldAllowedUpdates.includes(fieldUpdate)) {
-                    return res.status(400).json({
-                        message: `Update: ${fieldUpdate} is invalid.`,
-                    });
-                }
-            });
-        });
-        userUpdates.forEach((update) => {
-            // Object.keys(req.body[update]).forEach((fieldUpdate) => {
-            //     req.user[update][fieldUpdate] = req.body[update][fieldUpdate];
-            // });
-            console.log(req.user[update]);
-            req.user[update].append(req.body[update]);
-        });
-        await req.user.save();
-        return res.json({ user: req.user });
-    } catch (error) {
-        console.log(error);
-        console.log(error.name + '    ');
-        if (error.name === 'ValidationError') {
-            return res.status(400).json({
-                message: 'No body provided',
-            });
-        }
-        return res.status(500).json({
-            message: 'Server Error',
-        });
-    }
+			const fieldAllowedUpdates = ['name', 'description'];
+			req.body[update].forEach((fieldUpdate) => {
+				// if (!fieldAllowedUpdates.includes(fieldUpdate)) {
+				//     return res.status(400).json({
+				//         message: `Update: ${fieldUpdate} is invalid.`,
+				//     });
+				// }
+				console.log(fieldUpdate);
+			});
+		});
+		// userUpdates.forEach((update) => {
+		//     // Object.keys(req.body[update]).forEach((fieldUpdate) => {
+		//     //     req.user[update][fieldUpdate] = req.body[update][fieldUpdate];
+		//     // });
+		//     console.log(req.user[update]);
+		//     req.user[update].append(req.body[update]);
+		// });
+		await req.user.save();
+		return res.json({ user: req.user });
+	} catch (error) {
+		console.log(error);
+		console.log(error.name + '    ');
+		if (error.name === 'ValidationError') {
+			return res.status(400).json({
+				message: 'No body provided',
+			});
+		}
+		return res.status(500).json({
+			message: 'Server Error',
+		});
+	}
 });
 /**
  * @name login
@@ -131,23 +132,23 @@ router.post('/me/personal-info', auth, async (req, res) => {
  * @memberof user
  */
 router.post('/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await User.findByCredentials(email, password);
+	try {
+		const { email, password } = req.body;
+		const user = await User.findByCredentials(email, password);
 
-        const token = await user.generateAuthToken();
-        res.send({ user, token });
-    } catch (error) {
-        console.error(error.message);
-        if (error.message === 'Unable to login') {
-            return res.status(400).json({
-                message: 'Unable to login - Wrong Credentials',
-            });
-        }
-        res.status(500).json({
-            message: 'Server Error',
-        });
-    }
+		const token = await user.generateAuthToken();
+		res.send({ user, token });
+	} catch (error) {
+		console.error(error.message);
+		if (error.message === 'Unable to login') {
+			return res.status(400).json({
+				message: 'Unable to login - Wrong Credentials',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
 });
 
 /**
@@ -157,36 +158,36 @@ router.post('/login', async (req, res) => {
  * @memberof user
  */
 router.post(
-    '/me/avatar',
-    auth,
-    upload.single('avatar'),
-    async (req, res) => {
-        try {
-            const avatarBuffer = await sharp(req.file.buffer)
-                .resize({
-                    width: 400,
-                    height: 400,
-                })
-                .png()
-                .toBuffer();
-            req.user.avatar = avatarBuffer;
-            console.log(req.user);
-            await req.user.save();
-            res.set('Content-Type', 'image/png');
-            res.send(req.user.avatar);
-        } catch (error) {
-            console.error(error);
+	'/me/avatar',
+	auth,
+	upload.single('avatar'),
+	async (req, res) => {
+		try {
+			const avatarBuffer = await sharp(req.file.buffer)
+				.resize({
+					width: 400,
+					height: 400,
+				})
+				.png()
+				.toBuffer();
+			req.user.avatar = avatarBuffer;
+			console.log(req.user);
+			await req.user.save();
+			res.set('Content-Type', 'image/png');
+			res.send(req.user.avatar);
+		} catch (error) {
+			console.error(error);
 
-            res.status(500).json({
-                message: 'Server error',
-            });
-        }
-    },
-    (error, req, res, next) => {
-        res.status(400).json({
-            message: error.message,
-        });
-    }
+			res.status(500).json({
+				message: 'Server error',
+			});
+		}
+	},
+	(error, req, res, next) => {
+		res.status(400).json({
+			message: error.message,
+		});
+	}
 );
 
 /**
@@ -196,18 +197,18 @@ router.post(
  * @memberof user
  */
 router.delete('/me/avatar', auth, async (req, res) => {
-    try {
-        req.user.avatar = undefined;
-        await req.user.save();
-        res.json({
-            message: 'Avatar Deleted!',
-        });
-    } catch (error) {
-        console.error(error.message);
-        res.status(500).json({
-            message: 'Server Error',
-        });
-    }
+	try {
+		req.user.avatar = undefined;
+		await req.user.save();
+		res.json({
+			message: 'Avatar Deleted!',
+		});
+	} catch (error) {
+		console.error(error.message);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
 });
 
 /**
@@ -218,34 +219,34 @@ router.delete('/me/avatar', auth, async (req, res) => {
  */
 
 router.get('/:user_id/avatar', async (req, res) => {
-    try {
-        const user_id = req.params.user_id;
-        if (!Mongoose.Types.ObjectId.isValid(user_id)) {
-            return res.status(400).json({
-                message: 'Wrong UserID',
-            });
-        }
-        const user = await User.findById(user_id);
+	try {
+		const user_id = req.params.user_id;
+		if (!Mongoose.Types.ObjectId.isValid(user_id)) {
+			return res.status(400).json({
+				message: 'Wrong UserID',
+			});
+		}
+		const user = await User.findById(user_id);
 
-        if (!user) {
-            return res.status(400).json({
-                message: 'User not Found',
-            });
-        }
+		if (!user) {
+			return res.status(400).json({
+				message: 'User not Found',
+			});
+		}
 
-        if (user.avatar === undefined) {
-            return res.status(400).json({
-                message: 'No Avatar has been uploaded',
-            });
-        }
-        res.set('Content-Type', 'image/png');
-        res.send(user.avatar);
-    } catch (error) {
-        console.error(error.name);
-        res.status(500).json({
-            message: 'Server Error',
-        });
-    }
+		if (user.avatar === undefined) {
+			return res.status(400).json({
+				message: 'No Avatar has been uploaded',
+			});
+		}
+		res.set('Content-Type', 'image/png');
+		res.send(user.avatar);
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
 });
 
 /**
@@ -256,39 +257,39 @@ router.get('/:user_id/avatar', async (req, res) => {
  */
 
 router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
-    try {
-        const senderID = req.user.id;
-        const receiverID = req.params.user_id;
+	try {
+		const senderID = req.user.id;
+		const receiverID = req.params.user_id;
 
-        let connectRequest = await ConnectRequest.findOne({
-            sender: senderID,
-            receiver: receiverID,
-        });
+		let connectRequest = await ConnectRequest.findOne({
+			sender: senderID,
+			receiver: receiverID,
+		});
 
-        if (connectRequest) {
-            return res.status(400).json({
-                message: 'Request already sent.',
-            });
-        }
+		if (connectRequest) {
+			return res.status(400).json({
+				message: 'Request already sent.',
+			});
+		}
 
-        connectRequest = new ConnectRequest({
-            sender: senderID,
-            receiver: receiverID,
-            status: 'Pending',
-        });
+		connectRequest = new ConnectRequest({
+			sender: senderID,
+			receiver: receiverID,
+			status: 'Pending',
+		});
 
-        await connectRequest.save();
+		await connectRequest.save();
 
-        res.status(201).json({
-            message: 'Connect Request sent!',
-            requestID: connectRequest._id,
-        });
-    } catch (error) {
-        console.error(error.name);
-        res.status(500).json({
-            message: 'Server Error',
-        });
-    }
+		res.status(201).json({
+			message: 'Connect Request sent!',
+			requestID: connectRequest._id,
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
 });
 
 /**
@@ -299,37 +300,37 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
  */
 
 router.patch('/:user_id/connect', auth, validateUserID, async (req, res) => {
-    try {
-        const senderID = req.params.user_id;
-        const receiverID = req.user.id;
+	try {
+		const senderID = req.params.user_id;
+		const receiverID = req.user.id;
 
-        const connectRequest = await ConnectRequest.findOne({
-            sender: senderID,
-            receiver: receiverID,
-        });
-        if (!connectRequest) {
-            return res.status(400).json({
-                message: 'No Connect Request exists.',
-            });
-        } else if (connectRequest.status === 'Accepted') {
-            return res.status(400).json({
-                message: 'Connect Request has already been accepted',
-            });
-        }
+		const connectRequest = await ConnectRequest.findOne({
+			sender: senderID,
+			receiver: receiverID,
+		});
+		if (!connectRequest) {
+			return res.status(400).json({
+				message: 'No Connect Request exists.',
+			});
+		} else if (connectRequest.status === 'Accepted') {
+			return res.status(400).json({
+				message: 'Connect Request has already been accepted',
+			});
+		}
 
-        connectRequest.status = 'Accepted';
-        await connectRequest.save();
+		connectRequest.status = 'Accepted';
+		await connectRequest.save();
 
-        res.json({
-            message: 'Connect Request Accepted',
-            requestID: connectRequest._id,
-        });
-    } catch (error) {
-        console.error(error.name);
-        res.status(500).json({
-            message: 'Server Error',
-        });
-    }
+		res.json({
+			message: 'Connect Request Accepted',
+			requestID: connectRequest._id,
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
 });
 
 /**
@@ -340,35 +341,35 @@ router.patch('/:user_id/connect', auth, validateUserID, async (req, res) => {
  */
 
 router.delete('/:user_id/connect', auth, validateUserID, async (req, res) => {
-    try {
-        const senderID = req.user.id;
-        const receiverID = req.params.user_id;
+	try {
+		const senderID = req.user.id;
+		const receiverID = req.params.user_id;
 
-        let connectRequest = await ConnectRequest.findOne({
-            sender: senderID,
-            receiver: receiverID,
-        });
+		let connectRequest = await ConnectRequest.findOne({
+			sender: senderID,
+			receiver: receiverID,
+		});
 
-        if (!connectRequest) {
-            return res.status(400).json({
-                message: 'No Connect Request exists or has already been deleted.',
-            });
-        } else if (connectRequest.status === 'Accepted') {
-            return res.status(400).json({
-                message: 'Connect Request has already been accepted',
-            });
-        }
-        await connectRequest.remove();
+		if (!connectRequest) {
+			return res.status(400).json({
+				message: 'No Connect Request exists or has already been deleted.',
+			});
+		} else if (connectRequest.status === 'Accepted') {
+			return res.status(400).json({
+				message: 'Connect Request has already been accepted',
+			});
+		}
+		await connectRequest.remove();
 
-        res.json({
-            message: 'Connect Request deleted.',
-        });
-    } catch (error) {
-        console.error(error.name);
-        res.status(500).json({
-            message: 'Server Error',
-        });
-    }
+		res.json({
+			message: 'Connect Request deleted.',
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
 });
 
 /**
@@ -379,31 +380,31 @@ router.delete('/:user_id/connect', auth, validateUserID, async (req, res) => {
  */
 
 router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) => {
-    try {
-        const senderID = req.user.id;
-        const receiverID = req.params.user_id;
+	try {
+		const senderID = req.user.id;
+		const receiverID = req.params.user_id;
 
-        let connectRequest = await ConnectRequest.findOne({
-            sender: senderID,
-            receiver: receiverID,
-        });
+		let connectRequest = await ConnectRequest.findOne({
+			sender: senderID,
+			receiver: receiverID,
+		});
 
-        if (!connectRequest) {
-            return res.status(400).json({
-                message: 'No Connect Request exists or has already been deleted.',
-            });
-        }
+		if (!connectRequest) {
+			return res.status(400).json({
+				message: 'No Connect Request exists or has already been deleted.',
+			});
+		}
 
-        res.json({
-            status: connectRequest.status,
-            requestID: connectRequest._id,
-        });
-    } catch (error) {
-        console.error(error.name);
-        res.status(500).json({
-            message: 'Server Error',
-        });
-    }
+		res.json({
+			status: connectRequest.status,
+			requestID: connectRequest._id,
+		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
 });
 
 module.exports = router;

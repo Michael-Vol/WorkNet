@@ -24,7 +24,7 @@ const App = (props) => {
 						<NavBar />
 					</Header>
 					<Route exact path='/' component={Landing} />
-					<Container>
+					<Container className='app--container'>
 						<Switch>
 							<Route exact path='/register' component={Register} />
 							<Route exact path='/login' component={Login} />
