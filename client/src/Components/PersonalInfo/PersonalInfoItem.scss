@@ -1,8 +1,10 @@
 .info-item {
 	max-width: 100vh;
 	margin: 20px;
-	width: fit-content;
+	width: 35vh;
 	min-width: 30vh;
 	background-color: rgb(246, 246, 246);
 	max-height: 30vh;
+	height: 30vh;
+	overflow-y: scroll;
 }

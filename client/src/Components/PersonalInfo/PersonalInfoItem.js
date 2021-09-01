@@ -1,13 +1,13 @@
 import React from 'react';
-import { Panel, FlexboxGrid } from 'rsuite';
+import { Panel, FlexboxGrid, Col } from 'rsuite';
 import './PersonalInfoItem.scss';
 const PersonalInfoItem = ({ headerName, text, rest }) => {
 	return (
-		<FlexboxGrid.Item>
-			<Panel {...rest} shaded header={headerName} className='info-item'>
+		<Col md={6} sm={12}>
+			<Panel {...rest} shaded header={headerName} className='info-item' defaultExpanded>
 				<p>{text}</p>
 			</Panel>
-		</FlexboxGrid.Item>
+		</Col>
 	);
 };
 
