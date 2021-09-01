@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button } from 'rsuite';
-import { Grid, Row, Col, Content } from 'rsuite';
+import { Grid, Row, Col, Container, Content } from 'rsuite';
 import { Link } from 'react-router-dom';
 
 import './Landing.scss';
 const Landing = (props) => {
 	return (
-		<div className='landing--background'>
-			<Grid>
+		<Content className='landing--background'>
+			<Grid className='landing--grid'>
 				<Row className='show-grid'>
 					<h1 className='landing__title'>WorkNet</h1>
 				</Row>
@@ -31,7 +31,7 @@ const Landing = (props) => {
 					</Col>
 				</Row>
 			</Grid>
-		</div>
+		</Content>
 	);
 };
 

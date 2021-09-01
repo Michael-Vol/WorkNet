@@ -1,16 +1,6 @@
 @import '../../Styles/main.scss';
 @import '../../Styles//components/links';
 
-.landing {
-	display: flex;
-	justify-content: center;
-	align-content: center;
-	text-align: center;
-	min-height: 67.5vh;
-	margin-top: 25vh;
-	height: 100%;
-}
-
 .show-grid {
 	display: flex;
 	justify-content: center;
@@ -42,6 +32,6 @@
 	margin: 10px;
 }
 
-// .rs-container{
-// 	width: max-content;
-// }
+.landing--grid {
+	margin-top: 10%;
+}

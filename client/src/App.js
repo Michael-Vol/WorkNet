@@ -19,20 +19,18 @@ const App = (props) => {
 	return (
 		<Provider store={store}>
 			<Router>
-				<div className='show-container'>
-					<Container>
-						<Header>
-							<NavBar />
-						</Header>
+				<Container className='app-container'>
+					<Header>
+						<NavBar />
+					</Header>
+					<Switch>
 						<Route exact path='/' component={Landing} />
-						<Switch>
-							<Route exact path='/register' component={Register} />
-							<Route exact path='/login' component={Login} />
-							<PrivateRoute exact path='/dashboard' component={Dashboard} />
-							<PrivateRoute exact path='/personal-info' component={PersonalInfo} />
-						</Switch>
-					</Container>
-				</div>
+						<Route exact path='/register' component={Register} />
+						<Route exact path='/login' component={Login} />
+						<PrivateRoute exact path='/dashboard' component={Dashboard} />
+						<PrivateRoute exact path='/personal-info' component={PersonalInfo} />
+					</Switch>
+				</Container>
 			</Router>
 		</Provider>
 	);
