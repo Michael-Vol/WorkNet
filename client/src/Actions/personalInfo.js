@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { GET_PERSONAL_INFO, PERSONAL_INFO_ERROR } from './types';
 
-export const loadPersonalInfo = async () => {
+export const getPersonalInfo = async () => {
 	try {
 		const config = {
 			headers: {
