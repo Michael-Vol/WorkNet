@@ -93,23 +93,22 @@ router.post('/me/personal-info', auth, async (req, res) => {
 				});
 			}
 
-			const fieldAllowedUpdates = ['name', 'description'];
-			req.body[update].forEach((fieldUpdate) => {
-				// if (!fieldAllowedUpdates.includes(fieldUpdate)) {
-				//     return res.status(400).json({
-				//         message: `Update: ${fieldUpdate} is invalid.`,
-				//     });
-				// }
-				console.log(fieldUpdate);
+			Object.keys(req.body[update]).forEach((fieldUpdate) => {
+				let fieldAllowedUpdates = [];
+				req.body[update] === 'skills'
+					? (fieldAllowedUpdates = ['name'])
+					: (fieldAllowedUpdates = ['name', 'description']);
+				if (!fieldAllowedUpdates.includes(fieldUpdate)) {
+					return res.status(400).json({
+						message: `Update: ${fieldUpdate} is invalid.`,
+					});
+				}
 			});
 		});
-		// userUpdates.forEach((update) => {
-		//     // Object.keys(req.body[update]).forEach((fieldUpdate) => {
-		//     //     req.user[update][fieldUpdate] = req.body[update][fieldUpdate];
-		//     // });
-		//     console.log(req.user[update]);
-		//     req.user[update].append(req.body[update]);
-		// });
+		userUpdates.forEach((update) => {
+			console.log(req.user[update]);
+			req.user[update].push(req.body[update]);
+		});
 		await req.user.save();
 		return res.json({ user: req.user });
 	} catch (error) {
