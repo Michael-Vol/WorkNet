@@ -75,7 +75,7 @@ router.get('/me', auth, async (req, res) => {
 });
 
 /**
- * @name me/personalInfo
+ * @name POST me/personal-info
  * @desc Allows user set personalInfo
  * @access private
  * @memberof user
@@ -124,6 +124,22 @@ router.post('/me/personal-info', auth, async (req, res) => {
 		});
 	}
 });
+
+/**
+ * @name GET me/personal-info
+ * @desc Allows user set personalInfo
+ * @access private
+ * @memberof user
+ */
+
+router.get('/me/personal-info', auth, async (req, res) => {
+	return res.json({
+		workExperience: req.user.workExperience,
+		education: req.user.education,
+		skills: req.user.skills,
+	});
+});
+
 /**
  * @name login
  * @desc Allows user to login and get an auth token

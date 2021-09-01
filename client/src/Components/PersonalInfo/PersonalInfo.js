@@ -1,23 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './PersonalInfo.scss';
-import {
-    Sidenav,
-    Icon,
-    Sidebar,
-    PanelGroup,
-    Container,
-    Panel,
-    Col,
-    Row,
-    Nav,
-    Dropdown,
-    FlexboxGrid,
-    ButtonToolbar,
-    Button,
-} from 'rsuite';
+import { Sidenav, Icon, Sidebar, PanelGroup, Container, Panel, Col, Row, Nav, Dropdown, FlexboxGrid, Button } from 'rsuite';
 import PersonalInfoItem from './PersonalInfoItem';
 import PersonalInfoSideNav from './PersonalInfoSideNav';
+import { getPersonalInfo } from '../../Actions/personalInfo';
+import { useDispatch, useSelector } from 'react-redux';
 const PersonalInfo = () => {
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth.user);
+    useEffect(async () => {
+        const res = await getPersonalInfo();
+        console.log(res);
+        const personalInfo = dispatch(res);
+        setPersonalInfo(personalInfo.payload);
+    }, [user]);
+
+    const [personalInfo, setPersonalInfo] = useState({});
+    const { workExperience, education, skills } = personalInfo;
     return (
         <Container>
             <FlexboxGrid justify='start'>
@@ -26,27 +25,12 @@ const PersonalInfo = () => {
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item colspan={20}>
                     <PanelGroup>
+                        <Button className='add-item-btn'> Add Experience</Button>
                         <FlexboxGrid justify='space-around'>
-                            <Button className='add-item-btn'> Add Experience</Button>
-
-                            <FlexboxGrid.Item id='personalInfo-title' colspan={14}>
-                                <h1>Work Experience</h1>
-                            </FlexboxGrid.Item>
-                            <PersonalInfoItem
-                                headerName='header1'
-                                text='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam quae amet quod unde ipsum perferendis natus iure nostrum cupiditate soluta!
-'
-                            />
-                            <PersonalInfoItem
-                                headerName='header1'
-                                text='Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cum, magni neque. Optio soluta voluptatum vel itaque omnis atque eaque amet quod veniam accusantium qui temporibus iste voluptatibus ipsam laboriosam recusandae aspernatur, nulla repellat impedit quasi voluptas totam repudiandae inventore ratione? Quisquam animi cum omnis ipsam, excepturi eveniet laborum provident modi.
-'
-                            />
-                            <PersonalInfoItem
-                                headerName='header1'
-                                text='					Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cum, magni neque. Optio soluta voluptatum vel itaque omnis atque eaque amet quod veniam accusantium qui temporibus iste voluptatibus ipsam laboriosam recusandae aspernatur, nulla repellat impedit quasi voluptas totam repudiandae inventore ratione? Quisquam animi cum omnis ipsam, excepturi eveniet laborum provident modi.
-							Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cum, magni neque. Optio soluta voluptatum vel itaque omnis atque eaque amet quod veniam accusantium qui temporibus iste voluptatibus ipsam laboriosam recusandae aspernatur, nulla repellat impedit quasi voluptas totam repudiandae inventore ratione? Quisquam animi cum omnis ipsam, excepturi eveniet laborum provident modi.	'
-                            />
+                            {personalInfo.workExperience &&
+                                personalInfo.workExperience.map((work) => {
+                                    return <PersonalInfoItem key={work._id} headerName={work.name} text={work.description} />;
+                                })}
                         </FlexboxGrid>
                     </PanelGroup>
                 </FlexboxGrid.Item>
