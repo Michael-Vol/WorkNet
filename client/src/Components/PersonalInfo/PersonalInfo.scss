@@ -1,5 +1,6 @@
-
-.rs-sidenav {
-     position: absolute;
-     left: 200px;
+.info--sidebar {
+	display: 'flex';
+	flex-direction: 'column';
+	float: left;
+	justify-content: left;
 }

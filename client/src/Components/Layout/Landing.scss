@@ -3,7 +3,7 @@
 
 .landing {
 	display: flex;
-	 justify-content: center;
+	justify-content: center;
 	align-content: center;
 	text-align: center;
 	min-height: 67.5vh;
@@ -32,16 +32,10 @@
 	font-size: 35px;
 	color: $color-white;
 }
-.landing__background {
-	
+.landing--background {
 	// background:
 	background-image: $color-teal-gradient-opaque, url(/Images/landing-background-vector.jpg);
 	background-size: cover;
-	
-}
-
-.landing__info {
-	height: fit-content;
 }
 
 .show-grid {

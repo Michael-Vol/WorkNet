@@ -17,19 +17,14 @@ body {
 	right: 5px;
 }
 
-
-.login--container {
-
-	margin-top: 20%;
+.form--container {
 	border: 2 0px;
+	margin-top: 20%;
 	transition: box-shadow 0.3s;
 	border-radius: 20px;
 	text-align: center;
 	background-color: rgb(246, 246, 246);
-	//position: absolute;
-	//display: inline-block;
-	//margin: 0 auto;
-	// padding: 30px 30px;
+
 	width: fit-content;
 }
 
@@ -57,10 +52,6 @@ body {
 	place-self: center;
 }
 
-.rs-container {
- 	place-self: center; 
-}
-
 .rs-panel-bordered {
-    border: none;
+	border: none;
 }

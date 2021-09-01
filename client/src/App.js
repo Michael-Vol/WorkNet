@@ -6,7 +6,7 @@ import Register from './Components/auth/Register';
 import Login from './Components/auth/Login';
 import Dashboard from './Components/Dashboard/Dashboard';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Container, Header } from 'rsuite';
+import { Container, Content, Header } from 'rsuite';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 import PrivateRoute from './Components/Routing/PrivateRoute';
@@ -19,12 +19,12 @@ const App = (props) => {
 	return (
 		<Provider store={store}>
 			<Router>
-				<Container>
-					<Header>
-						<NavBar />
-					</Header>
-					<Route exact path='/' component={Landing} />
-					<Container className='app--container'>
+				<div className='show-container'>
+					<Container>
+						<Header>
+							<NavBar />
+						</Header>
+						<Route exact path='/' component={Landing} />
 						<Switch>
 							<Route exact path='/register' component={Register} />
 							<Route exact path='/login' component={Login} />
@@ -32,7 +32,7 @@ const App = (props) => {
 							<PrivateRoute exact path='/personal-info' component={PersonalInfo} />
 						</Switch>
 					</Container>
-				</Container>
+				</div>
 			</Router>
 		</Provider>
 	);
