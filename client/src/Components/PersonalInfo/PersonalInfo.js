@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import './PersonalInfo.scss';
-import { Sidenav, Icon, Sidebar, PanelGroup, Container, Panel, Col, Row, Nav, Dropdown, FlexboxGrid, Button } from 'rsuite';
+import {
+	Sidenav,
+	Icon,
+	Sidebar,
+	PanelGroup,
+	Container,
+	Input,
+	Panel,
+	Col,
+	Row,
+	Nav,
+	Dropdown,
+	FlexboxGrid,
+	Button,
+} from 'rsuite';
 import PersonalInfoItem from './PersonalInfoItem';
 import PersonalInfoSideNav from './PersonalInfoSideNav';
 import { getPersonalInfo } from '../../Actions/personalInfo';
@@ -16,6 +30,7 @@ const PersonalInfo = () => {
 	}, [user, getPersonalInfo]);
 
 	const [personalInfo, setPersonalInfo] = useState({});
+	const [addExperience, setAddExperience] = useState(false);
 	const { workExperience, education, skills } = personalInfo;
 	return (
 		<Container>
@@ -25,7 +40,16 @@ const PersonalInfo = () => {
 				</FlexboxGrid.Item>
 				<FlexboxGrid.Item colspan={20}>
 					<PanelGroup accordion>
-						<Button className='add-item-btn'> Add Experience</Button>
+						<Button className='add-item-btn' onClick={() => setAddExperience(!addExperience)}>
+							Add Experience
+						</Button>
+						{addExperience && (
+							<Row xs={12}>
+								<Col>
+									<Input componentClass='textarea' rows={3} placeholder='Description' />;
+								</Col>
+							</Row>
+						)}
 						<Row>
 							{personalInfo.workExperience &&
 								personalInfo.workExperience.map((work) => {
