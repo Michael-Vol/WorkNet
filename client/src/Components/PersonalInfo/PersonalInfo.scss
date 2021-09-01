@@ -1,7 +1,9 @@
-.info--sidebar {
-	display: 'flex';
-	flex-direction: 'column';
-	float: left;
-	justify-content: left;
-	flex-grow: inherit;
+// .rs-sidebar {
+//  flex: 1 !important;
+//  align-items: stretch !important;
+// }
+
+.sidenav--container {
+	min-height: 100vh;
+	// width: fit-content;
 }
