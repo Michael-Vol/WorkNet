@@ -4,15 +4,16 @@ import { Sidenav, Icon, Sidebar, PanelGroup, Container, Panel, Col, Row, Nav, Dr
 import PersonalInfoItem from './PersonalInfoItem';
 import PersonalInfoSideNav from './PersonalInfoSideNav';
 import { getPersonalInfo } from '../../Actions/personalInfo';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 const PersonalInfo = () => {
 	const dispatch = useDispatch();
+	const user = useSelector((state) => state.auth.user);
 	useEffect(async () => {
 		const res = await getPersonalInfo();
 		console.log(res);
 		const personalInfo = dispatch(res);
 		setPersonalInfo(personalInfo.payload);
-	}, [getPersonalInfo]);
+	}, [user]);
 
 	const [personalInfo, setPersonalInfo] = useState({});
 	const { workExperience, education, skills } = personalInfo;
@@ -25,10 +26,10 @@ const PersonalInfo = () => {
 				<FlexboxGrid.Item colspan={20}>
 					<PanelGroup>
 						<FlexboxGrid justify='space-around'>
-							{personalInfo.workExperience.map((work) => {
-								console.log(work);
-								return <PersonalInfoItem headerName={work.name} text={work.description} />;
-							})}
+							{personalInfo.workExperience &&
+								personalInfo.workExperience.map((work) => {
+									return <PersonalInfoItem key={work._id} headerName={work.name} text={work.description} />;
+								})}
 						</FlexboxGrid>
 					</PanelGroup>
 				</FlexboxGrid.Item>
