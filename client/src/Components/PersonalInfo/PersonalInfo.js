@@ -1,27 +1,35 @@
 import React from 'react';
 import './PersonalInfo.scss';
-import { Sidenav, Icon, Sidebar, Container, Nav, Dropdown, FlexboxGrid } from 'rsuite';
-
+import { Sidenav, Icon, Sidebar, PanelGroup, Container, Panel, Col, Row, Nav, Dropdown, FlexboxGrid } from 'rsuite';
+import PersonalInfoItem from './PersonalInfoItem';
+import PersonalInfoSideNav from './PersonalInfoSideNav';
 const PersonalInfo = () => {
 	return (
 		<Container>
 			<FlexboxGrid justify='start'>
 				<FlexboxGrid.Item colspan={4}>
-					<Sidenav activeKey='1' className='sidenav--container' appearance='inverse'>
-						<Sidenav.Body>
-							<Nav>
-								<Nav.Item eventKey='1' active icon={<Icon icon='dashboard' />}>
-									Work Experience
-								</Nav.Item>
-								<Nav.Item eventKey='2' icon={<Icon icon='group' />}>
-									Education
-								</Nav.Item>
-								<Nav.Item eventKey='3' icon={<Icon icon='group' />}>
-									Skills
-								</Nav.Item>
-							</Nav>
-						</Sidenav.Body>
-					</Sidenav>
+					<PersonalInfoSideNav />
+				</FlexboxGrid.Item>
+				<FlexboxGrid.Item colspan={20}>
+					<PanelGroup>
+						<FlexboxGrid justify='space-around'>
+							<PersonalInfoItem
+								headerName='header1'
+								text='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam quae amet quod unde ipsum perferendis natus iure nostrum cupiditate soluta!
+'
+							/>
+							<PersonalInfoItem
+								headerName='header1'
+								text='Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cum, magni neque. Optio soluta voluptatum vel itaque omnis atque eaque amet quod veniam accusantium qui temporibus iste voluptatibus ipsam laboriosam recusandae aspernatur, nulla repellat impedit quasi voluptas totam repudiandae inventore ratione? Quisquam animi cum omnis ipsam, excepturi eveniet laborum provident modi.
+'
+							/>
+							<PersonalInfoItem
+								headerName='header1'
+								text='					Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cum, magni neque. Optio soluta voluptatum vel itaque omnis atque eaque amet quod veniam accusantium qui temporibus iste voluptatibus ipsam laboriosam recusandae aspernatur, nulla repellat impedit quasi voluptas totam repudiandae inventore ratione? Quisquam animi cum omnis ipsam, excepturi eveniet laborum provident modi.
+							Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cum, magni neque. Optio soluta voluptatum vel itaque omnis atque eaque amet quod veniam accusantium qui temporibus iste voluptatibus ipsam laboriosam recusandae aspernatur, nulla repellat impedit quasi voluptas totam repudiandae inventore ratione? Quisquam animi cum omnis ipsam, excepturi eveniet laborum provident modi.	'
+							/>
+						</FlexboxGrid>
+					</PanelGroup>
 				</FlexboxGrid.Item>
 			</FlexboxGrid>
 		</Container>
