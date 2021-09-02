@@ -26,6 +26,7 @@ const PersonalInfo = () => {
 	const formRef = useRef();
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
+	const [personalInfo, setPersonalInfo] = useState({});
 	useEffect(async () => {
 		const res = await getPersonalInfo();
 		console.log(res);
@@ -34,21 +35,57 @@ const PersonalInfo = () => {
 	}, [user, getPersonalInfo]);
 
 	const infoCategories = ['Work Experience', 'Education', 'Skills'];
-	const [personalInfo, setPersonalInfo] = useState({});
 	const [addExperience, setAddExperience] = useState(false);
-	const [formData, setFormData] = useState({});
-	const { workExperience, education, skills } = personalInfo;
-
-	const { StringType } = Schema.Types;
-	const model = Schema.Model({
-		name: StringType().isRequired('This field is required'),
-		description: StringType().isRequired('This field is required'),
+	const [formFields, setFormFields] = useState({ fields: {}, model: Schema.Model({}) });
+	const [currentCategory, setCurrentCategory] = useState('workExperience');
+	const [formData, setFormData] = useState({
+		name: '',
+		description: '',
 	});
 
+	const { StringType } = Schema.Types;
+
 	const handleSubmit = async () => {
+		console.log(formData);
 		if (formRef.current.check()) {
-			const res = await postPersonalInfo({ workExperience: formData });
+			const res = await postPersonalInfo({ [currentCategory]: formData });
 			console.log(res);
+			dispatch(res);
+		}
+	};
+	const createFormFields = (category) => {
+		switch (category) {
+			case 'Work Experience':
+				formFields.name = 'Position';
+				formFields.description = 'Description';
+				formFields.icon = <i className='fas fa-briefcase form__icon'></i>;
+				return setFormFields({
+					fields: formFields,
+					model: Schema.Model({
+						name: StringType().isRequired('This field is required'),
+						description: StringType().isRequired('This field is required'),
+					}),
+				});
+			case 'Education':
+				formFields.name = 'Field of Study';
+				formFields.description = 'Description';
+				formFields.icon = <i className='fas fa-user-graduate form__icon'></i>;
+				return setFormFields({
+					fields: formFields,
+					model: Schema.Model({
+						name: StringType().isRequired('This field is required'),
+						description: StringType().isRequired('This field is required'),
+					}),
+				});
+			case 'Skills':
+				formFields.name = 'Skill';
+				formFields.icon = <i className='fas fa-tools form__icon'></i>;
+				return setFormFields({
+					fields: formFields,
+					model: Schema.Model({
+						name: StringType().isRequired('This field is required'),
+					}),
+				});
 		}
 	};
 	return (
@@ -58,7 +95,23 @@ const PersonalInfo = () => {
 					infoCategories.map((category) => {
 						return (
 							<Button
-								onClick={() => setAddExperience(!addExperience)}
+								onClick={() => {
+									let categoryName = '';
+									console.log(category);
+									switch (category) {
+										case 'Work Experience':
+											setCurrentCategory('workExperience');
+											break;
+										case 'Education':
+											setCurrentCategory('education');
+											break;
+										case 'Skills':
+											setCurrentCategory('skills');
+											break;
+									}
+									createFormFields(category);
+									setAddExperience(!addExperience);
+								}}
 								appearance='primary'
 								className='add-item-btn'>
 								Add {category}
@@ -75,25 +128,32 @@ const PersonalInfo = () => {
 						fluid
 						layout='horizontal'
 						ref={formRef}
-						model={model}
+						model={formFields.model}
 						formValue={formData}
 						onChange={(value) => setFormData(value)}>
 						<FormGroup key='form__position'>
 							<ControlLabel className='form__label'>
-								<i className='fas fa-briefcase form__icon'></i>
-								<span>Work Position</span>
+								{formFields.fields.icon}
+								<span>{formFields.fields.name}</span>
 							</ControlLabel>
 							<FormControl name='name'></FormControl>
 						</FormGroup>
-						<FormGroup key='form__description'>
-							<ControlLabel className='form__label'>
-								<i className='fas fa-edit form__icon'></i>
-								<span>Description</span>
-							</ControlLabel>
-							<FormControl componentClass='textarea' name='description'></FormControl>
-						</FormGroup>
+						{formFields.fields.description && (
+							<FormGroup key='form__description'>
+								<ControlLabel className='form__label'>
+									<i className='fas fa-edit form__icon'></i>
+									<span>Description</span>
+								</ControlLabel>
+								<FormControl componentClass='textarea' name='description'></FormControl>
+							</FormGroup>
+						)}
 						<ButtonToolbar>
-							<Button appearance='primary' onClick={() => handleSubmit()}>
+							<Button
+								appearance='primary'
+								onClick={() => {
+									handleSubmit();
+									setAddExperience(false);
+								}}>
 								Submit
 							</Button>
 							<Button appearance='subtle' onClick={() => setAddExperience(false)}>
@@ -105,64 +165,7 @@ const PersonalInfo = () => {
 			</Modal>
 
 			<FlexboxGrid justify='center'>
-				{/* <FlexboxGrid.Item colspan={8}>
-					<Panel header='Work Experience' shaded className='info--panel'>
-						<List hover className='info--list'>
-							{personalInfo.workExperience &&
-								personalInfo.workExperience.map((work) => {
-									return (
-										<List.Item className='info--item'>
-											<p className='info--item__title'>
-												<b>Position:</b> {work.name}
-											</p>
-											<p>
-												<b>Description:</b> {work.description}
-											</p>
-										</List.Item>
-									);
-								})}
-						</List>
-					</Panel>
-				</FlexboxGrid.Item>
-				<FlexboxGrid.Item colspan={8}>
-					<Panel header='Education' shaded className='info--panel'>
-						<List hover className='info--list'>
-							{personalInfo.workExperience &&
-								personalInfo.workExperience.map((work) => {
-									return (
-										<List.Item className='info--item'>
-											<p className='info--item__title'>
-												<b>Position:</b> {work.name}
-											</p>
-											<p>
-												<b>Description:</b> {work.description}
-											</p>
-										</List.Item>
-									);
-								})}
-						</List>
-					</Panel>
-				</FlexboxGrid.Item>
-				<FlexboxGrid.Item colspan={8}>
-					<Panel header='Skills' shaded className='info--panel'>
-						<List hover className='info--list'>
-							{personalInfo.workExperience &&
-								personalInfo.workExperience.map((work) => {
-									return (
-										<List.Item className='info--item'>
-											<p className='info--item__title'>
-												<b>Position:</b> {work.name}
-											</p>
-											<p>
-												<b>Description:</b> {work.description}
-											</p>
-										</List.Item>
-									);
-								})}
-						</List>
-					</Panel>
-				</FlexboxGrid.Item> */}
-				{infoCategories.map((category) => {
+				{infoCategories.map((category, index) => {
 					let infoData = {};
 					switch (category) {
 						case 'Work Experience':
@@ -182,27 +185,7 @@ const PersonalInfo = () => {
 					}
 					return (
 						<FlexboxGrid.Item colspan={8}>
-							<Panel header={category} shaded className='info--panel'>
-								<List hover className='info--list'>
-									{infoData &&
-										infoData.data &&
-										infoData.data.map((info) => {
-											console.log(info);
-											return (
-												<List.Item className='info--item'>
-													<p className='info--item__title'>
-														{infoData.name && <b>{infoData.name}:</b>} {info.name}
-													</p>
-													{info.description && (
-														<p>
-															<b>Description:</b> {info.description}
-														</p>
-													)}
-												</List.Item>
-											);
-										})}
-								</List>
-							</Panel>
+							<PersonalInfoItem category={category} key={index} infoData={infoData} />
 						</FlexboxGrid.Item>
 					);
 				})}
