@@ -33,6 +33,7 @@ const PersonalInfo = () => {
 		setPersonalInfo(personalInfo.payload);
 	}, [user, getPersonalInfo]);
 
+	const infoCategories = ['Work Experience', 'Education', 'Skills'];
 	const [personalInfo, setPersonalInfo] = useState({});
 	const [addExperience, setAddExperience] = useState(false);
 	const [formData, setFormData] = useState({});
@@ -52,24 +53,20 @@ const PersonalInfo = () => {
 	};
 	return (
 		<Container>
-			{/* <FlexboxGrid.Item colspan={4}>
-					<PersonalInfoSideNav />
-				</FlexboxGrid.Item> */}
-			{/* <Button className='add-item-btn' onClick={() => setAddExperience(!addExperience)}>
-				Add Experience
-			</Button> */}
 			<ButtonGroup style={{ marginTop: 12 }} justified>
-				<Button onClick={() => setAddExperience(!addExperience)} appearance='primary' className='add-item-btn'>
-					Add Work Experience
-				</Button>
-				<Button onClick={() => setAddExperience(!addExperience)} appearance='primary' className='add-item-btn'>
-					Add Education
-				</Button>
-				<Button onClick={() => setAddExperience(!addExperience)} appearance='primary' className='add-item-btn'>
-					Add Skills
-				</Button>
+				{infoCategories &&
+					infoCategories.map((category) => {
+						return (
+							<Button
+								onClick={() => setAddExperience(!addExperience)}
+								appearance='primary'
+								className='add-item-btn'>
+								Add {category}
+							</Button>
+						);
+					})}
 			</ButtonGroup>
-			<Modal show={addExperience}>
+			<Modal show={addExperience} onHide={() => setAddExperience(false)}>
 				<Modal.Header>
 					<h3>Add Work Experience</h3>
 				</Modal.Header>
@@ -108,7 +105,7 @@ const PersonalInfo = () => {
 			</Modal>
 
 			<FlexboxGrid justify='center'>
-				<FlexboxGrid.Item colspan={8}>
+				{/* <FlexboxGrid.Item colspan={8}>
 					<Panel header='Work Experience' shaded className='info--panel'>
 						<List hover className='info--list'>
 							{personalInfo.workExperience &&
@@ -164,7 +161,51 @@ const PersonalInfo = () => {
 								})}
 						</List>
 					</Panel>
-				</FlexboxGrid.Item>
+				</FlexboxGrid.Item> */}
+				{infoCategories.map((category) => {
+					let infoData = {};
+					switch (category) {
+						case 'Work Experience':
+							infoData.data = personalInfo.workExperience;
+							infoData.name = 'Position';
+							break;
+						case 'Education':
+							infoData.data = personalInfo.education;
+							infoData.name = 'Field of Study';
+							break;
+						case 'Skills':
+							infoData.data = personalInfo.skills;
+							break;
+						default:
+							infoData.data = personalInfo.workExperience;
+							infoData.name = 'Position';
+					}
+					return (
+						<FlexboxGrid.Item colspan={8}>
+							<Panel header={category} shaded className='info--panel'>
+								<List hover className='info--list'>
+									{infoData &&
+										infoData.data &&
+										infoData.data.map((info) => {
+											console.log(info);
+											return (
+												<List.Item className='info--item'>
+													<p className='info--item__title'>
+														{infoData.name && <b>{infoData.name}:</b>} {info.name}
+													</p>
+													{info.description && (
+														<p>
+															<b>Description:</b> {info.description}
+														</p>
+													)}
+												</List.Item>
+											);
+										})}
+								</List>
+							</Panel>
+						</FlexboxGrid.Item>
+					);
+				})}
 			</FlexboxGrid>
 		</Container>
 	);
