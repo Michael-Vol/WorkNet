@@ -17,23 +17,20 @@ import {
 	Button,
 	ButtonToolbar,
 	Modal,
+	Placeholder,
+	Loader,
 } from 'rsuite';
 import PersonalInfoItem from './PersonalInfoItem';
-import PersonalInfoSideNav from './PersonalInfoSideNav';
 import { getPersonalInfo, postPersonalInfo } from '../../Actions/personalInfo';
 import { useDispatch, useSelector } from 'react-redux';
 const PersonalInfo = () => {
 	const formRef = useRef();
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
-	const [personalInfo, setPersonalInfo] = useState({});
-	useEffect(async () => {
-		const res = await getPersonalInfo();
-		console.log(res);
-		const personalInfo = dispatch(res);
-		setPersonalInfo(personalInfo.payload);
-	}, [user, getPersonalInfo]);
+	const loading = useSelector((state) => state.personalInfo.loading);
 
+	const [personalInfo, setPersonalInfo] = useState({});
+	const [formSubmitted, setFormSubmitted] = useState(false);
 	const infoCategories = ['Work Experience', 'Education', 'Skills'];
 	const [addExperience, setAddExperience] = useState(false);
 	const [formFields, setFormFields] = useState({ fields: {}, model: Schema.Model({}) });
@@ -42,15 +39,26 @@ const PersonalInfo = () => {
 		name: '',
 		description: '',
 	});
+	const fetchInfo = async () => {
+		const res = await getPersonalInfo();
+		const personalInfo = dispatch(res);
+		console.log(personalInfo);
+		setPersonalInfo(personalInfo.payload);
+	};
+	useEffect(async () => {
+		if (user) {
+			await fetchInfo();
+		}
+	}, [user, getPersonalInfo]);
 
 	const { StringType } = Schema.Types;
-
 	const handleSubmit = async () => {
 		console.log(formData);
 		if (formRef.current.check()) {
 			const res = await postPersonalInfo({ [currentCategory]: formData });
 			console.log(res);
 			dispatch(res);
+			await fetchInfo();
 		}
 	};
 	const createFormFields = (category) => {
@@ -183,6 +191,7 @@ const PersonalInfo = () => {
 							infoData.data = personalInfo.workExperience;
 							infoData.name = 'Position';
 					}
+
 					return (
 						<FlexboxGrid.Item colspan={8}>
 							<PersonalInfoItem category={category} key={index} infoData={infoData} />

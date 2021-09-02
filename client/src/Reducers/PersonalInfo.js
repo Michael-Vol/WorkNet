@@ -10,7 +10,7 @@ const initialState = {
 
 const personalInfo = function (state = initialState, action) {
 	const { type, payload } = action;
-	switch (action) {
+	switch (type) {
 		case POST_PERSONAL_INFO:
 		case GET_PERSONAL_INFO:
 			const { workExperience, education, skills } = payload;
