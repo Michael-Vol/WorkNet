@@ -1,4 +1,4 @@
-import { GET_PERSONAL_INFO, PERSONAL_INFO_ERROR } from '../Actions/types';
+import { GET_PERSONAL_INFO, PERSONAL_INFO_ERROR, POST_PERSONAL_INFO } from '../Actions/types';
 
 const initialState = {
 	workExperience: null,
@@ -11,6 +11,7 @@ const initialState = {
 const personalInfo = function (state = initialState, action) {
 	const { type, payload } = action;
 	switch (action) {
+		case POST_PERSONAL_INFO:
 		case GET_PERSONAL_INFO:
 			const { workExperience, education, skills } = payload;
 			return {

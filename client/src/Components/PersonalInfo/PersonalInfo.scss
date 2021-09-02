@@ -1,35 +1,42 @@
-// .rs-sidebar {
-//  flex: 1 !important;
-//  align-items: stretch !important;
-// }
-
 .sidenav--container {
 	height: 100%;
 	// width: fit-content;
 }
 
 .add-item-btn {
-	margin-top: 30px;
-	margin-left: 90%;
+	font-size: 14px;
+	margin: 0px 10px 0px 10px;
+	height: 50px;
+	border-radius: 5px;
 }
 #personalInfo-title {
 	text-align: center;
 	color: rgb(246, 246, 246);
 }
 
-// .rs-panel {
-// 	background-color: rgb(246, 246, 246);
-// 	max-height: 30vh;
-// }
 .info--panel {
 	border-radius: 20px;
-	text-align: center;
-	width: 50%;
+	// justify-content: center;
 	background-color: rgb(246, 246, 246);
-	margin-left: 25%;
+	margin: 40px;
+	max-height: 80vh;
+	overflow-y: scroll;
 }
-
+.info--list {
+	text-align: left;
+}
 .info--item {
 	margin: 10px;
-	border-radius: 5px;
+	border-radius: 15px;
+	padding: 15px;
+	background-color: white;
+	color: #07324a;
+}
+
+.info--item__title {
+	font-size: 18px;
+}
+
+.rs-panel-heading {
+	font-size: 24px;
 }

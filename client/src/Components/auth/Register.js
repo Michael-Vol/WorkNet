@@ -92,113 +92,111 @@ const Register = (props) => {
 	//test comment
 
 	return (
-		<div>
+		<Content className='register'>
 			<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
-			<Content>
-				<FlexboxGrid justify='center'>
-					<FlexboxGrid.Item>
-						<div className='form--container register--container'>
-							<section className='form--title'>
-								<i className=' fas fa-pencil-alt fa-lg'></i>
-								<span className='form__title'>Register</span>
-							</section>
-							<Form
-								layout='horizontal'
-								ref={formRef}
-								model={model}
-								formValue={formData}
-								onChange={(value) => {
-									setFormData(value);
-								}}>
-								<FormGroup key='form__name'>
-									<ControlLabel className='form__label'>
-										<i className='fas fa-user form__icon'></i>
-										<span>Name</span>
-									</ControlLabel>
-									<FormControl name='name'></FormControl>
-									<HelpBlock>Required</HelpBlock>
-								</FormGroup>
+			<FlexboxGrid justify='center'>
+				<FlexboxGrid.Item>
+					<div className='form--container register--container'>
+						<section className='form--title'>
+							<i className=' fas fa-pencil-alt fa-lg'></i>
+							<span className='form__title'>Register</span>
+						</section>
+						<Form
+							layout='horizontal'
+							ref={formRef}
+							model={model}
+							formValue={formData}
+							onChange={(value) => {
+								setFormData(value);
+							}}>
+							<FormGroup key='form__name'>
+								<ControlLabel className='form__label'>
+									<i className='fas fa-user form__icon'></i>
+									<span>Name</span>
+								</ControlLabel>
+								<FormControl name='name'></FormControl>
+								<HelpBlock>Required</HelpBlock>
+							</FormGroup>
 
-								<FormGroup key='form__email'>
-									<ControlLabel className='form__label'>
-										<i className='fas fa-envelope form__icon'></i>
-										<span>Email</span>
-									</ControlLabel>{' '}
-									<FormControl name='email'></FormControl>
-									<HelpBlock>Required</HelpBlock>
-								</FormGroup>
-								<FormGroup key='form__password'>
-									<ControlLabel className='form__label'>
-										<i className='fas fa-key form__icon'></i>
-										<span>Password</span>
-									</ControlLabel>
-									<FormControl name='password'></FormControl>
-									<HelpBlock>Required</HelpBlock>
-								</FormGroup>
+							<FormGroup key='form__email'>
+								<ControlLabel className='form__label'>
+									<i className='fas fa-envelope form__icon'></i>
+									<span>Email</span>
+								</ControlLabel>{' '}
+								<FormControl name='email'></FormControl>
+								<HelpBlock>Required</HelpBlock>
+							</FormGroup>
+							<FormGroup key='form__password'>
+								<ControlLabel className='form__label'>
+									<i className='fas fa-key form__icon'></i>
+									<span>Password</span>
+								</ControlLabel>
+								<FormControl name='password'></FormControl>
+								<HelpBlock>Required</HelpBlock>
+							</FormGroup>
 
-								<FormGroup key='form__password2'>
-									<ControlLabel className='form__label'>
-										<i className='fas fa-key form__icon'></i>
-										<span>Verify Password</span>
-									</ControlLabel>
-									<FormControl name='password2'></FormControl>
-									<HelpBlock>Required</HelpBlock>
-								</FormGroup>
+							<FormGroup key='form__password2'>
+								<ControlLabel className='form__label'>
+									<i className='fas fa-key form__icon'></i>
+									<span>Verify Password</span>
+								</ControlLabel>
+								<FormControl name='password2'></FormControl>
+								<HelpBlock>Required</HelpBlock>
+							</FormGroup>
 
-								<FormGroup key='form__tel'>
-									<ControlLabel className='form__label'>
-										<i className='fas fa-phone form__icon'></i>
-										<span>Phone Number</span>
-									</ControlLabel>{' '}
-									<FormControl name='phone'></FormControl>
-									<HelpBlock>Required</HelpBlock>
-								</FormGroup>
+							<FormGroup key='form__tel'>
+								<ControlLabel className='form__label'>
+									<i className='fas fa-phone form__icon'></i>
+									<span>Phone Number</span>
+								</ControlLabel>{' '}
+								<FormControl name='phone'></FormControl>
+								<HelpBlock>Required</HelpBlock>
+							</FormGroup>
 
-								<FormGroup key='form__avatar'>
-									<ControlLabel className='form__label'>
-										<i className='fas fa-portrait form__icon'></i>
-										<span>Profile Photo</span>
-									</ControlLabel>
-									<Uploader
-										name='avatar'
-										autoUpload={false}
-										listType='picture'
-										multiple={false}
-										onChange={(fileList) => {
-											setAvatar(fileList[0]);
+							<FormGroup key='form__avatar'>
+								<ControlLabel className='form__label'>
+									<i className='fas fa-portrait form__icon'></i>
+									<span>Profile Photo</span>
+								</ControlLabel>
+								<Uploader
+									name='avatar'
+									autoUpload={false}
+									listType='picture'
+									multiple={false}
+									onChange={(fileList) => {
+										setAvatar(fileList[0]);
+									}}>
+									<button>
+										<Icon icon='camera-retro' size='lg' />
+									</button>
+								</Uploader>
+								<HelpBlock>Required</HelpBlock>
+							</FormGroup>
+
+							<FormGroup>
+								<ButtonToolbar>
+									<Button
+										className='form--submit-btn'
+										type='submit'
+										onClick={() => handleSubmit()}
+										appearance='primary'>
+										Register
+									</Button>
+									<Button
+										className='form--cancel-btn'
+										appearance='default'
+										onClick={() => {
+											setCancel(true);
 										}}>
-										<button>
-											<Icon icon='camera-retro' size='lg' />
-										</button>
-									</Uploader>
-									<HelpBlock>Required</HelpBlock>
-								</FormGroup>
-
-								<FormGroup>
-									<ButtonToolbar>
-										<Button
-											className='form--submit-btn'
-											type='submit'
-											onClick={() => handleSubmit()}
-											appearance='primary'>
-											Register
-										</Button>
-										<Button
-											className='form--cancel-btn'
-											appearance='default'
-											onClick={() => {
-												setCancel(true);
-											}}>
-											Cancel
-										</Button>
-									</ButtonToolbar>
-								</FormGroup>
-							</Form>
-						</div>
-					</FlexboxGrid.Item>
-				</FlexboxGrid>
-			</Content>
-		</div>
+										Cancel
+									</Button>
+								</ButtonToolbar>
+							</FormGroup>
+						</Form>
+					</div>
+				</FlexboxGrid.Item>
+			</FlexboxGrid>
+		</Content>
 	);
 };
 

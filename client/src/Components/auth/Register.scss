@@ -1,8 +1,10 @@
 @import '../../Styles/abstracts/variables';
-body {
+// body {
+// 	background-image: $color-teal-gradient;
+// }
+.register {
 	background-image: $color-teal-gradient;
 }
-
 .form__title {
 	font-size: 20px;
 	margin-left: 20px;

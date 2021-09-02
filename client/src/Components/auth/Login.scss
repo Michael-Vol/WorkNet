@@ -1,7 +1,7 @@
 @import '../../Styles/abstracts/variables';
-body {
-	background-image: $color-teal-gradient;
-}
+// body {
+// 	background-image: $color-teal-gradient;
+// }
 
 .form__title {
 	font-size: 20px;
@@ -26,6 +26,9 @@ body {
 	width: fit-content;
 }
 
+.login {
+	background-image: $color-teal-gradient;
+}
 .login--container {
 	margin-top: 20vh;
 }

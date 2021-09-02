@@ -58,7 +58,7 @@ const Login = () => {
 	};
 
 	return (
-		<Content>
+		<Content className='login'>
 			<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
 			<FlexboxGrid justify='center'>
 				<FlexboxGrid.Item colspan={8}>
@@ -87,15 +87,10 @@ const Login = () => {
 								</FormGroup>
 								<FormGroup>
 									<ButtonToolbar>
-										<Button
-											// className='form--submit-btn'
-											type='submit'
-											onClick={() => handleSubmit()}
-											appearance='primary'>
+										<Button type='submit' onClick={() => handleSubmit()} appearance='primary'>
 											Login
 										</Button>
 										<Button
-											// className='form--cancel-btn'
 											appearance='default'
 											onClick={() => {
 												setCancel(true);

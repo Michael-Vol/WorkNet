@@ -76,7 +76,7 @@ export const loginUser = async ({ email, password }) => {
 
 		return {
 			type: LOGIN_FAIL,
-			payload: error.response.data,
+			payload: error.response,
 		};
 	}
 };
