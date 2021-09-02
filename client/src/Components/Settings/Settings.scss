@@ -1,0 +1,14 @@
+.settings-panel {
+	border: 2 0px;
+	transition: box-shadow 0.3s;
+	border-radius: 20px;
+	text-align: center;
+	background-color: rgb(246, 246, 246);
+	width: fit-content;
+	margin-top: 60px;
+}
+
+.current-settings-panel {
+	margin-bottom: 20px;
+	text-align: left;
+}

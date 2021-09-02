@@ -35,7 +35,7 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 			<Nav.Item href='/personal-info' className='link'>
 				Personal Info
 			</Nav.Item>
-			<Nav.Item href='/personal-info' className='link'>
+			<Nav.Item href='/settings' className='link'>
 				Settings
 			</Nav.Item>
 		</div>
