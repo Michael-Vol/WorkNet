@@ -1,5 +1,7 @@
 import React, { useState, createRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { updateUserInfo } from '../../Actions/userInfo';
+import { Redirect } from 'react-router';
 import {
 	Schema,
 	FlexboxGrid,
@@ -14,21 +16,20 @@ import {
 	ButtonToolbar,
 	Input,
 } from 'rsuite';
-
+import { Toaster, toast } from 'react-hot-toast';
 import './Settings.scss';
 const Settings = () => {
 	const user = useSelector((state) => state.auth.user);
 	const formRef = createRef();
+	const dispatch = useDispatch();
 	const { StringType } = Schema.Types;
 	const model = Schema.Model({
-		email: StringType().isRequired('Please provide an email address').isEmail('Please provide a valid email'),
-		password: StringType()
-			.isRequired('Please provide a password')
-			.rangeLength(6, 20, 'The password should contain between 6 and 20 alphanumeric characters'),
+		email: StringType().isEmail('Please provide a valid email'),
+		password: StringType().rangeLength(6, 20, 'The password should contain between 6 and 20 alphanumeric characters'),
 		password2: StringType()
-			.isRequired('Please provide a password')
 			.rangeLength(6, 20, 'The password should contain between 6 and 20 alphanumeric characters')
 			.addRule((value, data) => {
+				console.log(value, data.password);
 				if (value !== data.password) {
 					return false;
 				}
@@ -43,22 +44,32 @@ const Settings = () => {
 	const [showEmail, setShowEmail] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 	const [cancel, setCancel] = useState(false);
+
 	const handleSubmit = async () => {
 		if (formRef.current.check()) {
-			console.log(formData);
+			const filledFields = {};
+			Object.keys(formData).forEach((field) => {
+				if (formData[field] !== '' && field !== 'password2') {
+					filledFields[field] = formData[field];
+				}
+			});
+			console.log(filledFields);
+			const res = await updateUserInfo(filledFields);
+			console.log(res);
+			dispatch(res);
+			if (res.payload.user) {
+				return toast.success('User Settings Updated!');
+			}
+			toast.error(res.payload.response.data.message);
 		}
 	};
 	return (
 		<Container>
+			<Toaster position='top-center' toastOptions={{ duration: 4000 }} />
+			{cancel && <Redirect to='/' />}
 			<FlexboxGrid justify='center'>
 				<FlexboxGrid.Item>
 					<Panel header='Settings' className='settings-panel'>
-						{/* <Panel className='current-settings-panel'>
-							<h3>Your Current Settings:</h3>
-							<p>Email : </p>
-							<p>Password : </p>
-						</Panel> */}
-
 						<Form
 							fluid
 							ref={formRef}
