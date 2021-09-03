@@ -1,0 +1,81 @@
+@import '../../Styles/main';
+.container {
+	border-radius: 5px;
+	height: fit-content;
+}
+.dashboard--container {
+	height: fit-content;
+	overflow: scroll;
+	margin-bottom: 20px;
+}
+.posts--container {
+	margin: 20px 20px 0px 30px;
+	height: fit-content;
+	border: 4px solid $color-base;
+	background-color: rgb(240, 242, 245);
+	border-radius: 5px;
+	padding: 30px;
+}
+.add--post--btn {
+	background-color: $color-base;
+	color: white;
+}
+.add--post--btn:hover {
+	background-color: darken($color-base, 5%);
+	color: white;
+}
+
+.create--post--container {
+	padding: 20px;
+	margin-bottom: 20px;
+}
+.post--container {
+	font-size: 16px;
+	background-color: lighten($color-white-light, 5%);
+	margin-bottom: 20px;
+	padding: 40px 50px 40px 50px;
+	margin-left: 130px;
+}
+.post--container:hover {
+	background-color: #0b4b6d !important;
+	color: white;
+	transition: ease-in 0.1s;
+}
+
+.posts--header {
+	font-size: 36px;
+	color: $color-base;
+}
+.posts--divider {
+	height: 5px;
+	border-radius: 2px;
+	background-color: $color-base;
+	margin-top: 0px;
+}
+
+.add--post--header {
+	font-size: 24px;
+	color: $color-base;
+}
+
+.dashboard--flex--container {
+	height: 100%;
+	display: flex;
+	align-items: stretch;
+}
+
+.post--header {
+	margin-bottom: 15px;
+}
+.post--user--info {
+	padding-top: 10px;
+	font-size: 18px;
+}
+
+.post--title {
+	margin-bottom: 15px;
+}
+
+.test {
+	width: 100%;
+}

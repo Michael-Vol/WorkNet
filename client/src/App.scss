@@ -11,6 +11,8 @@ html {
 	margin: 0;
 	font-family: 'Source Sans Pro', sans-serif;
 	background-image: $color-teal-gradient;
+	overflow: scroll;
+	scroll-behavior: smooth;
 }
 
 #root {
@@ -30,5 +32,6 @@ a {
 	min-height: 100%;
 	height: auto !important;
 	height: 100%;
+	overflow: scroll;
 	width: auto !important;
 }
