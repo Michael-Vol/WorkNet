@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+
 import './PersonalInfo.scss';
 import {
 	PanelGroup,
@@ -171,8 +172,7 @@ const PersonalInfo = () => {
 					</Form>
 				</Modal.Body>
 			</Modal>
-
-			<FlexboxGrid justify='center'>
+			<Row>
 				{infoCategories.map((category, index) => {
 					let infoData = {};
 					switch (category) {
@@ -193,12 +193,12 @@ const PersonalInfo = () => {
 					}
 
 					return (
-						<FlexboxGrid.Item colspan={8}>
+						<Col md={8}>
 							<PersonalInfoItem category={category} key={index} infoData={infoData} />
-						</FlexboxGrid.Item>
+						</Col>
 					);
 				})}
-			</FlexboxGrid>
+			</Row>
 		</Container>
 	);
 };
