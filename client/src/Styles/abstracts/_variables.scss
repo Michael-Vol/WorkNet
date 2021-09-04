@@ -1,18 +1,12 @@
 $color-white: rgb(255, 255, 255);
+$color-white-light: rgb(241, 241, 241);
 $color-purple-primary: rgb(131, 58, 180);
 $color-orange-primary: rgb(253, 139, 29);
 $color-orange-light: rgb(252, 176, 69);
 
 $color-teal-primary: #00989b;
 $color-teal-secondary: #005e78;
-$color-teal-gradient: linear-gradient(
-	90deg,
-	rgba(5, 60, 92, 1) 0%,
-	rgba(11, 79, 96, 1) 26%,
-	rgba(6, 91, 96, 1) 50%,
-	rgba(7, 74, 101, 1) 70%,
-	rgba(0, 58, 74, 1) 100%
-);
+$color-teal-gradient: linear-gradient(to right top, #07324a, #093c55, #0b4660, #0e506a, #105b75);
 $color-teal-gradient-opaque: linear-gradient(
 	90deg,
 	rgba(5, 60, 92, 0.7) 0%,

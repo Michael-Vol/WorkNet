@@ -6,7 +6,7 @@ const PersonalInfoItem = ({ category, infoData }) => {
 	const loading = useSelector((state) => state.personalInfo.loading);
 
 	return (
-		<Panel header={category} shaded className='info--panel'>
+		<Panel header={category} shaded className='info--panel' collapsi>
 			{loading ? (
 				<Placeholder.Paragraph active />
 			) : (

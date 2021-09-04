@@ -1,7 +1,16 @@
+@import '../../Styles/main';
 .info--item {
-	margin: 10px;
-	border-radius: 15px;
+	margin: 8px;
+	border-radius: 5px;
 	padding: 15px;
-	background-color: white;
+	background-color: $color-white-light;
+	border-width: 25px;
+	border-color: blue;
 	color: #07324a;
+}
+
+.info--item:hover {
+	background-color: #0b4b6d !important;
+	color: white;
+	transition: ease-in 0.1s;
 }

@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../Actions/auth';
 import { Redirect } from 'react-router-dom';
 import {
-	Container,
 	Uploader,
 	Form,
 	FormGroup,

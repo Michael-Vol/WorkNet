@@ -75,6 +75,54 @@ router.get('/me', auth, async (req, res) => {
 });
 
 /**
+ * @name POST me/
+ * @desc Allows user to change email,password
+ * @access private
+ * @memberof user
+ */
+
+router.post('/me', auth, async (req, res) => {
+	try {
+		const allowedUpdates = ['email', 'password'];
+		const userUpdates = Object.keys(req.body);
+
+		//check if user updates are valid
+		const isValidUpdate = userUpdates.every((update) => allowedUpdates.includes(update));
+		if (!isValidUpdate) {
+			return res.status(400).json({
+				message: `Update is invalid.`,
+			});
+		}
+		//Check if email is already taken (if email is in updates body)
+		if (req.body.email) {
+			const emailCount = await User.countDocuments({ _id: { $ne: req.user.id }, email: req.body.email });
+			if (emailCount > 0) {
+				return res.status(400).json({
+					message: 'Email is already taken',
+				});
+			}
+		}
+		userUpdates.forEach((update) => {
+			req.user[update] = req.body[update];
+		});
+		await req.user.save();
+		return res.json({
+			user: req.user,
+		});
+	} catch (error) {
+		console.log(error);
+		if (error.name === 'ValidationError') {
+			return res.status(400).json({
+				message: 'No body provided',
+			});
+		}
+		return res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
  * @name POST me/personal-info
  * @desc Allows user set personalInfo
  * @access private
@@ -113,7 +161,6 @@ router.post('/me/personal-info', auth, async (req, res) => {
 		return res.json({ user: req.user });
 	} catch (error) {
 		console.log(error);
-		console.log(error.name + '    ');
 		if (error.name === 'ValidationError') {
 			return res.status(400).json({
 				message: 'No body provided',
