@@ -1,28 +1,75 @@
 import React, { useState } from 'react';
-import { Container, Avatar, Button, Form, FormGroup, Divider, Grid, Row, Col, FlexboxGrid } from 'rsuite';
+import {
+	Container,
+	Avatar,
+	ButtonToolbar,
+	Button,
+	Form,
+	FormGroup,
+	FormControl,
+	ControlLabel,
+	Divider,
+	Grid,
+	Row,
+	Col,
+	FlexboxGrid,
+	Modal,
+} from 'rsuite';
 import './Dashboard.scss';
 import SideNav from './SideNav.js';
 const Dashboard = () => {
+	const [newPost, setNewPost] = useState(false);
 	return (
 		<Container className='dashboard--container'>
 			<FlexboxGrid justify='start' className='dashboard--flex--container'>
-				<FlexboxGrid.Item>
+				<FlexboxGrid.Item colspan={3}>
 					<SideNav />
 				</FlexboxGrid.Item>
-				<FlexboxGrid.Item colspan={14} className='container posts--container'>
+				<FlexboxGrid.Item colspan={16} className='container posts--container'>
 					<Row className='container create--post--container'>
-						<Row className='add--post--header'></Row>
-
-						<Col>
-							Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad neque rerum cumque quibusdam mollitia! Ex,
-							nostrum quisquam est odit suscipit sunt! Fugit fuga iusto ratione minima assumenda explicabo iste
-							nobis hic harum amet? Laboriosam sunt pariatur tempora facere, quae dolorem? Dolorum deserunt unde
-							rerum dolor ratione voluptates vitae, rem fugit maxime, id pariatur, veritatis voluptas quibusdam
-							accusantium asperiores magnam autem commodi. Suscipit sint aut facilis et voluptates aperiam magnam
-							dolore natus fugit quaerat harum tempora officia incidunt amet placeat error rem, eligendi, quam
-							dolores. Amet molestias laborum asperiores provident sint commodi odit, reiciendis, expedita culpa
-							accusantium ipsa veritatis assumenda neque.
-						</Col>
+						<Row className='new--post--header'>
+							<Col md={24}>
+								<Button className='new--post--btn' onClick={() => setNewPost(!newPost)}>
+									New Post
+								</Button>
+							</Col>
+						</Row>
+						{newPost && (
+							<Modal show={newPost} onHide={() => setNewPost(false)}>
+								<Modal.Header>
+									<h3>New Post</h3>
+								</Modal.Header>
+								<Modal.Body>
+									<Form fluid className='new--post--form'>
+										<FormGroup key='form__title' className='add--post--title'>
+											<ControlLabel className='form__label'>
+												<span>Title</span>
+											</ControlLabel>
+											<FormControl name='title' />
+										</FormGroup>
+										<FormGroup key='form__body'>
+											<ControlLabel className='form__label'>
+												<span>Your Thoughts</span>
+											</ControlLabel>
+											<FormControl className='add--post--body' componentClass='textarea' name='password' />
+										</FormGroup>
+										<FormGroup>
+											<ButtonToolbar className='add--post--toolbar'>
+												<Button className='submit--post--btn' appearance='primary'>
+													Submit
+												</Button>
+												<Button
+													className='cancel--post--btn'
+													appearance='default'
+													onClick={() => setNewPost(false)}>
+													Cancel
+												</Button>
+											</ButtonToolbar>
+										</FormGroup>
+									</Form>
+								</Modal.Body>
+							</Modal>
+						)}
 					</Row>
 					<Row className='posts--header'>
 						<span>Posts</span>
@@ -101,6 +148,48 @@ const Dashboard = () => {
 							</Col>
 						</Row>
 					</Grid>
+				</FlexboxGrid.Item>
+				<FlexboxGrid.Item colspan={4} className='users--list--container'>
+					<Row className='users--list--user'>
+						<Col>
+							<Avatar circle />
+						</Col>
+						<Col>
+							<div>User Info</div>
+						</Col>
+					</Row>
+					<Row className='users--list--user'>
+						<Col>
+							<Avatar circle />
+						</Col>
+						<Col>
+							<div>User Info</div>
+						</Col>
+					</Row>
+					<Row className='users--list--user'>
+						<Col>
+							<Avatar circle />
+						</Col>
+						<Col>
+							<div>User Info</div>
+						</Col>
+					</Row>
+					<Row className='users--list--user'>
+						<Col>
+							<Avatar circle />
+						</Col>
+						<Col>
+							<div>User Info</div>
+						</Col>
+					</Row>
+					<Row className='users--list--user'>
+						<Col>
+							<Avatar circle />
+						</Col>
+						<Col>
+							<div>User Info</div>
+						</Col>
+					</Row>
 				</FlexboxGrid.Item>
 			</FlexboxGrid>
 		</Container>

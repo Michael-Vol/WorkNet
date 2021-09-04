@@ -2,24 +2,18 @@ import React, { useEffect, useState, useRef } from 'react';
 
 import './PersonalInfo.scss';
 import {
-	PanelGroup,
 	Container,
 	Row,
 	Col,
-	FlexboxGrid,
 	Form,
 	ButtonGroup,
 	FormGroup,
-	List,
-	Panel,
 	FormControl,
 	ControlLabel,
 	Schema,
 	Button,
 	ButtonToolbar,
 	Modal,
-	Placeholder,
-	Loader,
 } from 'rsuite';
 import PersonalInfoItem from './PersonalInfoItem';
 import { getPersonalInfo, postPersonalInfo } from '../../Actions/personalInfo';
