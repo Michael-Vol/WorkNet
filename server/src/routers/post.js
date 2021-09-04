@@ -51,7 +51,7 @@ router.post('/', auth, async (req, res) => {
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const posts = await Post.find({}).populate('creator');
+		const posts = await Post.find({}).populate('creator').sort({ updatedAt: -1 });
 		return res.json({ posts });
 	} catch (error) {
 		console.error(error.name);

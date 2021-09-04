@@ -22,12 +22,13 @@ import './Dashboard.scss';
 import { getPosts } from '../../Actions/posts';
 import SideNav from './SideNav.js';
 import { useDispatch, useSelector } from 'react-redux';
+import { addPost } from '../../Actions/posts';
 const Dashboard = () => {
 	const formRef = useRef();
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
 	const [newPost, setNewPost] = useState(false);
-	const [posts, setPosts] = useState({ posts: [] });
+	const [posts, setPosts] = useState([]);
 	const [formData, setFormData] = useState({
 		title: '',
 		body: '',
@@ -35,8 +36,7 @@ const Dashboard = () => {
 	const fetchPosts = async () => {
 		const res = await getPosts();
 		const postsState = dispatch(res);
-		setPosts(postsState.payload);
-		console.log(posts);
+		setPosts(postsState.payload.posts);
 	};
 	useEffect(async () => {
 		if (user) {
@@ -54,6 +54,8 @@ const Dashboard = () => {
 	const handleSubmit = async () => {
 		if (formRef.current.check()) {
 			console.log(formData);
+			const res = await addPost(formData);
+			dispatch(res);
 		}
 	};
 
@@ -137,20 +139,25 @@ const Dashboard = () => {
 					</Row>
 					<Grid className='test'>
 						<Row>
-							<Col md={18} className='container post--container'>
-								<Row className='post--header'>
-									<Col md={2} className='post--avatar'>
-										<Avatar circle />
+							{posts &&
+								posts.map((post, index) => (
+									<Col md={18} className='container post--container' key={index}>
+										<Row className='post--header'>
+											<Col md={2} className='post--avatar'>
+												<Avatar circle />
+											</Col>
+											<Col md={4} className='post--user--info'>
+												<div>
+													{post.creator.firstName} {post.creator.lastName}
+												</div>
+											</Col>
+										</Row>
+										<Row className='post--title'>
+											<h4>{post.title}</h4>
+										</Row>
+										<Row className='post--body'>{post.body}</Row>
 									</Col>
-									<Col md={4} className='post--user--info'>
-										<div>User Info</div>
-									</Col>
-								</Row>
-								<Row className='post--title'>
-									<h4>Title</h4>
-								</Row>
-								<Row className='post--body'>{posts[0] && posts[0].body}</Row>
-							</Col>
+								))}
 						</Row>
 					</Grid>
 				</FlexboxGrid.Item>
