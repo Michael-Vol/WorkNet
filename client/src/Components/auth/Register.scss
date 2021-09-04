@@ -1,8 +1,10 @@
 @import '../../Styles/abstracts/variables';
-body {
+// body {
+// 	background-image: $color-teal-gradient;
+// }
+.register {
 	background-image: $color-teal-gradient;
 }
-
 .form__title {
 	font-size: 20px;
 	margin-left: 20px;
@@ -17,21 +19,13 @@ body {
 	right: 5px;
 }
 
-.register--container {
-	transition: box-shadow 0.3s;
-	// position: absolute;
-	// left: 35%;
-	margin-top: 20%;
-	border: 2 0px;
-	border-radius: 20px;
-	padding: 30px 30px;
-	// width: fit-content;
-	text-align: center;
-	background-color: rgb(246, 246, 246);
-}
-
 .form--container:hover {
 	box-shadow: #004855 20px 54px 55px, #004855 0px -12px 30px, #004855 0px 4px 6px, #004855 0px 12px 13px, #004855 0px -3px 5px;
+}
+
+.register--container {
+	margin-top: 10%;
+	padding: 20px;
 }
 
 .form--title {

@@ -75,6 +75,72 @@ router.get('/me', auth, async (req, res) => {
 });
 
 /**
+ * @name POST me/personal-info
+ * @desc Allows user set personalInfo
+ * @access private
+ * @memberof user
+ */
+
+router.post('/me/personal-info', auth, async (req, res) => {
+	try {
+		console.log(req.body);
+		const allowedUpdates = ['workExperience', 'education', 'skills'];
+		const userUpdates = Object.keys(req.body);
+		userUpdates.forEach((update) => {
+			if (!allowedUpdates.includes(update)) {
+				return res.status(400).json({
+					message: `Update: ${update} is  invalid.`,
+				});
+			}
+
+			Object.keys(req.body[update]).forEach((fieldUpdate) => {
+				let fieldAllowedUpdates = [];
+				req.body[update] === 'skills'
+					? (fieldAllowedUpdates = ['name'])
+					: (fieldAllowedUpdates = ['name', 'description']);
+				if (!fieldAllowedUpdates.includes(fieldUpdate)) {
+					return res.status(400).json({
+						message: `Update: ${fieldUpdate} is invalid.`,
+					});
+				}
+			});
+		});
+		userUpdates.forEach((update) => {
+			console.log(req.user[update]);
+			req.user[update].push(req.body[update]);
+		});
+		await req.user.save();
+		return res.json({ user: req.user });
+	} catch (error) {
+		console.log(error);
+		console.log(error.name + '    ');
+		if (error.name === 'ValidationError') {
+			return res.status(400).json({
+				message: 'No body provided',
+			});
+		}
+		return res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET me/personal-info
+ * @desc Allows user set personalInfo
+ * @access private
+ * @memberof user
+ */
+
+router.get('/me/personal-info', auth, async (req, res) => {
+	return res.json({
+		workExperience: req.user.workExperience,
+		education: req.user.education,
+		skills: req.user.skills,
+	});
+});
+
+/**
  * @name login
  * @desc Allows user to login and get an auth token
  * @access public

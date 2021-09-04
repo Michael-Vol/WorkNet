@@ -1,16 +1,6 @@
 @import '../../Styles/main.scss';
 @import '../../Styles//components/links';
 
-.landing {
-	display: flex;
-	 justify-content: center;
-	align-content: center;
-	text-align: center;
-	min-height: 67.5vh;
-	margin-top: 25vh;
-	height: 100%;
-}
-
 .show-grid {
 	display: flex;
 	justify-content: center;
@@ -20,6 +10,7 @@
 	height: 55px;
 	width: 150px;
 	margin-top: 50px;
+	margin-right: 5px;
 	font-weight: 400;
 }
 
@@ -32,22 +23,16 @@
 	font-size: 35px;
 	color: $color-white;
 }
-.landing__background {
-	
+.landing--background {
 	// background:
 	background-image: $color-teal-gradient-opaque, url(/Images/landing-background-vector.jpg);
-	background-size: cover;
-	
-}
-
-.landing__info {
-	height: fit-content;
+	 background-size:  cover;
 }
 
 .show-grid {
 	margin: 10px;
 }
 
-// .rs-container{
-// 	width: max-content;
-// }
+.landing--grid {
+	margin-top: 10%;
+}

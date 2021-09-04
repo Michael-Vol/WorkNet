@@ -1,5 +1,5 @@
 import { REGISTER_SUCCESS, REGISTER_FAIL, LOGIN_SUCCESS, LOGIN_FAIL, USER_LOADED, AUTH_ERROR } from '../Actions/types';
-
+import axios from 'axios';
 const initialState = {
 	token: localStorage.getItem('token'),
 	isAuthenticated: !!localStorage.getItem('token'),

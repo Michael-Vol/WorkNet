@@ -1,7 +1,7 @@
 @import '../../Styles/abstracts/variables';
-body {
-	background-image: $color-teal-gradient;
-}
+// body {
+// 	background-image: $color-teal-gradient;
+// }
 
 .form__title {
 	font-size: 20px;
@@ -17,22 +17,21 @@ body {
 	right: 5px;
 }
 
-
-.login--container {
-
-	margin-top: 20%;
+.form--container {
 	border: 2 0px;
 	transition: box-shadow 0.3s;
 	border-radius: 20px;
 	text-align: center;
 	background-color: rgb(246, 246, 246);
-	//position: absolute;
-	//display: inline-block;
-	//margin: 0 auto;
-	// padding: 30px 30px;
 	width: fit-content;
 }
 
+.login {
+	background-image: $color-teal-gradient;
+}
+.login--container {
+	margin-top: 20vh;
+}
 .login--container:hover {
 	box-shadow: #004855 20px 54px 55px, #004855 0px -12px 30px, #004855 0px 4px 6px, #004855 0px 12px 13px, #004855 0px -3px 5px;
 }
@@ -57,10 +56,6 @@ body {
 	place-self: center;
 }
 
-.rs-container {
- 	place-self: center; 
-}
-
 .rs-panel-bordered {
-    border: none;
+	border: none;
 }

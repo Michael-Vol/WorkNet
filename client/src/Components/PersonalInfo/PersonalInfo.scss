@@ -1,0 +1,35 @@
+.sidenav--container {
+	height: 100%;
+	// width: fit-content;
+}
+
+.add-item-btn {
+	font-size: 18px;
+	margin: 0px 10px 0px 10px;
+	height: 50px;
+	border-radius: 5px;
+}
+#personalInfo-title {
+	text-align: center;
+	color: rgb(246, 246, 246);
+}
+
+.info--panel {
+	border-radius: 20px;
+	// justify-content: center;
+	background-color: rgb(246, 246, 246);
+	margin: 40px;
+	max-height: 80vh;
+	overflow-y: scroll;
+}
+.info--list {
+	text-align: left;
+}
+
+.info--item__title {
+	font-size: 18px;
+}
+
+.rs-panel-heading {
+	font-size: 24px;
+}
