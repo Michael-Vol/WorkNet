@@ -17,16 +17,19 @@ import {
 	Uploader,
 	Icon,
 	Schema,
+	Placeholder,
 } from 'rsuite';
 import './Dashboard.scss';
 import { getPosts } from '../../Actions/posts';
 import SideNav from './SideNav.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPost } from '../../Actions/posts';
+import PostItem from './PostItem';
 const Dashboard = () => {
 	const formRef = useRef();
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
+	const postsLoading = useSelector((state) => state.posts.loading);
 	const [newPost, setNewPost] = useState(false);
 	const [posts, setPosts] = useState([]);
 	const [formData, setFormData] = useState({
@@ -34,15 +37,17 @@ const Dashboard = () => {
 		body: '',
 	});
 	const fetchPosts = async () => {
+		console.log('fetching');
 		const res = await getPosts();
 		const postsState = dispatch(res);
 		setPosts(postsState.payload.posts);
 	};
 	useEffect(async () => {
+		console.log(postsLoading);
 		if (user) {
 			await fetchPosts();
 		}
-	}, [getPosts, user]);
+	}, [getPosts, setNewPost, user]);
 
 	const { StringType } = Schema.Types;
 
@@ -53,6 +58,7 @@ const Dashboard = () => {
 
 	const handleSubmit = async () => {
 		if (formRef.current.check()) {
+			setNewPost(false);
 			console.log(formData);
 			const res = await addPost(formData);
 			dispatch(res);
@@ -74,7 +80,9 @@ const Dashboard = () => {
 								</Button>
 							</Col>
 							<Col md={12}>
-								<Button className='refresh--posts--btn'>Refresh</Button>
+								<Button className='refresh--posts--btn' onClick={async () => await fetchPosts()}>
+									Refresh
+								</Button>
 							</Col>
 						</Row>
 						{newPost && (
@@ -139,25 +147,21 @@ const Dashboard = () => {
 					</Row>
 					<Grid className='test'>
 						<Row>
-							{posts &&
-								posts.map((post, index) => (
-									<Col md={18} className='container post--container' key={index}>
-										<Row className='post--header'>
-											<Col md={2} className='post--avatar'>
-												<Avatar circle />
-											</Col>
-											<Col md={4} className='post--user--info'>
-												<div>
-													{post.creator.firstName} {post.creator.lastName}
-												</div>
-											</Col>
-										</Row>
-										<Row className='post--title'>
-											<h4>{post.title}</h4>
-										</Row>
-										<Row className='post--body'>{post.body}</Row>
+							{postsLoading ? (
+								<div>
+									<Col md={18} className='container post--container'>
+										<Placeholder.Paragraph active />
 									</Col>
-								))}
+									<Col md={18} className='container post--container'>
+										<Placeholder.Paragraph active />
+									</Col>
+									<Col md={18} className='container post--container'>
+										<Placeholder.Paragraph active />
+									</Col>
+								</div>
+							) : (
+								posts.map((post, index) => <PostItem key={index} post={post} />)
+							)}
 						</Row>
 					</Grid>
 				</FlexboxGrid.Item>

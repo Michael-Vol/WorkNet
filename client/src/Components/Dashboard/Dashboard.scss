@@ -36,7 +36,7 @@
 	font-size: 16px;
 	background-color: lighten($color-white-light, 5%);
 	margin-bottom: 20px;
-	padding: 40px 50px 40px 50px;
+	padding: 40px 50px 10px 30px;
 	margin-left: 130px;
 }
 .posts--container::-webkit-scrollbar {
@@ -122,15 +122,6 @@
 }
 
 .post--header {
-	margin-bottom: 15px;
-}
-.post--user--info {
-	padding-top: 10px;
-	font-size: 18px;
-	width: fit-content;
-}
-
-.post--title {
 	margin-bottom: 15px;
 }
 
