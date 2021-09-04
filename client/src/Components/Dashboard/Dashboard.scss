@@ -68,21 +68,35 @@
 
 .new--post--btn {
 	font-size: 28px;
-	width: 20%;
+	width: 40%;
 	background-color: lighten($color-base, 5%);
 	color: white;
 	transition: 0.5s;
 	margin-bottom: 20px;
+	text-align: center;
 }
 .new--post--btn:hover {
 	background-color: $color-base;
 	color: white;
 }
+.refresh--posts--btn:hover {
+	background-color: $color-base;
+	color: white;
+}
+.refresh--posts--btn {
+	font-size: 28px;
+	width: 40%;
+	float: right;
+	background-color: lighten($color-base, 5%);
+	color: white;
+	transition: 0.5s;
+	margin-bottom: 20px;
+}
 .new--post--form {
 	text-align: left;
 	background-color: $color-white-secondary;
 	border-radius: 5px;
-	padding: 50px;
+	padding: 45px 45px 60px 45px;
 	color: $color-base;
 	margin: auto;
 	width: 100%;
@@ -135,4 +149,8 @@
 	font-size: 14px;
 	border-radius: 5px;
 	margin-bottom: 10px;
+}
+.users--list--user:hover {
+	background-color: #0b4b6d;
+	color: white;
 }

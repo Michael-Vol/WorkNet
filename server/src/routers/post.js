@@ -14,15 +14,16 @@ const router = express.Router();
 
 router.post('/', auth, async (req, res) => {
 	try {
-		const { body } = req.body;
+		const { title, body } = req.body;
 
-		if (body == '') {
+		if (body == '' || title == '') {
 			return res.status(400).send({
 				message: 'Cannot create an empty post.',
 			});
 		}
 
 		const post = new Post({
+			title,
 			body,
 			creator: req.user._id,
 		});
@@ -40,31 +41,25 @@ router.post('/', auth, async (req, res) => {
 		});
 	}
 });
+
 /**
  * @name GET /
  * @desc Allows user to get all of the posts
- * @access private
+ * @access auth
  * @memberof post
  */
 
 router.get('/', auth, async (req, res) => {
 	try {
-		await req.user
-			.populate({
-				path: 'posts',
-			})
-			.execPopulate();
-		res.json({
-			posts: req.user.posts,
-		});
+		const posts = await Post.find({}).populate('creator');
+		return res.json({ posts });
 	} catch (error) {
-		console.error(error);
+		console.error(error.name);
 		res.status(500).json({
 			message: 'Server Error',
 		});
 	}
 });
-
 /**
  * @name GET /{post_id}
  * @desc Allows anyone to get any post

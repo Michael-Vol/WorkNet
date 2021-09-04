@@ -469,4 +469,29 @@ router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) =>
 	}
 });
 
+/**
+ * @name GET /me/posts
+ * @desc Allows user to get all of the posts of his own
+ * @access private
+ * @memberof post
+ */
+
+router.get('/me/posts', auth, async (req, res) => {
+	try {
+		await req.user
+			.populate({
+				path: 'posts',
+			})
+			.execPopulate();
+		res.json({
+			posts: req.user.posts,
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
 module.exports = router;

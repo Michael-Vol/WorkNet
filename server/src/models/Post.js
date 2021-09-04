@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const Comment = require('./Comment');
 const postSchema = new mongoose.Schema({
+	title: {
+		type: String,
+		require: [true, 'No Title'],
+	},
 	body: {
 		type: String,
 		required: [true, 'No Body'],
