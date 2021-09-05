@@ -1,6 +1,6 @@
 import React, { useState, createRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUserInfo } from '../../Actions/userInfo';
+import { updateUserInfo } from '../../Actions/users';
 import { Redirect } from 'react-router';
 import { Schema, FlexboxGrid, Container, Panel, Form, FormControl, FormGroup, ControlLabel, Button, ButtonToolbar } from 'rsuite';
 import { Toaster, toast } from 'react-hot-toast';

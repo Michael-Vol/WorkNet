@@ -1,0 +1,22 @@
+.users--list--user {
+	background-color: white;
+	padding: 10px;
+	font-size: 14px;
+	border-radius: 5px;
+	margin-bottom: 10px;
+}
+.users--list--user:hover {
+	background-color: #0b4b6d;
+	color: white;
+}
+
+.users--user--info {
+	padding-top: 10px;
+	font-size: 18px;
+	width: fit-content;
+}
+
+.users--user--avatar {
+	max-width: 100%;
+	max-height: 100%;
+}

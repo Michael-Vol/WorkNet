@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { LOGIN_FAIL, LOGIN_SUCCESS } from '../../Actions/types';
+import React, { useState, useRef } from 'react';
+import { LOGIN_FAIL } from '../../Actions/types';
 import './Login.scss';
 import { loginUser } from '../../Actions/auth';
 import toast, { Toaster } from 'react-hot-toast';
@@ -8,7 +8,6 @@ import { Redirect } from 'react-router-dom';
 import { Form, FormGroup, FormControl, ControlLabel, Button, ButtonToolbar, Schema, Content, FlexboxGrid, Panel } from 'rsuite';
 const Login = () => {
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-	const authError = useSelector((state) => state.auth.error);
 	const [loginData, setLoginData] = useState({
 		email: '',
 		password: '',

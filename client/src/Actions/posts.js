@@ -53,9 +53,7 @@ export const getAvatar = async (userID) => {
 		const config = {
 			responseType: 'arraybuffer',
 		};
-		console.log(userID);
 		const res = await axios.get(`/users/${userID}/avatar`, config);
-		// const avatar = res.data;
 		const avatar = Buffer.from(res.data).toString('base64');
 		return {
 			type: GET_USER_AVATAR_SUCCESS,

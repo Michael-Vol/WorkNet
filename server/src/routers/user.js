@@ -75,6 +75,24 @@ router.get('/me', auth, async (req, res) => {
 });
 
 /**
+ * @name /
+ * @descs Allows user to get all user info
+ * @access private
+ * @memberof user
+ */
+
+router.get('/', auth, async (req, res) => {
+	try {
+		const users = await User.find({}).select('firstName lastName email');
+		res.json({ users });
+	} catch (error) {
+		res.status(500).json({
+			message: error,
+		});
+	}
+});
+
+/**
  * @name POST me/
  * @desc Allows user to change email,password
  * @access private
@@ -297,11 +315,11 @@ router.get('/:user_id/avatar', async (req, res) => {
 		}
 
 		if (user.avatar === undefined) {
-			return res.status(400).json({
+			return res.json({
 				message: 'No Avatar has been uploaded',
 			});
 		}
-		// res.set('Content-Type', 'image/png');
+		res.set('Content-Type', 'image/png');
 		res.send(user.avatar);
 	} catch (error) {
 		console.error(error.name);

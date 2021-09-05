@@ -9,10 +9,8 @@ const PostItem = ({ post, index }) => {
 	const [avatar, setAvatar] = useState([]);
 	useEffect(async () => {
 		const res = await getAvatar(post.creator._id);
-		// document.querySelector('img').src = `data:image/png;base64,${res.payload}`;
 		dispatch(res);
 		setAvatar(res.payload);
-		// console.log(res.payload);
 	}, []);
 	return (
 		<Col md={18} className='container post--container' key={index}>

@@ -21,7 +21,7 @@ const posts = function (state = initialState, action) {
 		case GET_POSTS_SUCCESS:
 			return {
 				...state,
-				posts: payload,
+				posts: payload.posts,
 				error: null,
 				loading: false,
 			};

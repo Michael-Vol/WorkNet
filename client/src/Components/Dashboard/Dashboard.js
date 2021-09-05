@@ -23,32 +23,42 @@ import './Dashboard.scss';
 import { getPosts } from '../../Actions/posts';
 import SideNav from './SideNav.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPost } from '../../Actions/posts';
+import { addPost, getAvatar } from '../../Actions/posts';
 import PostItem from './PostItem';
+import { getUsers } from '../../Actions/users';
+import UserItem from './UserItem';
 const Dashboard = () => {
 	const formRef = useRef();
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
-	const postsLoading = useSelector((state) => state.posts.loading);
+	const users = useSelector((state) => state.users.users);
+	let posts = useSelector((state) => state.posts.posts);
 	const [newPost, setNewPost] = useState(false);
-	const [posts, setPosts] = useState([]);
 	const [formData, setFormData] = useState({
 		title: '',
 		body: '',
 	});
 	const fetchPosts = async () => {
-		console.log('fetching');
+		console.log('fetching posts');
 		const res = await getPosts();
 		dispatch(res);
-		setPosts(res.payload.posts);
 	};
+	const fetchUsers = async () => {
+		console.log('fetching users');
+		const res = await getUsers();
+		dispatch(res);
+		console.log(res);
+	};
+
+	if (posts) {
+		console.log(posts);
+	}
 	useEffect(async () => {
-		console.log(postsLoading);
 		if (user) {
 			await fetchPosts();
+			await fetchUsers();
 		}
-	}, [getPosts, setNewPost, user]);
-
+	}, [user]);
 	const { StringType } = Schema.Types;
 
 	const model = Schema.Model({
@@ -56,12 +66,13 @@ const Dashboard = () => {
 		body: StringType().isRequired('This field is required'),
 	});
 
-	const handleSubmit = async () => {
+	const handleFormSubmit = async () => {
 		if (formRef.current.check()) {
 			setNewPost(false);
 			console.log(formData);
 			const res = await addPost(formData);
 			dispatch(res);
+			await fetchPosts();
 		}
 	};
 
@@ -122,7 +133,7 @@ const Dashboard = () => {
 													className='submit--post--btn'
 													appearance='primary'
 													onClick={() => {
-														handleSubmit();
+														handleFormSubmit();
 													}}>
 													Submit
 												</Button>
@@ -147,7 +158,7 @@ const Dashboard = () => {
 					</Row>
 					<Grid className='test'>
 						<Row>
-							{postsLoading ? (
+							{!posts ? (
 								<div>
 									<Col md={18} className='container post--container'>
 										<Placeholder.Paragraph active />
@@ -160,52 +171,13 @@ const Dashboard = () => {
 									</Col>
 								</div>
 							) : (
-								 posts.map((post, index) => <PostItem key={index} post={post} />)
+								posts.map((post, index) => <PostItem key={index} post={post} />)
 							)}
 						</Row>
 					</Grid>
 				</FlexboxGrid.Item>
 				<FlexboxGrid.Item colspan={4} className='users--list--container'>
-					<Row className='users--list--user'>
-						<Col>
-							<Avatar circle />
-						</Col>
-						<Col>
-							<div>User Info</div>
-						</Col>
-					</Row>
-					<Row className='users--list--user'>
-						<Col>
-							<Avatar circle />
-						</Col>
-						<Col>
-							<div>User Info</div>
-						</Col>
-					</Row>
-					<Row className='users--list--user'>
-						<Col>
-							<Avatar circle />
-						</Col>
-						<Col>
-							<div>User Info</div>
-						</Col>
-					</Row>
-					<Row className='users--list--user'>
-						<Col>
-							<Avatar circle />
-						</Col>
-						<Col>
-							<div>User Info</div>
-						</Col>
-					</Row>
-					<Row className='users--list--user'>
-						<Col>
-							<Avatar circle />
-						</Col>
-						<Col>
-							<div>User Info</div>
-						</Col>
-					</Row>
+					{users && users.map((user, index) => <UserItem user={user} key={index} />)}
 				</FlexboxGrid.Item>
 			</FlexboxGrid>
 		</Container>
