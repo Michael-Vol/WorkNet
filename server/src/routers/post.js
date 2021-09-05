@@ -4,6 +4,8 @@ const Post = require('../models/Post');
 const User = require('../models/User');
 const Like = require('../models/Like');
 const Comment = require('../models/Comment');
+const multer = require('multer');
+const sharp = require('sharp');
 const router = express.Router();
 /**
  * @name POST /
@@ -12,7 +14,20 @@ const router = express.Router();
  * @memberof post
  */
 
-router.post('/', auth, async (req, res) => {
+const upload = multer({
+	limits: {
+		fileSize: 3000000,
+	},
+	fileFilter(req, file, cb) {
+		if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+			return cb(new Error('Please upload an image'));
+		}
+
+		cb(undefined, true);
+	},
+});
+
+router.post('/', auth, upload.single('image'), async (req, res) => {
 	try {
 		const { title, body } = req.body;
 
@@ -27,16 +42,27 @@ router.post('/', auth, async (req, res) => {
 			body,
 			creator: req.user._id,
 		});
+
+		if (req.file) {
+			const imageBuffer = await sharp(req.file.buffer)
+				.resize({
+					width: 600,
+					height: 400,
+				})
+				.png()
+				.toBuffer();
+			post.image = imageBuffer;
+		}
 		await post.save();
 
-		res.status(201).send(post);
+		res.status(201).json({ post });
 	} catch (error) {
 		if (error.name === 'ValidationError') {
 			return res.status(400).json({
 				message: 'No post body provided.',
 			});
 		}
-		res.status(500).json({
+		return res.status(500).json({
 			message: 'Server Error',
 		});
 	}

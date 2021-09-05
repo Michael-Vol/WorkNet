@@ -14,6 +14,9 @@ const postSchema = new mongoose.Schema(
 			type: mongoose.Types.ObjectId,
 			ref: 'User',
 		},
+		image: {
+			type: Buffer,
+		},
 	},
 	{ timestamps: true }
 );
