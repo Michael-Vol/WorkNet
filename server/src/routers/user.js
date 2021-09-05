@@ -301,7 +301,7 @@ router.get('/:user_id/avatar', async (req, res) => {
 				message: 'No Avatar has been uploaded',
 			});
 		}
-		res.set('Content-Type', 'image/png');
+		// res.set('Content-Type', 'image/png');
 		res.send(user.avatar);
 	} catch (error) {
 		console.error(error.name);
