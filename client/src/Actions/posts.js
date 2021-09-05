@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { GET_POSTS_SUCCESS, GET_POSTS_ERROR, ADD_POST_ERROR, ADD_POST_SUCCESS } from './types';
+import {
+	GET_POSTS_SUCCESS,
+	GET_POSTS_ERROR,
+	ADD_POST_ERROR,
+	ADD_POST_SUCCESS,
+	GET_USER_AVATAR_ERROR,
+	GET_USER_AVATAR_SUCCESS,
+} from './types';
 
 export const getPosts = async () => {
 	try {
@@ -36,6 +43,27 @@ export const addPost = async (formData) => {
 	} catch (error) {
 		return {
 			type: ADD_POST_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getAvatar = async (userID) => {
+	try {
+		const config = {
+			responseType: 'arraybuffer',
+		};
+		console.log(userID);
+		const res = await axios.get(`/users/${userID}/avatar`, config);
+		// const avatar = res.data;
+		const avatar = Buffer.from(res.data).toString('base64');
+		return {
+			type: GET_USER_AVATAR_SUCCESS,
+			payload: avatar,
+		};
+	} catch (error) {
+		return {
+			type: GET_USER_AVATAR_ERROR,
 			payload: error,
 		};
 	}

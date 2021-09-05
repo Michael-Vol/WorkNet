@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Col, Row } from 'rsuite';
 import './PostItem.scss';
 import Moment from 'react-moment';
+import { getAvatar } from '../../Actions/posts';
+import { useDispatch } from 'react-redux';
 const PostItem = ({ post, index }) => {
+	const dispatch = useDispatch();
+	const [avatar, setAvatar] = useState([]);
+	useEffect(async () => {
+		const res = await getAvatar(post.creator._id);
+		// document.querySelector('img').src = `data:image/png;base64,${res.payload}`;
+		dispatch(res);
+		setAvatar(res.payload);
+		// console.log(res.payload);
+	}, []);
 	return (
 		<Col md={18} className='container post--container' key={index}>
 			<Row className='post--header'>
 				<Col md={2} className='post--avatar'>
-					<Avatar circle />
+					<Avatar circle src={`data:image/png;base64,${avatar}`} className='image' />
 				</Col>
 				<Col md={4} className='post--user--info'>
 					<div>

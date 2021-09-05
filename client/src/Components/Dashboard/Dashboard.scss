@@ -67,8 +67,8 @@
 }
 
 .new--post--btn {
-	font-size: 28px;
-	width: 40%;
+	font-size: 22px;
+	width: fit-content;
 	background-color: lighten($color-base, 5%);
 	color: white;
 	transition: 0.5s;
@@ -84,8 +84,8 @@
 	color: white;
 }
 .refresh--posts--btn {
-	font-size: 28px;
-	width: 40%;
+	font-size: 22px;
+	width: fit-content;
 	float: right;
 	background-color: lighten($color-base, 5%);
 	color: white;

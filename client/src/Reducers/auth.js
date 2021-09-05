@@ -12,6 +12,7 @@ const auth = function (state = initialState, action) {
 	switch (type) {
 		case LOGIN_SUCCESS:
 		case REGISTER_SUCCESS:
+			console.log(payload);
 			localStorage.setItem('token', payload.token);
 			return {
 				...state,
@@ -19,6 +20,7 @@ const auth = function (state = initialState, action) {
 				loading: false,
 				user: payload.user,
 				error: null,
+				token: localStorage.getItem('token'),
 			};
 		case LOGIN_FAIL:
 		case REGISTER_FAIL:

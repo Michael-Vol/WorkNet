@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { LOGIN_FAIL, LOGIN_SUCCESS } from '../../Actions/types';
 import './Login.scss';
 import { loginUser } from '../../Actions/auth';
 import toast, { Toaster } from 'react-hot-toast';
@@ -18,17 +19,11 @@ const Login = () => {
 	const { email, password } = loginData;
 	const dispatch = useDispatch();
 
-	useEffect(() => {
-		if (authError) {
-			toast.error(authError.message);
-		}
-	}, [authError]);
-
-	if (isAuthenticated) {
-		return <Redirect to='/dashboard' />;
-	}
 	if (cancel) {
 		return <Redirect to='/' />;
+	}
+	if (isAuthenticated) {
+		return <Redirect to='/dashboard' />;
 	}
 	const { StringType } = Schema.Types;
 	const model = Schema.Model({
@@ -42,6 +37,10 @@ const Login = () => {
 		if (formRef.current.check()) {
 			const res = await loginUser({ email, password });
 			dispatch(res);
+			console.log(res);
+			if (res.type === LOGIN_FAIL) {
+				toast.error(res.payload.data.message);
+			}
 		}
 	};
 
@@ -71,7 +70,7 @@ const Login = () => {
 										<i className='fas fa-key form__icon'></i>
 										<span>Password</span>
 									</ControlLabel>
-									<FormControl name='password'></FormControl>
+									<FormControl type='password' name='password'></FormControl>
 								</FormGroup>
 								<FormGroup>
 									<ButtonToolbar>

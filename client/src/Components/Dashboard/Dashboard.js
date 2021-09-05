@@ -39,8 +39,8 @@ const Dashboard = () => {
 	const fetchPosts = async () => {
 		console.log('fetching');
 		const res = await getPosts();
-		const postsState = dispatch(res);
-		setPosts(postsState.payload.posts);
+		dispatch(res);
+		setPosts(res.payload.posts);
 	};
 	useEffect(async () => {
 		console.log(postsLoading);
@@ -160,7 +160,7 @@ const Dashboard = () => {
 									</Col>
 								</div>
 							) : (
-								posts.map((post, index) => <PostItem key={index} post={post} />)
+								 posts.map((post, index) => <PostItem key={index} post={post} />)
 							)}
 						</Row>
 					</Grid>

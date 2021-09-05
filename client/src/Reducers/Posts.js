@@ -1,4 +1,11 @@
-import { GET_POSTS_SUCCESS, GET_POSTS_ERROR, ADD_POST_SUCCESS, ADD_POST_ERROR } from '../Actions/types';
+import {
+	GET_POSTS_SUCCESS,
+	GET_POSTS_ERROR,
+	ADD_POST_SUCCESS,
+	ADD_POST_ERROR,
+	GET_USER_AVATAR_ERROR,
+	GET_USER_AVATAR_SUCCESS,
+} from '../Actions/types';
 
 const initialState = {
 	posts: null,
@@ -36,6 +43,18 @@ const posts = function (state = initialState, action) {
 			return {
 				...state,
 				post: null,
+				error: payload,
+				loading: false,
+			};
+		case GET_USER_AVATAR_SUCCESS:
+			return {
+				...state,
+				error: null,
+				loading: false,
+			};
+		case GET_USER_AVATAR_ERROR:
+			return {
+				...state,
 				error: payload,
 				loading: false,
 			};
