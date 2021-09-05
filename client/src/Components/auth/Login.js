@@ -5,7 +5,19 @@ import { loginUser } from '../../Actions/auth';
 import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Form, FormGroup, FormControl, ControlLabel, Button, ButtonToolbar, Schema, Content, FlexboxGrid, Panel } from 'rsuite';
+import {
+	Form,
+	FormGroup,
+	FormControl,
+	ControlLabel,
+	Button,
+	ButtonToolbar,
+	Schema,
+	Content,
+	FlexboxGrid,
+	Panel,
+	Loader,
+} from 'rsuite';
 const Login = () => {
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 	const [loginData, setLoginData] = useState({
@@ -13,6 +25,7 @@ const Login = () => {
 		password: '',
 	});
 	const [cancel, setCancel] = useState(false);
+	const [submitted, setSubmitted] = useState(false);
 	const formRef = useRef();
 
 	const { email, password } = loginData;
@@ -39,6 +52,7 @@ const Login = () => {
 			console.log(res);
 			if (res.type === LOGIN_FAIL) {
 				toast.error(res.payload.data.message);
+				setSubmitted(false);
 			}
 		}
 	};
@@ -73,7 +87,14 @@ const Login = () => {
 								</FormGroup>
 								<FormGroup>
 									<ButtonToolbar>
-										<Button type='submit' onClick={() => handleSubmit()} appearance='primary'>
+										<Button
+											type='submit'
+											loading={submitted}
+											onClick={() => {
+												setSubmitted(true);
+												handleSubmit();
+											}}
+											appearance='primary'>
 											Login
 										</Button>
 										<Button

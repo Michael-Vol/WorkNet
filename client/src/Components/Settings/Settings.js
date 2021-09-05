@@ -50,10 +50,12 @@ const Settings = () => {
 			toast.error(res.payload.response.data.message);
 		}
 	};
+	if (cancel) {
+		return <Redirect to='/dashboard' />;
+	}
 	return (
 		<Container>
 			<Toaster position='top-center' toastOptions={{ duration: 4000 }} />
-			{cancel && <Redirect to='/' />}
 			<FlexboxGrid justify='center'>
 				<FlexboxGrid.Item>
 					<Panel header='Settings' className='settings-panel'>
