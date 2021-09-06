@@ -12,6 +12,7 @@ import axios from 'axios';
 import { loadUser } from './Actions/auth';
 import PrivateRoute from './Components/Routing/PrivateRoute';
 import PersonalInfo from './Components/PersonalInfo/PersonalInfo';
+import Network from './Components/Network/Network';
 import store from './store';
 import { useDispatch } from 'react-redux';
 import './App.scss';
@@ -37,6 +38,7 @@ const App = (props) => {
 					<PrivateRoute exact path='/dashboard' component={Dashboard} />
 					<PrivateRoute exact path='/personal-info' component={PersonalInfo} />
 					<PrivateRoute exact path='/settings' component={Settings} />
+					<PrivateRoute exact path='/network' component={Network} />
 				</Switch>
 			</Container>
 		</Router>
