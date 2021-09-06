@@ -37,7 +37,6 @@ export const registerUser = async ({ firstName, lastName, email, password, phone
 	for (const key in textFields) {
 		formData.append(key, textFields[key]);
 	}
-	//formData.append('data', { firstName, lastName, email, password, phoneNumber: phone });
 
 	try {
 		const res = await axios.post('/users/signup', formData, config);

@@ -33,11 +33,14 @@ const Dashboard = () => {
 	const user = useSelector((state) => state.auth.user);
 	const users = useSelector((state) => state.users.users);
 	let posts = useSelector((state) => state.posts.posts);
+
 	const [newPost, setNewPost] = useState(false);
 	const [formData, setFormData] = useState({
 		title: '',
 		body: '',
 	});
+	const [formImage, setFormImage] = useState({});
+
 	const fetchPosts = async () => {
 		console.log('fetching posts');
 		const res = await getPosts();
@@ -50,9 +53,6 @@ const Dashboard = () => {
 		console.log(res);
 	};
 
-	if (posts) {
-		console.log(posts);
-	}
 	useEffect(async () => {
 		if (user) {
 			await fetchPosts();
@@ -70,7 +70,8 @@ const Dashboard = () => {
 		if (formRef.current.check()) {
 			setNewPost(false);
 			console.log(formData);
-			const res = await addPost(formData);
+			const res = await addPost(formData, formImage);
+			console.log(res);
 			dispatch(res);
 			await fetchPosts();
 		}
@@ -121,7 +122,15 @@ const Dashboard = () => {
 											<FormControl className='add--post--body' componentClass='textarea' name='body' />
 										</FormGroup>
 										<FormGroup className='form__image'>
-											<Uploader listType='picture'>
+											<Uploader
+												listType='picture'
+												multiple={false}
+												autoUpload={false}
+												name='formImage'
+												onChange={(fileList) => {
+													console.log(fileList[0]);
+													setFormImage(fileList[0]);
+												}}>
 												<button>
 													<Icon icon='camera-retro' size='lg' />
 												</button>

@@ -11,6 +11,10 @@ const PostItem = ({ post, index }) => {
 		const res = await getAvatar(post.creator._id);
 		dispatch(res);
 		setAvatar(res.payload);
+		console.log(post);
+		if (post.image) {
+			post.image = Buffer.from(post.image.data).toString('base64');
+		}
 	}, []);
 	return (
 		<Col md={18} className='container post--container' key={index}>
@@ -33,6 +37,9 @@ const PostItem = ({ post, index }) => {
 				<h4>{post.title}</h4>
 			</Row>
 			<Row className='post--body'>{post.body}</Row>
+			<Row className='post--image--container'>
+				{post.image && <img className='post--image' src={`data:image/png;base64,${post.image}`} />}{' '}
+			</Row>
 		</Col>
 	);
 };

@@ -26,15 +26,24 @@ export const getPosts = async () => {
 	}
 };
 
-export const addPost = async (formData) => {
+export const addPost = async (textFields, image) => {
 	try {
+		const formData = new FormData();
+		for (const key in textFields) {
+			formData.append(key, textFields[key]);
+		}
+
+		if (image) {
+			formData.append('image', image.blobFile);
+		}
+
 		const config = {
 			headers: {
-				'Content-Type': 'application/json',
+				'Content-Type': 'multipart/form-data',
 			},
 		};
-		const body = JSON.stringify(formData);
-		const res = await axios.post('/posts', body, config);
+		console.log(formData);
+		const res = await axios.post('/posts', formData, config);
 
 		return {
 			type: ADD_POST_SUCCESS,
