@@ -7,13 +7,15 @@ import { useDispatch } from 'react-redux';
 const PostItem = ({ post, index }) => {
 	const dispatch = useDispatch();
 	const [avatar, setAvatar] = useState([]);
+	const [imageConverted, setimageConverted] = useState(false);
 	useEffect(async () => {
 		const res = await getAvatar(post.creator._id);
 		dispatch(res);
 		setAvatar(res.payload);
 		console.log(post);
 		if (post.image) {
-			post.image = Buffer.from(post.image.data).toString('base64');
+			post.image.data = Buffer.from(post.image.data).toString('base64');
+			setimageConverted(true);
 		}
 	}, []);
 	return (
@@ -38,7 +40,7 @@ const PostItem = ({ post, index }) => {
 			</Row>
 			<Row className='post--body'>{post.body}</Row>
 			<Row className='post--image--container'>
-				{post.image && <img className='post--image' src={`data:image/png;base64,${post.image}`} />}{' '}
+				{imageConverted && <img className='post--image' src={`data:image/png;base64,${post.image.data}`} />}{' '}
 			</Row>
 		</Col>
 	);
