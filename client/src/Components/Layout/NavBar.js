@@ -38,6 +38,15 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 			<Nav.Item href='/settings' className='link'>
 				Settings
 			</Nav.Item>
+			<Nav.Item
+				href='/settings'
+				className='link'
+				onSelect={() => {
+					localStorage.removeItem('token');
+				}}>
+				<i className='fas fa-sign-out-alt nav-icon'></i>
+				Logout
+			</Nav.Item>
 		</div>
 	);
 	return (

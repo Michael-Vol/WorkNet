@@ -3,9 +3,9 @@
 	border-radius: 5px;
 }
 .dashboard--container {
-	margin-bottom: 20px;
-	height: 100vh;
-	overflow-y: hidden;
+	margin-bottom: 0px;
+	height: 90vh;
+	overflow-y: scroll;
 }
 .posts--container {
 	margin: 20px 20px 0px 30px;
@@ -13,7 +13,7 @@
 	background-color: rgb(240, 242, 245);
 	border-radius: 5px;
 	overflow-y: scroll;
-	height: 100%;
+	height: 90vh;
 	padding: 30px;
 }
 .add--post--btn {
@@ -36,7 +36,7 @@
 	font-size: 16px;
 	background-color: lighten($color-white-light, 5%);
 	margin-bottom: 20px;
-	padding: 40px 50px 40px 50px;
+	padding: 40px 50px 10px 30px;
 	margin-left: 130px;
 }
 .posts--container::-webkit-scrollbar {
@@ -67,22 +67,36 @@
 }
 
 .new--post--btn {
-	font-size: 28px;
-	width: 20%;
+	font-size: 22px;
+	width: fit-content;
 	background-color: lighten($color-base, 5%);
 	color: white;
 	transition: 0.5s;
 	margin-bottom: 20px;
+	text-align: center;
 }
 .new--post--btn:hover {
 	background-color: $color-base;
 	color: white;
 }
+.refresh--posts--btn:hover {
+	background-color: $color-base;
+	color: white;
+}
+.refresh--posts--btn {
+	font-size: 22px;
+	width: fit-content;
+	float: right;
+	background-color: lighten($color-base, 5%);
+	color: white;
+	transition: 0.5s;
+	margin-bottom: 20px;
+}
 .new--post--form {
 	text-align: left;
 	background-color: $color-white-secondary;
 	border-radius: 5px;
-	padding: 50px;
+	padding: 45px 45px 60px 45px;
 	color: $color-base;
 	margin: auto;
 	width: 100%;
@@ -110,14 +124,6 @@
 .post--header {
 	margin-bottom: 15px;
 }
-.post--user--info {
-	padding-top: 10px;
-	font-size: 18px;
-}
-
-.post--title {
-	margin-bottom: 15px;
-}
 
 .test {
 	width: 100%;
@@ -128,11 +134,6 @@
 	margin: 20px 0px 0px 0px;
 	border: 3px solid $color-base;
 	padding: 20px;
-}
-.users--list--user {
-	background-color: white;
-	padding: 10px;
-	font-size: 14px;
-	border-radius: 5px;
-	margin-bottom: 10px;
+	height: 90vh;
+	overflow-y: scroll;
 }

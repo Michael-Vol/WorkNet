@@ -1,12 +1,10 @@
 import axios from 'axios';
 import { REGISTER_SUCCESS, REGISTER_FAIL, LOGIN_SUCCESS, LOGIN_FAIL, USER_LOADED, AUTH_ERROR } from './types';
-
+import setAuthHeader from '../Utils/setAuthHeader';
 //Load User
 
 export const loadUser = async () => {
-	if (localStorage.token) {
-		axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
-	}
+	setAuthHeader();
 	try {
 		const res = await axios.get('/users/me');
 		return { type: USER_LOADED, payload: res.data };
@@ -39,7 +37,6 @@ export const registerUser = async ({ firstName, lastName, email, password, phone
 	for (const key in textFields) {
 		formData.append(key, textFields[key]);
 	}
-	//formData.append('data', { firstName, lastName, email, password, phoneNumber: phone });
 
 	try {
 		const res = await axios.post('/users/signup', formData, config);

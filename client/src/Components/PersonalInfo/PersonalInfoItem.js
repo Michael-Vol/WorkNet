@@ -1,5 +1,5 @@
 import React from 'react';
-import { Panel, Loader, List, Placeholder } from 'rsuite';
+import { Panel, List, Placeholder } from 'rsuite';
 import { useSelector } from 'react-redux';
 import './PersonalInfoItem.scss';
 const PersonalInfoItem = ({ category, infoData }) => {

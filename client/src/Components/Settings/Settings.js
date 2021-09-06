@@ -1,21 +1,8 @@
-import React, { useState, createRef, useEffect } from 'react';
+import React, { useState, createRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUserInfo } from '../../Actions/userInfo';
+import { updateUserInfo } from '../../Actions/users';
 import { Redirect } from 'react-router';
-import {
-	Schema,
-	FlexboxGrid,
-	Container,
-	List,
-	Panel,
-	Form,
-	FormControl,
-	FormGroup,
-	ControlLabel,
-	Button,
-	ButtonToolbar,
-	Input,
-} from 'rsuite';
+import { Schema, FlexboxGrid, Container, Panel, Form, FormControl, FormGroup, ControlLabel, Button, ButtonToolbar } from 'rsuite';
 import { Toaster, toast } from 'react-hot-toast';
 import './Settings.scss';
 const Settings = () => {
@@ -63,10 +50,12 @@ const Settings = () => {
 			toast.error(res.payload.response.data.message);
 		}
 	};
+	if (cancel) {
+		return <Redirect to='/dashboard' />;
+	}
 	return (
 		<Container>
 			<Toaster position='top-center' toastOptions={{ duration: 4000 }} />
-			{cancel && <Redirect to='/' />}
 			<FlexboxGrid justify='center'>
 				<FlexboxGrid.Item>
 					<Panel header='Settings' className='settings-panel'>

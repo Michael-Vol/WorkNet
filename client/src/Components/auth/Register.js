@@ -37,6 +37,7 @@ const Register = (props) => {
 	//setup local state
 	const [avatar, setAvatar] = useState({});
 	const [cancel, setCancel] = useState(false);
+	const [submitted, setSubmitted] = useState(false);
 	const formRef = useRef();
 
 	useEffect(() => {
@@ -177,7 +178,11 @@ const Register = (props) => {
 									<Button
 										className='form--submit-btn'
 										type='submit'
-										onClick={() => handleSubmit()}
+										loading={submitted}
+										onClick={() => {
+											setSubmitted(true);
+											handleSubmit();
+										}}
 										appearance='primary'>
 										Register
 									</Button>

@@ -1,4 +1,6 @@
 import { REGISTER_SUCCESS, REGISTER_FAIL, LOGIN_SUCCESS, LOGIN_FAIL, USER_LOADED, AUTH_ERROR } from '../Actions/types';
+import setAuthHeader from '../Utils/setAuthHeader';
+
 const initialState = {
 	token: localStorage.getItem('token'),
 	isAuthenticated: !!localStorage.getItem('token'),
@@ -12,13 +14,16 @@ const auth = function (state = initialState, action) {
 	switch (type) {
 		case LOGIN_SUCCESS:
 		case REGISTER_SUCCESS:
+			console.log(payload);
 			localStorage.setItem('token', payload.token);
+			setAuthHeader();
 			return {
 				...state,
 				isAuthenticated: true,
 				loading: false,
 				user: payload.user,
 				error: null,
+				token: localStorage.getItem('token'),
 			};
 		case LOGIN_FAIL:
 		case REGISTER_FAIL:

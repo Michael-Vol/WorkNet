@@ -42,7 +42,6 @@ router.post('/signup', upload.single('avatar'), async (req, res) => {
 			})
 			.png()
 			.toBuffer();
-		console.log(req.body);
 		const user = new User({ ...req.body, avatar: avatarBuffer });
 		const token = await user.generateAuthToken();
 		user.avatar = avatarBuffer;
@@ -72,6 +71,24 @@ router.post('/signup', upload.single('avatar'), async (req, res) => {
  */
 router.get('/me', auth, async (req, res) => {
 	res.send(req.user);
+});
+
+/**
+ * @name /
+ * @descs Allows user to get all user info
+ * @access private
+ * @memberof user
+ */
+
+router.get('/', auth, async (req, res) => {
+	try {
+		const users = await User.find({}).select('firstName lastName email');
+		res.json({ users });
+	} catch (error) {
+		res.status(500).json({
+			message: error,
+		});
+	}
 });
 
 /**
@@ -297,7 +314,7 @@ router.get('/:user_id/avatar', async (req, res) => {
 		}
 
 		if (user.avatar === undefined) {
-			return res.status(400).json({
+			return res.json({
 				message: 'No Avatar has been uploaded',
 			});
 		}
@@ -463,6 +480,31 @@ router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) =>
 		});
 	} catch (error) {
 		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET /me/posts
+ * @desc Allows user to get all of the posts of his own
+ * @access private
+ * @memberof post
+ */
+
+router.get('/me/posts', auth, async (req, res) => {
+	try {
+		await req.user
+			.populate({
+				path: 'posts',
+			})
+			.execPopulate();
+		res.json({
+			posts: req.user.posts,
+		});
+	} catch (error) {
+		console.error(error);
 		res.status(500).json({
 			message: 'Server Error',
 		});
