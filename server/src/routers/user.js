@@ -148,7 +148,6 @@ router.post('/me', auth, async (req, res) => {
 
 router.post('/me/personal-info', auth, async (req, res) => {
 	try {
-		console.log(req.body);
 		const allowedUpdates = ['workExperience', 'education', 'skills'];
 		const userUpdates = Object.keys(req.body);
 		userUpdates.forEach((update) => {
@@ -160,9 +159,18 @@ router.post('/me/personal-info', auth, async (req, res) => {
 
 			Object.keys(req.body[update]).forEach((fieldUpdate) => {
 				let fieldAllowedUpdates = [];
-				req.body[update] === 'skills'
-					? (fieldAllowedUpdates = ['name'])
-					: (fieldAllowedUpdates = ['name', 'description']);
+				switch (update) {
+					case 'skills':
+						fieldAllowedUpdates = ['name'];
+						break;
+					case 'education':
+						fieldAllowedUpdates = ['name', 'university', 'description'];
+						break;
+					case 'workExperience':
+						fieldAllowedUpdates = ['name', 'employer', 'description'];
+						break;
+				}
+				// console.log('field  ', update, fieldUpdate, fieldAllowedUpdates);
 				if (!fieldAllowedUpdates.includes(fieldUpdate)) {
 					return res.status(400).json({
 						message: `Update: ${fieldUpdate} is invalid.`,
@@ -171,16 +179,16 @@ router.post('/me/personal-info', auth, async (req, res) => {
 			});
 		});
 		userUpdates.forEach((update) => {
-			console.log(req.user[update]);
+			console.log(req.user[update], req.body[update]);
 			req.user[update].push(req.body[update]);
 		});
 		await req.user.save();
 		return res.json({ user: req.user });
 	} catch (error) {
-		console.log(error);
+		// console.log(error);
 		if (error.name === 'ValidationError') {
 			return res.status(400).json({
-				message: 'No body provided',
+				message: 'One or more fields are missing',
 			});
 		}
 		return res.status(500).json({
