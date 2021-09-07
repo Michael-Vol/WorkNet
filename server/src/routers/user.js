@@ -82,9 +82,21 @@ router.get('/me', auth, async (req, res) => {
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const users = await User.find({}).select('firstName lastName email');
+		req.query.personalInfo
+			? (selectFields = 'firstName lastName email workExperience education skills avatar')
+			: (selectFields = 'firstName lastName email avatar');
+
+		const users = await User.find({}).select(selectFields);
+		if (req.query.personalInfo) {
+			users.forEach((user) => {
+				user.workExperience.reverse();
+				user.education.reverse();
+				user.skills.reverse();
+			});
+		}
 		res.json({ users });
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({
 			message: error,
 		});
@@ -148,6 +160,7 @@ router.post('/me', auth, async (req, res) => {
 
 router.post('/me/personal-info', auth, async (req, res) => {
 	try {
+		console.log(req.body);
 		const allowedUpdates = ['workExperience', 'education', 'skills'];
 		const userUpdates = Object.keys(req.body);
 		userUpdates.forEach((update) => {
@@ -181,6 +194,7 @@ router.post('/me/personal-info', auth, async (req, res) => {
 		await req.user.save();
 		return res.json({ user: req.user });
 	} catch (error) {
+		console.log(error);
 		if (error.name === 'ValidationError') {
 			return res.status(400).json({
 				message: 'One or more fields are missing or invalid',
@@ -201,9 +215,9 @@ router.post('/me/personal-info', auth, async (req, res) => {
 
 router.get('/me/personal-info', auth, async (req, res) => {
 	return res.json({
-		workExperience: req.user.workExperience,
-		education: req.user.education,
-		skills: req.user.skills,
+		workExperience: req.user.workExperience.reverse(),
+		education: req.user.education.reverse(),
+		skills: req.user.skills.reverse(),
 	});
 });
 

@@ -1,0 +1,40 @@
+@import '../../Styles/main';
+.user--panel--container > .rs-panel {
+	background-color: $color-white-secondary;
+	border: 5px $color-base;
+	border-radius: 10px;
+	animation: fadeIn 1.5s;
+	margin: 20px;
+	// width: 40vh;
+	padding: 10px;
+	height: 25vh;
+	overflow-y: scroll;
+	transition: 1s;
+	text-align: center;
+	font-size: 20px;
+}
+.user--panel:hover {
+	background-color: $color-base;
+	color: #fff;
+	transition: 0.5s;
+	box-shadow: rgba(0, 0, 0, 0.45) 15px 14px 28px, rgba(0, 0, 0, 0.45) 15px 14px 10px;
+}
+.header {
+	font-size: 24px;
+	margin-bottom: 10px;
+}
+.info {
+	// font-size: 20px;
+	float: left;
+	width: 100%;
+	padding: 2px;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
