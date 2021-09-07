@@ -49,8 +49,8 @@ const Login = () => {
 		if (formRef.current.check()) {
 			const res = await loginUser({ email, password });
 			dispatch(res);
-			console.log(res);
 			if (res.type === LOGIN_FAIL) {
+				console.log(res.payload);
 				toast.error(res.payload.data.message);
 				setSubmitted(false);
 			}

@@ -19,6 +19,13 @@ const PersonalInfoItem = ({ category, infoData }) => {
 									<p className='info--item__title'>
 										{infoData.name && <b>{infoData.name}:</b>} {info.name}
 									</p>
+									<p className='info--item__title'>
+										{infoData.sector && (
+											<span>
+												<b>{infoData.sector}:</b> {info[infoData.sector.toLowerCase()]}
+											</span>
+										)}
+									</p>
 									{info.description && (
 										<p>
 											<b>Description:</b> {info.description}

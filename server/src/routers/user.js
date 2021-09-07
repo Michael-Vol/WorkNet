@@ -82,9 +82,21 @@ router.get('/me', auth, async (req, res) => {
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const users = await User.find({}).select('firstName lastName email');
+		req.query.personalInfo
+			? (selectFields = 'firstName lastName email workExperience education skills avatar')
+			: (selectFields = 'firstName lastName email avatar');
+
+		const users = await User.find({}).select(selectFields);
+		if (req.query.personalInfo) {
+			users.forEach((user) => {
+				user.workExperience.reverse();
+				user.education.reverse();
+				user.skills.reverse();
+			});
+		}
 		res.json({ users });
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({
 			message: error,
 		});
@@ -160,18 +172,23 @@ router.post('/me/personal-info', auth, async (req, res) => {
 
 			Object.keys(req.body[update]).forEach((fieldUpdate) => {
 				let fieldAllowedUpdates = [];
-				req.body[update] === 'skills'
-					? (fieldAllowedUpdates = ['name'])
-					: (fieldAllowedUpdates = ['name', 'description']);
+				switch (update) {
+					case 'skills':
+						fieldAllowedUpdates = ['name'];
+						break;
+					case 'education':
+						fieldAllowedUpdates = ['name', 'university', 'description'];
+						break;
+					case 'workExperience':
+						fieldAllowedUpdates = ['name', 'employer', 'description'];
+						break;
+				}
 				if (!fieldAllowedUpdates.includes(fieldUpdate)) {
-					return res.status(400).json({
-						message: `Update: ${fieldUpdate} is invalid.`,
-					});
+					throw new Error({ name: 'Validation Error' });
 				}
 			});
 		});
 		userUpdates.forEach((update) => {
-			console.log(req.user[update]);
 			req.user[update].push(req.body[update]);
 		});
 		await req.user.save();
@@ -180,7 +197,7 @@ router.post('/me/personal-info', auth, async (req, res) => {
 		console.log(error);
 		if (error.name === 'ValidationError') {
 			return res.status(400).json({
-				message: 'No body provided',
+				message: 'One or more fields are missing or invalid',
 			});
 		}
 		return res.status(500).json({
@@ -198,9 +215,9 @@ router.post('/me/personal-info', auth, async (req, res) => {
 
 router.get('/me/personal-info', auth, async (req, res) => {
 	return res.json({
-		workExperience: req.user.workExperience,
-		education: req.user.education,
-		skills: req.user.skills,
+		workExperience: req.user.workExperience.reverse(),
+		education: req.user.education.reverse(),
+		skills: req.user.skills.reverse(),
 	});
 });
 

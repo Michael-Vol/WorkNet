@@ -63,14 +63,16 @@ const userSchema = new mongoose.Schema(
 		],
 		workExperience: [
 			{
-				name: { type: String },
-				description: { type: String },
+				name: { type: String, required: true },
+				employer: { type: String, required: true },
+				description: { type: String, required: true },
 			},
 		],
 		education: [
 			{
-				name: { type: String },
-				description: { type: String },
+				name: { type: String, required: true },
+				university: { type: String, required: true },
+				description: { type: String, required: true },
 			},
 		],
 		skills: [

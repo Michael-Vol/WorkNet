@@ -31,18 +31,24 @@
 }
 .login--container {
 	margin-top: 20vh;
+	animation: fadeIn 1s;
 }
 .login--container:hover {
-	box-shadow: #004855 20px 54px 55px, #004855 0px -12px 30px, #004855 0px 4px 6px, #004855 0px 12px 13px, #004855 0px -3px 5px;
+	transition: 0.4s;
+	box-shadow: rgba(0, 0, 0, 0.45) 15px 14px 28px, rgba(0, 0, 0, 0.45) 15px 14px 10px;
 }
 
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
 .form--title {
 	margin-bottom: 20px;
 }
-
-// .form--submit-btn {
-// 	margin-right: 50px;
-// }
 
 .rs-input {
 	width: auto;

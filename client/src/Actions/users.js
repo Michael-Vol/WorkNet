@@ -23,9 +23,16 @@ export const updateUserInfo = async (userInfo) => {
 	}
 };
 
-export const getUsers = async () => {
+export const getUsers = async (options = {}) => {
 	try {
-		const res = await axios.get('/users/');
+		const { includePersonalInfo } = options;
+		let url = '/users';
+		console.log(includePersonalInfo);
+		if (includePersonalInfo) {
+			url = url + '?personalInfo=true';
+		}
+		console.log(url);
+		const res = await axios.get(url);
 		return {
 			type: GET_USERS_SUCCESS,
 			payload: res.data,
