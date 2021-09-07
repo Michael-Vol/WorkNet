@@ -8,23 +8,34 @@ import UserItem from './UserItem';
 const Network = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
+	const [users, setUsers] = useState([]);
+	const [filteredUsers, setFilteredUsers] = useState([]);
 	useEffect(async () => {
 		if (user) {
 			console.log('fetching users');
 			const res = await getUsers({ includePersonalInfo: true });
 			dispatch(res);
 			setUsers(res.payload.users);
-			console.log(res.payload.users);
+			setFilteredUsers(res.payload.users);
 		}
 	}, [user]);
 
-	const [users, setUsers] = useState([]);
+	const searchUsers = (value) => {
+		setFilteredUsers([]);
+		users.forEach((user) => {
+			const fullName = user.firstName + ' ' + user.lastName;
+			if (fullName.toLowerCase().includes(value)) {
+				setFilteredUsers((filteredUsers) => [...filteredUsers, user]);
+			}
+		});
+	};
+
 	return (
 		<Container className='network--container'>
 			<Row className='search--container' gutter={10}>
 				<Col md={22} className='search'>
 					<InputGroup>
-						<Input />
+						<Input onChange={(value) => searchUsers(value)} />
 						<InputGroup.Button>
 							<Icon icon='search' />
 						</InputGroup.Button>
@@ -32,7 +43,7 @@ const Network = () => {
 				</Col>
 			</Row>
 			<Row className='users--container' gutter={4}>
-				{users && users.map((user, index) => <UserItem user={user} key={index} />)}
+				{filteredUsers && filteredUsers.map((user, index) => <UserItem user={user} key={index} />)}
 			</Row>
 		</Container>
 	);

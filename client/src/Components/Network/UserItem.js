@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './UserItem.scss';
-import { Col, Row, Panel, Avatar } from 'rsuite';
+import { Col, Row, Panel, Avatar, Button } from 'rsuite';
 import { getAvatar } from '../../Actions/posts';
 import { useDispatch } from 'react-redux';
 const UserItem = ({ user }) => {

@@ -13,7 +13,7 @@ const PostItem = ({ post, index }) => {
 		dispatch(res);
 		setAvatar(res.payload);
 		console.log(post);
-		if (post.image) {
+		if (post.image && post.image.data) {
 			post.image.data = Buffer.from(post.image.data).toString('base64');
 			setimageConverted(true);
 		}
@@ -40,7 +40,7 @@ const PostItem = ({ post, index }) => {
 			</Row>
 			<Row className='post--body'>{post.body}</Row>
 			<Row className='post--image--container'>
-				{imageConverted && <img className='post--image' src={`data:image/png;base64,${post.image.data}`} />}{' '}
+				{imageConverted && post.image && <img className='post--image' src={`data:image/png;base64,${post.image.data}`} />}{' '}
 			</Row>
 		</Col>
 	);
