@@ -25,19 +25,19 @@ const PersonalInfo = () => {
 	const loading = useSelector((state) => state.personalInfo.loading);
 
 	const [personalInfo, setPersonalInfo] = useState({});
-	const [formSubmitted, setFormSubmitted] = useState(false);
 	const infoCategories = ['Work Experience', 'Education', 'Skills'];
 	const [addExperience, setAddExperience] = useState(false);
 	const [formFields, setFormFields] = useState({ fields: {}, model: Schema.Model({}) });
 	const [currentCategory, setCurrentCategory] = useState('workExperience');
-	const [formData, setFormData] = useState({
+	const formInitialState = {
 		name: '',
+		sector: '',
 		description: '',
-	});
+	};
+	const [formData, setFormData] = useState(formInitialState);
 	const fetchInfo = async () => {
 		const res = await getPersonalInfo();
 		const personalInfo = dispatch(res);
-		console.log(personalInfo);
 		setPersonalInfo(personalInfo.payload);
 	};
 	useEffect(async () => {
@@ -48,11 +48,31 @@ const PersonalInfo = () => {
 
 	const { StringType } = Schema.Types;
 	const handleSubmit = async () => {
-		console.log(formData);
 		if (formRef.current.check()) {
-			const res = await postPersonalInfo({ [currentCategory]: formData });
+			// formData.sector = formData[sector].toLowerCase();
+			const actionData = {};
+			console.log(currentCategory);
+			switch (currentCategory) {
+				case 'workExperience':
+					actionData.name = formData.name;
+					actionData.description = formData.description;
+					actionData.employer = formData.sector;
+					break;
+				case 'education':
+					actionData.name = formData.name;
+					actionData.description = formData.description;
+					actionData.university = formData.sector;
+					break;
+				case 'skills':
+					actionData.name = formData.name;
+					break;
+			}
+			console.log(actionData);
+
+			const res = await postPersonalInfo({ [currentCategory]: actionData });
 			console.log(res);
 			dispatch(res);
+			setFormData(formInitialState);
 			await fetchInfo();
 		}
 	};
@@ -60,23 +80,27 @@ const PersonalInfo = () => {
 		switch (category) {
 			case 'Work Experience':
 				formFields.name = 'Position';
+				formFields.sector = 'Employer';
 				formFields.description = 'Description';
 				formFields.icon = <i className='fas fa-briefcase form__icon'></i>;
 				return setFormFields({
 					fields: formFields,
 					model: Schema.Model({
 						name: StringType().isRequired('This field is required'),
+						sector: StringType().isRequired('This field is required'),
 						description: StringType().isRequired('This field is required'),
 					}),
 				});
 			case 'Education':
 				formFields.name = 'Field of Study';
+				formFields.sector = 'University';
 				formFields.description = 'Description';
 				formFields.icon = <i className='fas fa-user-graduate form__icon'></i>;
 				return setFormFields({
 					fields: formFields,
 					model: Schema.Model({
 						name: StringType().isRequired('This field is required'),
+						sector: StringType().isRequired('This field is required'),
 						description: StringType().isRequired('This field is required'),
 					}),
 				});
@@ -100,7 +124,6 @@ const PersonalInfo = () => {
 							<Button
 								onClick={() => {
 									let categoryName = '';
-									console.log(category);
 									switch (category) {
 										case 'Work Experience':
 											setCurrentCategory('workExperience');
@@ -122,7 +145,12 @@ const PersonalInfo = () => {
 						);
 					})}
 			</ButtonGroup>
-			<Modal show={addExperience} onHide={() => setAddExperience(false)}>
+			<Modal
+				show={addExperience}
+				onHide={() => {
+					setFormData(formInitialState);
+					setAddExperience(false);
+				}}>
 				<Modal.Header>
 					<h3>Add Work Experience</h3>
 				</Modal.Header>
@@ -141,6 +169,14 @@ const PersonalInfo = () => {
 							</ControlLabel>
 							<FormControl name='name'></FormControl>
 						</FormGroup>
+						{formFields.fields.sector && (
+							<FormGroup key='form__sector'>
+								<ControlLabel className='form__label'>
+									<span>{formFields.fields.sector}</span>
+								</ControlLabel>
+								<FormControl name='sector'></FormControl>
+							</FormGroup>
+						)}
 						{formFields.fields.description && (
 							<FormGroup key='form__description'>
 								<ControlLabel className='form__label'>
@@ -159,7 +195,12 @@ const PersonalInfo = () => {
 								}}>
 								Submit
 							</Button>
-							<Button appearance='subtle' onClick={() => setAddExperience(false)}>
+							<Button
+								appearance='subtle'
+								onClick={() => {
+									setFormData(formInitialState);
+									setAddExperience(false);
+								}}>
 								Cancel
 							</Button>
 						</ButtonToolbar>
@@ -173,16 +214,19 @@ const PersonalInfo = () => {
 						case 'Work Experience':
 							infoData.data = personalInfo.workExperience;
 							infoData.name = 'Position';
+							infoData.sector = 'Employer';
 							break;
 						case 'Education':
 							infoData.data = personalInfo.education;
 							infoData.name = 'Field of Study';
+							infoData.sector = 'University';
 							break;
 						case 'Skills':
 							infoData.data = personalInfo.skills;
 							break;
 						default:
 							infoData.data = personalInfo.workExperience;
+							infoData.sector = 'Employer';
 							infoData.name = 'Position';
 					}
 

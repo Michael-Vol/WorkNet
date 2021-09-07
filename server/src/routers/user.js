@@ -170,25 +170,20 @@ router.post('/me/personal-info', auth, async (req, res) => {
 						fieldAllowedUpdates = ['name', 'employer', 'description'];
 						break;
 				}
-				// console.log('field  ', update, fieldUpdate, fieldAllowedUpdates);
 				if (!fieldAllowedUpdates.includes(fieldUpdate)) {
-					return res.status(400).json({
-						message: `Update: ${fieldUpdate} is invalid.`,
-					});
+					throw new Error({ name: 'Validation Error' });
 				}
 			});
 		});
 		userUpdates.forEach((update) => {
-			console.log(req.user[update], req.body[update]);
 			req.user[update].push(req.body[update]);
 		});
 		await req.user.save();
 		return res.json({ user: req.user });
 	} catch (error) {
-		// console.log(error);
 		if (error.name === 'ValidationError') {
 			return res.status(400).json({
-				message: 'One or more fields are missing',
+				message: 'One or more fields are missing or invalid',
 			});
 		}
 		return res.status(500).json({
