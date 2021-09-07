@@ -43,7 +43,8 @@ const Network = () => {
 				</Col>
 			</Row>
 			<Row className='users--container' gutter={4}>
-				{filteredUsers && filteredUsers.map((user, index) => <UserItem user={user} key={index} />)}
+				{filteredUsers &&
+					filteredUsers.map((user, index) => <UserItem user={user} key={index} id={`userItem-${index}`} />)}
 			</Row>
 		</Container>
 	);
