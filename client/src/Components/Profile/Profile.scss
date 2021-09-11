@@ -18,6 +18,9 @@
 .profile--main--container::-webkit-scrollbar {
 	display: none;
 }
+.loader {
+	padding-top: 40vh;
+}
 
 .profile--container {
 	// margin: 20px;
@@ -34,6 +37,10 @@
 .profile--avatar {
 	width: 20vh;
 	height: 20vh;
+	img {
+		width: 100% !important;
+		height: 100% !important;
+	}
 }
 .header--container {
 	margin-bottom: 20px;

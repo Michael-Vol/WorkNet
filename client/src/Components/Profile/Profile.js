@@ -2,17 +2,22 @@ import React, { useEffect, useState } from 'react';
 
 import './Profile.scss';
 import { getPersonalInfo } from '../../Actions/personalInfo';
-import { Container, FlexboxGrid, Avatar, Row, Nav, Button, List } from 'rsuite';
+import { getAvatar } from '../../Actions/posts';
+import { Container, FlexboxGrid, Avatar, Row, Nav, Button, List, Loader } from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux';
 const Profile = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
 	const personalInfo = useSelector((state) => state.personalInfo);
 	const [currentCategory, setCurrentCategory] = useState('Work Experience');
-
+	const [avatar, setAvatar] = useState(null);
 	const fetchPersonalInfo = async (userId) => {
-		const res = await getPersonalInfo(userId);
-		dispatch(res);
+		const resInfo = await getPersonalInfo(userId);
+		const resAvatar = await getAvatar(userId);
+		dispatch(resInfo);
+		dispatch(resAvatar);
+
+		setAvatar(resAvatar.payload);
 	};
 
 	useEffect(async () => {
@@ -78,33 +83,38 @@ const Profile = () => {
 		<Container className='profile--container'>
 			<FlexboxGrid justify='start' className='profile--flex--container'>
 				<FlexboxGrid.Item colspan={4}></FlexboxGrid.Item>
-				{personalInfo.loading ? (
-					<h1>Loading</h1>
-				) : (
-					<FlexboxGrid.Item colspan={16} className='profile--main--container'>
-						<Row>
-							<Button className='connect-btn' appearance='primary'>
-								Connect
-							</Button>
-						</Row>
-						<Row className='profile--container profile--avatar--container'>
-							<Avatar circle className='profile--avatar' />
-						</Row>
-						<Row className='profile--container header--container'>
-							<div className='header'>{personalInfo.name}</div>
-						</Row>
-						<Row className='profile--container profile--body--container'>
-							<Nav className='profile--navbar' appearance='tabs' justified>
-								<Nav.Item active className='active-tab' onSelect={() => setCurrentCategory('Work Experience')}>
-									Work Experience
-								</Nav.Item>
-								<Nav.Item onSelect={() => setCurrentCategory('Education')}>Education</Nav.Item>
-								<Nav.Item onSelect={() => setCurrentCategory('Skills')}>Skills</Nav.Item>
-							</Nav>
-							<div className='info--container'>{personalInfo.name && displayInfo()}</div>
-						</Row>
-					</FlexboxGrid.Item>
-				)}
+				<FlexboxGrid.Item colspan={16} className='profile--main--container'>
+					{personalInfo.loading ? (
+						<Loader size='lg' content='Fetching Personal Info' className='loader' />
+					) : (
+						<div>
+							<Row>
+								<Button className='connect-btn' appearance='primary'>
+									Connect
+								</Button>
+							</Row>
+							<Row className='profile--container profile--avatar--container'>
+								<Avatar circle className='profile--avatar' src={`data:image/png;base64,${avatar}`} />
+							</Row>
+							<Row className='profile--container header--container'>
+								<div className='header'>{personalInfo.name}</div>
+							</Row>
+							<Row className='profile--container profile--body--container'>
+								<Nav className='profile--navbar' appearance='tabs' justified>
+									<Nav.Item
+										active
+										className='active-tab'
+										onSelect={() => setCurrentCategory('Work Experience')}>
+										Work Experience
+									</Nav.Item>
+									<Nav.Item onSelect={() => setCurrentCategory('Education')}>Education</Nav.Item>
+									<Nav.Item onSelect={() => setCurrentCategory('Skills')}>Skills</Nav.Item>
+								</Nav>
+								<div className='info--container'>{personalInfo.name && displayInfo()}</div>
+							</Row>
+						</div>
+					)}
+				</FlexboxGrid.Item>
 				<FlexboxGrid.Item colspan={4}></FlexboxGrid.Item>
 			</FlexboxGrid>
 		</Container>
