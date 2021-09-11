@@ -408,8 +408,7 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 		await connectRequest.save();
 
 		res.status(201).json({
-			message: 'Connect Request sent!',
-			requestID: connectRequest._id,
+			request: connectRequest,
 		});
 	} catch (error) {
 		console.error(error.name);

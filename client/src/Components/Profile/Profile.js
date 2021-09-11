@@ -11,6 +11,7 @@ const Profile = () => {
 	const personalInfo = useSelector((state) => state.personalInfo);
 	const [currentCategory, setCurrentCategory] = useState('Work Experience');
 	const [avatar, setAvatar] = useState(null);
+	const userId = window.location.pathname.split('/')[2];
 	const fetchPersonalInfo = async (userId) => {
 		const resInfo = await getPersonalInfo(userId);
 		const resAvatar = await getAvatar(userId);
@@ -20,9 +21,12 @@ const Profile = () => {
 		setAvatar(resAvatar.payload);
 	};
 
+	const connectWithUser = async () => {
+		if (user) {
+		}
+	};
 	useEffect(async () => {
 		if (user) {
-			const userId = window.location.pathname.split('/')[2];
 			await fetchPersonalInfo(userId);
 		}
 	}, [user]);
@@ -89,7 +93,12 @@ const Profile = () => {
 					) : (
 						<div>
 							<Row>
-								<Button className='connect-btn' appearance='primary'>
+								<Button
+									className='connect-btn'
+									appearance='primary'
+									onClick={() => {
+										connectWithUser();
+									}}>
 									Connect
 								</Button>
 							</Row>
