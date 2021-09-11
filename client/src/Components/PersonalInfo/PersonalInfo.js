@@ -16,7 +16,7 @@ import {
 	Modal,
 } from 'rsuite';
 import PersonalInfoItem from './PersonalInfoItem';
-import { getPersonalInfo, postPersonalInfo } from '../../Actions/personalInfo';
+import { getMyPersonalInfo, postPersonalInfo } from '../../Actions/personalInfo';
 import { useDispatch, useSelector } from 'react-redux';
 const PersonalInfo = () => {
 	const formRef = useRef();
@@ -36,7 +36,7 @@ const PersonalInfo = () => {
 	};
 	const [formData, setFormData] = useState(formInitialState);
 	const fetchInfo = async () => {
-		const res = await getPersonalInfo();
+		const res = await getMyPersonalInfo();
 		const personalInfo = dispatch(res);
 		setPersonalInfo(personalInfo.payload);
 	};
@@ -44,11 +44,13 @@ const PersonalInfo = () => {
 		if (user) {
 			await fetchInfo();
 		}
-	}, [user, getPersonalInfo]);
+	}, [user, getMyPersonalInfo]);
 
 	const { StringType } = Schema.Types;
 	const handleSubmit = async () => {
 		if (formRef.current.check()) {
+			setAddExperience(false);
+
 			// formData.sector = formData[sector].toLowerCase();
 			const actionData = {};
 			console.log(currentCategory);
@@ -191,7 +193,6 @@ const PersonalInfo = () => {
 								appearance='primary'
 								onClick={() => {
 									handleSubmit();
-									setAddExperience(false);
 								}}>
 								Submit
 							</Button>

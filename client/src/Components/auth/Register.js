@@ -131,7 +131,7 @@ const Register = (props) => {
 									<i className='fas fa-key form__icon'></i>
 									<span>Password</span>
 								</ControlLabel>
-								<FormControl name='password'></FormControl>
+								<FormControl type='password' name='password'></FormControl>
 								<HelpBlock>Required</HelpBlock>
 							</FormGroup>
 
@@ -140,7 +140,7 @@ const Register = (props) => {
 									<i className='fas fa-key form__icon'></i>
 									<span>Verify Password</span>
 								</ControlLabel>
-								<FormControl name='password2'></FormControl>
+								<FormControl type='password' name='password2'></FormControl>
 								<HelpBlock>Required</HelpBlock>
 							</FormGroup>
 
