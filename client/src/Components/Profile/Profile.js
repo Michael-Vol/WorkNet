@@ -2,16 +2,24 @@ import React, { useEffect, useState } from 'react';
 
 import './Profile.scss';
 import { getPersonalInfo } from '../../Actions/personalInfo';
+import { connectRequest, getConnectRequestStatus } from '../../Actions/connectRequests';
 import { getAvatar } from '../../Actions/posts';
 import { Container, FlexboxGrid, Avatar, Row, Nav, Button, List, Loader } from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast, Toaster } from 'react-hot-toast';
+
 const Profile = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
 	const personalInfo = useSelector((state) => state.personalInfo);
+	const connectRequestState = useSelector((state) => state.connectRequest);
+
 	const [currentCategory, setCurrentCategory] = useState('Work Experience');
 	const [avatar, setAvatar] = useState(null);
+	const [requestSent, setrequestSent] = useState(true);
+
 	const userId = window.location.pathname.split('/')[2];
+
 	const fetchPersonalInfo = async (userId) => {
 		const resInfo = await getPersonalInfo(userId);
 		const resAvatar = await getAvatar(userId);
@@ -22,12 +30,29 @@ const Profile = () => {
 	};
 
 	const connectWithUser = async () => {
-		if (user) {
+		const res = await connectRequest(userId);
+		dispatch(res);
+		if (res.payload.isAxiosError) {
+			toast.error(res.payload.response.data.message);
+		} else if (res.payload.request) {
+			toast.success('Connect Request Sent!');
+			setrequestSent(true);
+		}
+	};
+	const getStatus = async () => {
+		const res = await getConnectRequestStatus(userId);
+		dispatch(res);
+		// console.log(res);
+		if (res.payload.status === 'Pending') {
+			setrequestSent(true);
+		} else if (res.payload.status === 'None') {
+			setrequestSent(false);
 		}
 	};
 	useEffect(async () => {
 		if (user) {
 			await fetchPersonalInfo(userId);
+			await getStatus();
 		}
 	}, [user]);
 
@@ -35,7 +60,6 @@ const Profile = () => {
 		let jsx = '';
 		switch (currentCategory) {
 			case 'Work Experience':
-				console.log(personalInfo);
 				jsx = (
 					<List>
 						{personalInfo.workExperience.map((work) => (
@@ -79,12 +103,12 @@ const Profile = () => {
 				);
 				break;
 		}
-		console.log(jsx);
 		return jsx;
 	};
 
 	return (
 		<Container className='profile--container'>
+			<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
 			<FlexboxGrid justify='start' className='profile--flex--container'>
 				<FlexboxGrid.Item colspan={4}></FlexboxGrid.Item>
 				<FlexboxGrid.Item colspan={16} className='profile--main--container'>
@@ -96,10 +120,11 @@ const Profile = () => {
 								<Button
 									className='connect-btn'
 									appearance='primary'
+									disabled={requestSent}
 									onClick={() => {
 										connectWithUser();
 									}}>
-									Connect
+									{requestSent ? 'Request Sent' : 'Connect'}
 								</Button>
 							</Row>
 							<Row className='profile--container profile--avatar--container'>

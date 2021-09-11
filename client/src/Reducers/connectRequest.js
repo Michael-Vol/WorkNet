@@ -1,29 +1,51 @@
-import { CONNECT_REQUEST_SENT, CONNECT_REQUEST_ERROR } from '../Actions/types';
+import {
+	CONNECT_REQUEST_SENT,
+	CONNECT_REQUEST_ERROR,
+	CONNECT_REQUEST_STATUS_SUCCESS,
+	CONNECT_REQUEST_STATUS_ERROR,
+} from '../Actions/types';
 
 const initialState = {
+	status: null,
 	request: null,
 	loading: true,
 	error: null,
 };
 
-function connectRequest(state = initialState, action) {
+const connectRequest = function (state = initialState, action) {
 	const { type, payload } = action;
 	switch (type) {
 		case CONNECT_REQUEST_SENT:
-			const { request } = payload.request;
+			const { request } = payload;
+			console.log(request);
 			return {
+				...state,
+				status: request.status,
 				request,
 				loading: false,
 				error: null,
 			};
 		case CONNECT_REQUEST_ERROR:
+		case CONNECT_REQUEST_STATUS_ERROR:
 			return {
+				...state,
 				status: null,
 				request: null,
 				loading: false,
 				error: payload,
 			};
+		case CONNECT_REQUEST_STATUS_SUCCESS: {
+			const { status } = payload;
+			return {
+				...state,
+				status,
+				loading: false,
+				error: null,
+			};
+		}
+		default:
+			return state;
 	}
-}
+};
 
 export default connectRequest;

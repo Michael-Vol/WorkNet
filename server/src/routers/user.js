@@ -395,7 +395,7 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 
 		if (connectRequest) {
 			return res.status(400).json({
-				message: 'Request already sent.',
+				message: 'Request already sent',
 			});
 		}
 
@@ -516,8 +516,9 @@ router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) =>
 		});
 
 		if (!connectRequest) {
-			return res.status(400).json({
+			return res.json({
 				message: 'No Connect Request exists or has already been deleted.',
+				status: 'None',
 			});
 		}
 
