@@ -208,17 +208,48 @@ router.post('/me/personal-info', auth, async (req, res) => {
 
 /**
  * @name GET me/personal-info
- * @desc Allows user set personalInfo
+ * @desc Allows user to get personalInfo
  * @access private
  * @memberof user
  */
 
 router.get('/me/personal-info', auth, async (req, res) => {
-	return res.json({
-		workExperience: req.user.workExperience.reverse(),
-		education: req.user.education.reverse(),
-		skills: req.user.skills.reverse(),
-	});
+	try {
+		return res.json({
+			workExperience: req.user.workExperience.reverse(),
+			education: req.user.education.reverse(),
+			skills: req.user.skills.reverse(),
+		});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+/**
+ * @name GET /:user_id/personal-info
+ * @desc Allows to get another user's personalInfo
+ * @access private
+ * @memberof user
+ */
+
+router.get('/:user_id/personal-info', auth, async (req, res) => {
+	try {
+		const user = await User.findById(req.params.user_id);
+		return res.json({
+			firstName: user.firstName,
+			lastName: user.lastName,
+			workExperience: user.workExperience.reverse(),
+			education: user.education.reverse(),
+			skills: user.skills.reverse(),
+		});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({
+			message: 'Server Error',
+		});
+	}
 });
 
 /**

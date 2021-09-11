@@ -3,17 +3,29 @@ import './UserItem.scss';
 import { Col, Row, Panel, Avatar, Button } from 'rsuite';
 import { getAvatar } from '../../Actions/posts';
 import { useDispatch } from 'react-redux';
-const UserItem = ({ user }) => {
+import { Redirect } from 'react-router';
+import { useHistory } from 'react-router';
+const UserItem = ({ user, id }) => {
 	const dispatch = useDispatch();
+	const history = useHistory();
 	const [avatar, setAvatar] = useState(null);
+
 	useEffect(async () => {
 		const res = await getAvatar(user._id);
 		dispatch(res);
 		setAvatar(res.payload);
+		const userItem = document.getElementById(id);
+		userItem.style.cursor = 'pointer';
+		userItem.onclick = forwardToProfile;
 	}, []);
 
+	const forwardToProfile = () => {
+		console.log('click');
+		console.log(`/users/${user._id}/profile`);
+		history.push(`/users/${user._id}/profile`);
+	};
 	return (
-		<Col md={6} sm={24} xs={24} className='user--panel--container'>
+		<Col md={6} sm={24} xs={24} className='user--panel--container' id={id}>
 			<Panel className='user--panel'>
 				<Row className='header'>
 					<span>{`${user.firstName} ${user.lastName}`}</span>

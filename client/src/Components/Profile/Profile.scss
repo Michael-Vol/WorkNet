@@ -1,0 +1,81 @@
+@import '../../Styles/main';
+
+.header {
+	font-size: 36px;
+}
+
+.profile--main--container {
+	text-align: center;
+	background-color: $color-white-secondary;
+	border: 5px $color-base;
+	border-radius: 10px;
+	margin-top: 20px;
+	padding: 15px;
+	height: 90vh;
+	overflow-y: scroll;
+}
+
+.profile--main--container::-webkit-scrollbar {
+	display: none;
+}
+.loader {
+	padding-top: 40vh;
+}
+
+.profile--container {
+	// margin: 20px;
+}
+.connect-btn {
+	float: right;
+	font-size: 22px;
+	margin: 20px 20px 0px 0px;
+}
+
+.profile--avatar--container {
+	margin: 40px 0px 40px 0px;
+}
+.profile--avatar {
+	width: 20vh;
+	height: 20vh;
+	img {
+		width: 100% !important;
+		height: 100% !important;
+	}
+}
+.header--container {
+	margin-bottom: 20px;
+}
+.info--container {
+	margin: 20px;
+	font-size: 18px;
+}
+
+.item--container {
+	border: 2px $color-base;
+	border-radius: 10px;
+	padding: 15px 15px 15px 35px;
+	text-align: left;
+	margin: 15px;
+}
+
+.item--container:hover {
+	background-color: $color-base;
+	color: $color-white-secondary;
+	transition: 0.3s;
+}
+
+.list--item--header {
+	font-size: 24px;
+	margin-bottom: 15px;
+	width: 100%;
+}
+
+.list--item--sector {
+	font-size: 22px;
+	margin-bottom: 15px;
+	width: 100%;
+}
+
+.list--item--description {
+	font-size: 16px;
+}
