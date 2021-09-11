@@ -10,6 +10,7 @@ const Network = () => {
 	const user = useSelector((state) => state.auth.user);
 	const [users, setUsers] = useState([]);
 	const [filteredUsers, setFilteredUsers] = useState([]);
+
 	useEffect(async () => {
 		if (user) {
 			console.log('fetching users');
@@ -44,7 +45,9 @@ const Network = () => {
 			</Row>
 			<Row className='users--container' gutter={4}>
 				{filteredUsers &&
-					filteredUsers.map((user, index) => <UserItem user={user} key={index} id={`userItem-${index}`} />)}
+					filteredUsers.map((usr, index) => {
+						if (usr._id !== user._id) return <UserItem user={usr} key={index} id={`userItem-${index}`} />;
+					})}
 			</Row>
 		</Container>
 	);
