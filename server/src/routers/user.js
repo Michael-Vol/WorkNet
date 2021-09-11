@@ -30,19 +30,19 @@ const upload = multer({
 
 router.post('/signup', upload.single('avatar'), async (req, res) => {
 	try {
-		if (!req.file) {
+		if (!file) {
 			return res.status(400).json({
 				message: 'Please upload an  avatar.',
 			});
 		}
-		const avatarBuffer = await sharp(req.file.buffer)
+		const avatarBuffer = await sharp(file.buffer)
 			.resize({
 				width: 400,
 				height: 400,
 			})
 			.png()
 			.toBuffer();
-		const user = new User({ ...req.body, avatar: avatarBuffer });
+		const user = new User({ ...body, avatar: avatarBuffer });
 		const token = await user.generateAuthToken();
 		user.avatar = avatarBuffer;
 		await user.save();
@@ -70,7 +70,7 @@ router.post('/signup', upload.single('avatar'), async (req, res) => {
  * @memberof user
  */
 router.get('/me', auth, async (req, res) => {
-	res.send(req.user);
+	res.send(user);
 });
 
 /**
@@ -82,12 +82,12 @@ router.get('/me', auth, async (req, res) => {
 
 router.get('/', auth, async (req, res) => {
 	try {
-		req.query.personalInfo
+		query.personalInfo
 			? (selectFields = 'firstName lastName email workExperience education skills avatar')
 			: (selectFields = 'firstName lastName email avatar');
 
 		const users = await User.find({}).select(selectFields);
-		if (req.query.personalInfo) {
+		if (query.personalInfo) {
 			users.forEach((user) => {
 				user.workExperience.reverse();
 				user.education.reverse();
@@ -113,7 +113,7 @@ router.get('/', auth, async (req, res) => {
 router.post('/me', auth, async (req, res) => {
 	try {
 		const allowedUpdates = ['email', 'password'];
-		const userUpdates = Object.keys(req.body);
+		const userUpdates = Object.keys(body);
 
 		//check if user updates are valid
 		const isValidUpdate = userUpdates.every((update) => allowedUpdates.includes(update));
@@ -123,8 +123,8 @@ router.post('/me', auth, async (req, res) => {
 			});
 		}
 		//Check if email is already taken (if email is in updates body)
-		if (req.body.email) {
-			const emailCount = await User.countDocuments({ _id: { $ne: req.user.id }, email: req.body.email });
+		if (body.email) {
+			const emailCount = await User.countDocuments({ _id: { $ne: user.id }, email: body.email });
 			if (emailCount > 0) {
 				return res.status(400).json({
 					message: 'Email is already taken',
@@ -132,11 +132,11 @@ router.post('/me', auth, async (req, res) => {
 			}
 		}
 		userUpdates.forEach((update) => {
-			req.user[update] = req.body[update];
+			user[update] = body[update];
 		});
-		await req.user.save();
+		await user.save();
 		return res.json({
-			user: req.user,
+			user: user,
 		});
 	} catch (error) {
 		console.log(error);
@@ -160,9 +160,9 @@ router.post('/me', auth, async (req, res) => {
 
 router.post('/me/personal-info', auth, async (req, res) => {
 	try {
-		console.log(req.body);
+		console.log(body);
 		const allowedUpdates = ['workExperience', 'education', 'skills'];
-		const userUpdates = Object.keys(req.body);
+		const userUpdates = Object.keys(body);
 		userUpdates.forEach((update) => {
 			if (!allowedUpdates.includes(update)) {
 				return res.status(400).json({
@@ -170,7 +170,7 @@ router.post('/me/personal-info', auth, async (req, res) => {
 				});
 			}
 
-			Object.keys(req.body[update]).forEach((fieldUpdate) => {
+			Object.keys(body[update]).forEach((fieldUpdate) => {
 				let fieldAllowedUpdates = [];
 				switch (update) {
 					case 'skills':
@@ -189,10 +189,10 @@ router.post('/me/personal-info', auth, async (req, res) => {
 			});
 		});
 		userUpdates.forEach((update) => {
-			req.user[update].push(req.body[update]);
+			user[update].push(body[update]);
 		});
-		await req.user.save();
-		return res.json({ user: req.user });
+		await user.save();
+		return res.json({ user: user });
 	} catch (error) {
 		console.log(error);
 		if (error.name === 'ValidationError') {
@@ -208,17 +208,52 @@ router.post('/me/personal-info', auth, async (req, res) => {
 
 /**
  * @name GET me/personal-info
- * @desc Allows user set personalInfo
+ * @desc Allows user to get personalInfo
  * @access private
  * @memberof user
  */
 
 router.get('/me/personal-info', auth, async (req, res) => {
-	return res.json({
-		workExperience: req.user.workExperience.reverse(),
-		education: req.user.education.reverse(),
-		skills: req.user.skills.reverse(),
-	});
+	try {
+		return res.json({
+			workExperience: user.workExperience.reverse(),
+			education: user.education.reverse(),
+			skills: user.skills.reverse(),
+		});
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+/**
+ * @name GET /:user_id/personal-info
+ * @desc Allows to get another user's personalInfo
+ * @access private
+ * @memberof user
+ */
+
+router.get('/:user_id/personal-info', auth, async (req, res) => {
+	try {
+		const user = await User.findById(req.params.user_id);
+
+		return res.json({
+			workExperience: user.workExperience.reverse(),
+			education: user.education.reverse(),
+			skills: user.skills.reverse(),
+		});
+	} catch (error) {
+		console.error(error.name);
+		if (error.name === 'CastError' || error.name === 'TypeError') {
+			return res.status(400).json({
+				message: 'User not found.',
+			});
+		}
+		return res.status(500).json({
+			message: 'Server Error',
+		});
+	}
 });
 
 /**
@@ -229,7 +264,7 @@ router.get('/me/personal-info', auth, async (req, res) => {
  */
 router.post('/login', async (req, res) => {
 	try {
-		const { email, password } = req.body;
+		const { email, password } = body;
 		const user = await User.findByCredentials(email, password);
 
 		const token = await user.generateAuthToken();
@@ -259,18 +294,18 @@ router.post(
 	upload.single('avatar'),
 	async (req, res) => {
 		try {
-			const avatarBuffer = await sharp(req.file.buffer)
+			const avatarBuffer = await sharp(file.buffer)
 				.resize({
 					width: 400,
 					height: 400,
 				})
 				.png()
 				.toBuffer();
-			req.user.avatar = avatarBuffer;
-			console.log(req.user);
-			await req.user.save();
+			user.avatar = avatarBuffer;
+			console.log(user);
+			await user.save();
 			res.set('Content-Type', 'image/png');
-			res.send(req.user.avatar);
+			res.send(user.avatar);
 		} catch (error) {
 			console.error(error);
 
@@ -294,8 +329,8 @@ router.post(
  */
 router.delete('/me/avatar', auth, async (req, res) => {
 	try {
-		req.user.avatar = undefined;
-		await req.user.save();
+		user.avatar = undefined;
+		await user.save();
 		res.json({
 			message: 'Avatar Deleted!',
 		});
@@ -316,7 +351,7 @@ router.delete('/me/avatar', auth, async (req, res) => {
 
 router.get('/:user_id/avatar', async (req, res) => {
 	try {
-		const user_id = req.params.user_id;
+		const user_id = params.user_id;
 		if (!Mongoose.Types.ObjectId.isValid(user_id)) {
 			return res.status(400).json({
 				message: 'Wrong UserID',
@@ -354,8 +389,8 @@ router.get('/:user_id/avatar', async (req, res) => {
 
 router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 	try {
-		const senderID = req.user.id;
-		const receiverID = req.params.user_id;
+		const senderID = user.id;
+		const receiverID = params.user_id;
 
 		let connectRequest = await ConnectRequest.findOne({
 			sender: senderID,
@@ -397,8 +432,8 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 
 router.patch('/:user_id/connect', auth, validateUserID, async (req, res) => {
 	try {
-		const senderID = req.params.user_id;
-		const receiverID = req.user.id;
+		const senderID = params.user_id;
+		const receiverID = user.id;
 
 		const connectRequest = await ConnectRequest.findOne({
 			sender: senderID,
@@ -438,8 +473,8 @@ router.patch('/:user_id/connect', auth, validateUserID, async (req, res) => {
 
 router.delete('/:user_id/connect', auth, validateUserID, async (req, res) => {
 	try {
-		const senderID = req.user.id;
-		const receiverID = req.params.user_id;
+		const senderID = user.id;
+		const receiverID = params.user_id;
 
 		let connectRequest = await ConnectRequest.findOne({
 			sender: senderID,
@@ -477,8 +512,8 @@ router.delete('/:user_id/connect', auth, validateUserID, async (req, res) => {
 
 router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) => {
 	try {
-		const senderID = req.user.id;
-		const receiverID = req.params.user_id;
+		const senderID = user.id;
+		const receiverID = params.user_id;
 
 		let connectRequest = await ConnectRequest.findOne({
 			sender: senderID,
@@ -512,13 +547,13 @@ router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) =>
 
 router.get('/me/posts', auth, async (req, res) => {
 	try {
-		await req.user
+		await user
 			.populate({
 				path: 'posts',
 			})
 			.execPopulate();
 		res.json({
-			posts: req.user.posts,
+			posts: user.posts,
 		});
 	} catch (error) {
 		console.error(error);
