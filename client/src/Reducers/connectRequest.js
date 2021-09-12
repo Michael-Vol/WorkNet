@@ -5,6 +5,8 @@ import {
 	CONNECT_REQUEST_STATUS_ERROR,
 	GET_MY_REQUESTS_SUCCESS,
 	GET_MY_REQUESTS_ERROR,
+	ACCEPT_REQUEST_SUCCESS,
+	ACCEPT_REQUEST_ERROR,
 } from '../Actions/types';
 
 const initialState = {
@@ -59,6 +61,22 @@ const connectRequest = function (state = initialState, action) {
 				...state,
 				error: payload,
 				requests: null,
+				loading: false,
+			};
+		}
+		case ACCEPT_REQUEST_SUCCESS: {
+			return {
+				...state,
+				request: payload.request,
+				error: null,
+				loading: false,
+			};
+		}
+		case ACCEPT_REQUEST_ERROR: {
+			return {
+				...state,
+				request: null,
+				error: payload,
 				loading: false,
 			};
 		}

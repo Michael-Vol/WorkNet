@@ -124,7 +124,7 @@ const Profile = () => {
 									onClick={() => {
 										connectWithUser();
 									}}>
-									{requestSent ? 'Request Sent' : 'Connect'}
+									{requestSent ? 'Pending Request' : 'Connect'}
 								</Button>
 							</Row>
 							<Row className='profile--container profile--avatar--container'>

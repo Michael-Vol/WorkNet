@@ -20,8 +20,6 @@ const UserItem = ({ user, id }) => {
 	}, []);
 
 	const forwardToProfile = () => {
-		console.log('click');
-		console.log(`/users/${user._id}/profile`);
 		history.push(`/users/${user._id}/profile`);
 	};
 	return (

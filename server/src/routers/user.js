@@ -428,12 +428,13 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 router.get('/me/connect', auth, async (req, res) => {
 	try {
 		if (req.query.status) {
-			const requests = await ConnectRequest.find({ receiver: req.user._id, status: req.query.status });
+			const requests = await ConnectRequest.find({ receiver: req.user._id, status: req.query.status }).populate('sender');
 			return res.json({
 				requests,
 			});
 		} else {
-			const requests = await ConnectRequest.find({ receiver: req.user._id });
+			const requests = await ConnectRequest.find({ receiver: req.user._id }).populate('sender');
+
 			return res.json({
 				requests,
 			});
@@ -471,13 +472,11 @@ router.patch('/:user_id/connect', auth, validateUserID, async (req, res) => {
 				message: 'Connect Request has already been accepted',
 			});
 		}
-
-		connectRequest.status = 'Accepted';
+		req.query.accept ? (connectRequest.status = 'Accepted') : (connectRequest.status = 'Rejected');
 		await connectRequest.save();
 
 		res.json({
-			message: 'Connect Request Accepted',
-			requestID: connectRequest._id,
+			request: connectRequest,
 		});
 	} catch (error) {
 		console.error(error.name);
@@ -539,9 +538,13 @@ router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) =>
 		const receiverID = req.params.user_id;
 
 		let connectRequest = await ConnectRequest.findOne({
-			sender: senderID,
-			receiver: receiverID,
+			// sender: senderID,
+			// receiver: receiverID,
+			$or: [{ sender: senderID, receiver: receiverID }],
+			$or: [{ sender: receiverID, receiver: senderID }],
 		});
+
+		console.log(connectRequest);
 
 		if (!connectRequest) {
 			return res.json({

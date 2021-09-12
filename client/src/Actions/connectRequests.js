@@ -5,6 +5,8 @@ import {
 	CONNECT_REQUEST_STATUS_ERROR,
 	GET_MY_REQUESTS_SUCCESS,
 	GET_MY_REQUESTS_ERROR,
+	ACCEPT_REQUEST_SUCCESS,
+	ACCEPT_REQUEST_ERROR,
 } from './types';
 
 import axios from 'axios';
@@ -71,6 +73,27 @@ export const getMyRequests = async (status) => {
 	} catch (error) {
 		return {
 			type: GET_MY_REQUESTS_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const updateRequest = async (userId, accept = true) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const res = await axios.patch(`/users/${userId}/connect?accept=${accept}`);
+
+		return {
+			type: GET_MY_REQUESTS_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: ACCEPT_REQUEST_ERROR,
 			payload: error,
 		};
 	}

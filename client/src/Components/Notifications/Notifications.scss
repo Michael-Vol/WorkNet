@@ -4,15 +4,15 @@
 	background-color: darken($color-white-secondary, 6%);
 	color: $color-base;
 	position: absolute;
-	top: 7vh;
+	top: 118%;
 	z-index: 999;
 	right: 1%;
-	width: 40%;
+	width: 45%;
 	height: 50vh;
 	max-height: 50vh;
 	transition: 0.4s;
 	animation: fadeIn 0.3s;
-	border-radius: 3px;
+	border-radius: 8px;
 }
 
 @keyframes fadeIn {
@@ -28,12 +28,10 @@
 	width: 100%;
 	text-align: center;
 }
-.notifications--item--container {
-	width: 100%;
-	margin: 3px 0px 3px 0px;
-}
-.notifications--item {
-	width: 100%;
-	white-space: initial;
-	padding: 2px;
+
+.no--notifications {
+	font-size: 22px;
+	color: $color-base;
+	text-align: center;
+	margin-top: 50%;
 }
