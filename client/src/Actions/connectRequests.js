@@ -3,6 +3,8 @@ import {
 	CONNECT_REQUEST_ERROR,
 	CONNECT_REQUEST_STATUS_SUCCESS,
 	CONNECT_REQUEST_STATUS_ERROR,
+	GET_MY_REQUESTS_SUCCESS,
+	GET_MY_REQUESTS_ERROR,
 } from './types';
 
 import axios from 'axios';
@@ -46,6 +48,29 @@ export const getConnectRequestStatus = async (userId) => {
 	} catch (error) {
 		return {
 			type: CONNECT_REQUEST_STATUS_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getMyRequests = async (status) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		let url = '';
+		status ? (url = `/users/me/connect?status=${status}`) : (url = `/users/me/connect`);
+		const res = await axios.get(url, config);
+
+		return {
+			type: GET_MY_REQUESTS_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: GET_MY_REQUESTS_ERROR,
 			payload: error,
 		};
 	}

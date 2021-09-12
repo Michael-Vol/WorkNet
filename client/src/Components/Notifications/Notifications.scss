@@ -1,0 +1,39 @@
+@import '../../Styles/main';
+
+.notifications--container {
+	background-color: darken($color-white-secondary, 6%);
+	color: $color-base;
+	position: absolute;
+	top: 7vh;
+	z-index: 999;
+	right: 1%;
+	width: 40%;
+	height: 50vh;
+	max-height: 50vh;
+	transition: 0.4s;
+	animation: fadeIn 0.3s;
+	border-radius: 3px;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.notifications--list {
+	width: 100%;
+	text-align: center;
+}
+.notifications--item--container {
+	width: 100%;
+	margin: 3px 0px 3px 0px;
+}
+.notifications--item {
+	width: 100%;
+	white-space: initial;
+	padding: 2px;
+}

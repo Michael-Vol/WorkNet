@@ -419,6 +419,34 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 });
 
 /**
+ * @name GET /me/connect/pending?status=
+ * @desc Allows user to get all of his connect requests
+ * @access private
+ * @memberof user
+ */
+
+router.get('/me/connect', auth, async (req, res) => {
+	try {
+		if (req.query.status) {
+			const requests = await ConnectRequest.find({ receiver: req.user._id, status: req.query.status });
+			return res.json({
+				requests,
+			});
+		} else {
+			const requests = await ConnectRequest.find({ receiver: req.user._id });
+			return res.json({
+				requests,
+			});
+		}
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
  * @name PATCH /{user_id}/connect
  * @desc Allows user to accept a connect request
  * @access private
