@@ -393,12 +393,12 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 			receiver: receiverID,
 		});
 
-		if (connectRequest) {
+		if (connectRequest && connectRequest.status === 'Pending') {
 			return res.status(400).json({
 				message: 'Request already sent',
 			});
 		}
-
+		console.log(connectRequest);
 		connectRequest = new ConnectRequest({
 			sender: senderID,
 			receiver: receiverID,
@@ -429,11 +429,13 @@ router.get('/me/connect', auth, async (req, res) => {
 	try {
 		if (req.query.status) {
 			const requests = await ConnectRequest.find({ receiver: req.user._id, status: req.query.status }).populate('sender');
+			console.log(requests);
 			return res.json({
 				requests,
 			});
 		} else {
 			const requests = await ConnectRequest.find({ receiver: req.user._id }).populate('sender');
+			console.log(requests);
 
 			return res.json({
 				requests,
@@ -472,12 +474,20 @@ router.patch('/:user_id/connect', auth, validateUserID, async (req, res) => {
 				message: 'Connect Request has already been accepted',
 			});
 		}
-		req.query.accept ? (connectRequest.status = 'Accepted') : (connectRequest.status = 'Rejected');
-		await connectRequest.save();
+		console.log(req.query.accept);
+		if (req.query.accept === 'true') {
+			connectRequest.status = 'Accepted';
+			await connectRequest.save();
 
-		res.json({
-			request: connectRequest,
-		});
+			return res.json({
+				request: connectRequest,
+			});
+		} else {
+			await connectRequest.remove();
+			return res.json({
+				message: 'Request Deleted',
+			});
+		}
 	} catch (error) {
 		console.error(error.name);
 		res.status(500).json({
@@ -536,13 +546,12 @@ router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) =>
 	try {
 		const senderID = req.user.id;
 		const receiverID = req.params.user_id;
-		let connectRequest = await ConnectRequest.findOne({
+		const connectRequest = await ConnectRequest.findOne({
 			$or: [
 				{ sender: senderID, receiver: receiverID },
 				{ sender: receiverID, receiver: senderID },
 			],
 		});
-
 		if (!connectRequest) {
 			return res.json({
 				message: 'No Connect Request exists or has already been deleted.',
@@ -550,7 +559,8 @@ router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) =>
 			});
 		}
 
-		res.json({
+		console.log('request', connectRequest);
+		return res.json({
 			status: connectRequest.status,
 			requestID: connectRequest._id,
 		});

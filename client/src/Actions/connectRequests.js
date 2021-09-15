@@ -42,7 +42,7 @@ export const getConnectRequestStatus = async (userId) => {
 			},
 		};
 		const res = await axios.get(`/users/${userId}/connect/status`, config);
-
+		console.log('response', res);
 		return {
 			type: CONNECT_REQUEST_STATUS_SUCCESS,
 			payload: res.data,
