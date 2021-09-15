@@ -536,15 +536,12 @@ router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) =>
 	try {
 		const senderID = req.user.id;
 		const receiverID = req.params.user_id;
-
 		let connectRequest = await ConnectRequest.findOne({
-			// sender: senderID,
-			// receiver: receiverID,
-			$or: [{ sender: senderID, receiver: receiverID }],
-			$or: [{ sender: receiverID, receiver: senderID }],
+			$or: [
+				{ sender: senderID, receiver: receiverID },
+				{ sender: receiverID, receiver: senderID },
+			],
 		});
-
-		console.log(connectRequest);
 
 		if (!connectRequest) {
 			return res.json({

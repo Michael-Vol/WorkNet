@@ -16,8 +16,8 @@ const Profile = () => {
 
 	const [currentCategory, setCurrentCategory] = useState('Work Experience');
 	const [avatar, setAvatar] = useState(null);
-	const [requestSent, setrequestSent] = useState(true);
-
+	const [requestStatus, setRequestStatus] = useState('');
+	const [requestButtonStatus, setRequestButtonStatus] = useState('');
 	const userId = window.location.pathname.split('/')[2];
 
 	const fetchPersonalInfo = async (userId) => {
@@ -36,17 +36,20 @@ const Profile = () => {
 			toast.error(res.payload.response.data.message);
 		} else if (res.payload.request) {
 			toast.success('Connect Request Sent!');
-			setrequestSent(true);
+			setRequestStatus('Request Sent');
+			setRequestButtonStatus('connect-btn--pending');
 		}
 	};
 	const getStatus = async () => {
 		const res = await getConnectRequestStatus(userId);
 		dispatch(res);
-		// console.log(res);
+		console.log(res);
 		if (res.payload.status === 'Pending') {
-			setrequestSent(true);
-		} else if (res.payload.status === 'None') {
-			setrequestSent(false);
+			setRequestStatus('Request Pending');
+			setRequestButtonStatus('connect-btn--pending');
+		} else if (res.payload.status === 'Accepted') {
+			setRequestStatus('Friends');
+			setRequestButtonStatus('connect-btn--friends');
 		}
 	};
 	useEffect(async () => {
@@ -118,13 +121,20 @@ const Profile = () => {
 						<div>
 							<Row>
 								<Button
-									className='connect-btn'
+									className={`connect-btn ${requestButtonStatus}`}
 									appearance='primary'
-									disabled={requestSent}
+									disabled={requestStatus !== ''}
 									onClick={() => {
 										connectWithUser();
 									}}>
-									{requestSent ? 'Pending Request' : 'Connect'}
+									{requestStatus !== '' ? (
+										<div>
+											<i className='fas fa-check status--icon'></i>
+											<span>{requestStatus}</span>
+										</div>
+									) : (
+										'Connect'
+									)}
 								</Button>
 							</Row>
 							<Row className='profile--container profile--avatar--container'>
