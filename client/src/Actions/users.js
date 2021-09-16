@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { UPDATE_USER_INFO, USER_INFO_ERROR, GET_USERS_SUCCESS, GET_USERS_ERROR } from './types';
+import {
+	UPDATE_USER_INFO,
+	USER_INFO_ERROR,
+	GET_USERS_SUCCESS,
+	GET_USERS_ERROR,
+	GET_CONNECTED_USERS_SUCCESS,
+	GET_CONNECTED_USERS_ERROR,
+} from './types';
 
 export const updateUserInfo = async (userInfo) => {
 	try {
@@ -40,6 +47,27 @@ export const getUsers = async (options = {}) => {
 	} catch (error) {
 		return {
 			type: GET_USERS_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getConnectedUsers = async () => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const res = await axios.get('/users/me/connected_users', config);
+
+		return {
+			type: GET_CONNECTED_USERS_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: GET_CONNECTED_USERS_ERROR,
 			payload: error,
 		};
 	}

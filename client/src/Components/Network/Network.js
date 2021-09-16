@@ -10,7 +10,9 @@ const Network = () => {
 	const user = useSelector((state) => state.auth.user);
 	const [users, setUsers] = useState([]);
 	const [filteredUsers, setFilteredUsers] = useState([]);
-
+	const [connectedUsers,setConnectedUsers] = useState([]);
+	const [isSearching, setIsSearching] = useState(false);
+	const [searchValue, setSearchValue] = useState('');
 	useEffect(async () => {
 		if (user) {
 			console.log('fetching users');
@@ -22,6 +24,8 @@ const Network = () => {
 	}, [user]);
 
 	const searchUsers = (value) => {
+		setIsSearching(true);
+		setSearchValue(value);
 		setFilteredUsers([]);
 		users.forEach((user) => {
 			const fullName = user.firstName + ' ' + user.lastName;
@@ -30,6 +34,12 @@ const Network = () => {
 			}
 		});
 	};
+
+	useEffect(() => {
+		if (searchValue === '') {
+			setIsSearching(false);
+		}
+	}, [searchValue]);
 
 	return (
 		<Container className='network--container'>
@@ -44,7 +54,8 @@ const Network = () => {
 				</Col>
 			</Row>
 			<Row className='users--container' gutter={4}>
-				{filteredUsers &&
+				{isSearching &&
+					filteredUsers &&
 					filteredUsers.map((usr, index) => {
 						if (usr._id !== user._id) return <UserItem user={usr} key={index} id={`userItem-${index}`} />;
 					})}

@@ -419,6 +419,42 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 });
 
 /**
+ * @name GET
+ * @desc Allows user to get all of his connected users
+ * @access provate
+ * @memberof user
+ */
+
+router.get('/me/connected_users', auth, async (req, res) => {
+	try {
+		const acceptedRequests = await ConnectRequest.find({
+			$or: [{ sender: req.user._id }, { receiver: req.user._id }],
+			status: 'Accepted',
+		});
+		const users = await Promise.all(
+			acceptedRequests.map(async (request) => {
+				let userId = '';
+				if (!req.user._id.equals(request.sender)) {
+					userId = request.sender;
+					console.log(req.user._id, request.sender, request.receiver, userId);
+				} else {
+					userId = request.receiver;
+				}
+
+				const user = await User.findById(userId);
+				return user;
+			})
+		);
+		return res.json({ users });
+	} catch (error) {
+		console.error(error.name);
+		return res.json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
  * @name GET /me/connect/pending?status=
  * @desc Allows user to get all of his connect requests
  * @access private
