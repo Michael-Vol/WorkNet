@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Col, Row, Button, Badge } from 'rsuite';
+import { Avatar, Col, Row, Button, Badge, List, Input, InputGroup } from 'rsuite';
 import './PostItem.scss';
 import Moment from 'react-moment';
 import { getAvatar, likePost, getPostLiked, getLikesCount } from '../../Actions/posts';
 import { useDispatch } from 'react-redux';
+import CommentItem from './CommentItem';
 const PostItem = ({ post, index }) => {
 	const dispatch = useDispatch();
 	const [avatar, setAvatar] = useState([]);
 	const [imageConverted, setimageConverted] = useState(false);
 	const [liked, setliked] = useState(false);
 	const [numLikes, setNumLikes] = useState(0);
+	const [viewComments, setViewComments] = useState(false);
 	useEffect(async () => {
 		const res = await getAvatar(post.creator._id);
 		await postLiked();
@@ -75,12 +77,29 @@ const PostItem = ({ post, index }) => {
 					</Button>
 				</Col>
 				<Col>
-					<div className='comment--btn'>
+					<div className='comment--btn' onClick={() => setViewComments(!viewComments)}>
 						<i className='fas fa-comment comment--icon'></i>
 						20 Comments
 					</div>
 				</Col>
 			</Row>
+			{viewComments && (
+				<Row className='comments'>
+					<Row className='write--comment--container'>
+						<InputGroup className='comment--group'>
+							<Input placeholder='Write a Comment' className='write--comment' />
+							<Button appearance='primary' className='post--comment--btn'>
+								Post
+							</Button>
+						</InputGroup>
+					</Row>
+					<List className='comments--list'>
+						<CommentItem />
+						<CommentItem />
+						<CommentItem />
+					</List>
+				</Row>
+			)}
 		</Col>
 	);
 };

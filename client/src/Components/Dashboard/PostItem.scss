@@ -32,9 +32,9 @@
 	border-radius: 10px;
 	padding-top: 7px;
 }
-.post--actions:hover {
-	color: $color-white-secondary;
-}
+// .post--actions:hover {
+// 	color: $color-white-secondary;
+// }
 .like--btn {
 	width: fit-content;
 }
@@ -42,18 +42,49 @@
 	width: fit-content;
 	margin-top: 5px;
 	float: right;
+	color: $color-base;
 }
-.comment--btn:hover {
-	text-decoration: underline;
-}
+// .comment--btn:hover {
+// 	text-decoration: underline;
+// }
 .like--icon {
 	margin-right: 5px;
 }
 .comment--icon {
 	margin-right: 5px;
+	color: $color-base;
 }
 
 .likes--count {
 	margin-left: 5px;
 	background-color: $color-base;
+}
+.comments {
+	// animation: fadeIn 2s;
+	transition: ease-in 2s;
+	background-color: darken($color-white-secondary, 2%);
+}
+
+.comments--list {
+	transition: ease-in 2s;
+	border-radius: 10px;
+}
+
+.write--comment--container {
+	width: 100%;
+	padding: 10px;
+}
+
+.write--comment {
+	width: 100%;
+	padding: 10px;
+}
+
+.post--comment--btn {
+	float: right;
+	margin: 10px;
+}
+
+.comment--group {
+	background-color: #fff;
 }
