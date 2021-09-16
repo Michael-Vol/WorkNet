@@ -14,9 +14,6 @@ const UserItem = ({ user, id }) => {
 		const res = await getAvatar(user._id);
 		dispatch(res);
 		setAvatar(res.payload);
-		if (user.lastName === 'kartalas') {
-			console.log('rerender', user._id);
-		}
 	}, []);
 
 	const forwardToProfile = () => {
