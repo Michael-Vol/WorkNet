@@ -23,7 +23,6 @@ const App = (props) => {
 	useEffect(async () => {
 		const res = await loadUser();
 		const user = dispatch(res);
-		console.log(user);
 	}, []);
 	return (
 		<Router>

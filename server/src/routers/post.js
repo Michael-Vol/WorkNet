@@ -220,8 +220,10 @@ router.post('/:post_id/likes', auth, async (req, res) => {
 		};
 		let like = await Like.findOne(likeData);
 		if (like) {
-			return res.status(400).json({
-				message: 'Post is already liked!',
+			await like.remove();
+			return res.json({
+				message: 'Post unliked!',
+				liked: false,
 			});
 		}
 
@@ -229,6 +231,7 @@ router.post('/:post_id/likes', auth, async (req, res) => {
 		await like.save();
 		res.status(201).json({
 			message: 'Post Liked!',
+			liked: true,
 		});
 	} catch (error) {
 		console.error(error.name);
@@ -274,6 +277,46 @@ router.get('/:post_id/likes', async (req, res) => {
 			});
 		}
 		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET /{post_id}/liked
+ * @desc Allows user to check if he has liked a post
+ * @access private
+ * @memberof post
+ */
+
+router.get('/:post_id/liked', auth, async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.post_id);
+
+		if (!post) {
+			return res.status(400).json({
+				message: 'No Post found.',
+			});
+		}
+
+		const like = await Like.findOne({
+			post: post._id,
+			creator: req.user._id,
+		});
+
+		if (!like) {
+			return res.json({
+				liked: false,
+			});
+		}
+
+		return res.json({
+			liked: true,
+		});
+	} catch (error) {
+		console.error(error);
+
+		return res.json({
 			message: 'Server Error',
 		});
 	}

@@ -6,6 +6,12 @@ import {
 	ADD_POST_SUCCESS,
 	GET_USER_AVATAR_ERROR,
 	GET_USER_AVATAR_SUCCESS,
+	LIKE_POST_SUCCESS,
+	LIKE_POST_ERROR,
+	GET_POST_LIKED_SUCCESS,
+	GET_POST_LIKED_ERROR,
+	GET_LIKES_COUNT_SUCCESS,
+	GET_LIKES_COUNT_ERROR,
 } from './types';
 
 export const getPosts = async () => {
@@ -42,7 +48,6 @@ export const addPost = async (textFields, image) => {
 				'Content-Type': 'multipart/form-data',
 			},
 		};
-		console.log(formData);
 		const res = await axios.post('/posts', formData, config);
 
 		return {
@@ -71,6 +76,68 @@ export const getAvatar = async (userID) => {
 	} catch (error) {
 		return {
 			type: GET_USER_AVATAR_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const likePost = async (postId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		const res = await axios.post(`/posts/${postId}/likes`, config);
+
+		return {
+			type: LIKE_POST_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: LIKE_POST_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getPostLiked = async (postId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const res = await axios.get(`/posts/${postId}/liked`, config);
+		return {
+			type: GET_POST_LIKED_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: GET_POST_LIKED_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getLikesCount = async (postId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const res = await axios.get(`/posts/${postId}/likes`, config);
+		return {
+			type: GET_LIKES_COUNT_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: GET_LIKES_COUNT_ERROR,
 			payload: error,
 		};
 	}

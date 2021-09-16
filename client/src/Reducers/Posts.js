@@ -5,6 +5,12 @@ import {
 	ADD_POST_ERROR,
 	GET_USER_AVATAR_ERROR,
 	GET_USER_AVATAR_SUCCESS,
+	LIKE_POST_SUCCESS,
+	LIKE_POST_ERROR,
+	GET_POST_LIKED_SUCCESS,
+	GET_POST_LIKED_ERROR,
+	GET_LIKES_COUNT_SUCCESS,
+	GET_LIKES_COUNT_ERROR,
 } from '../Actions/types';
 
 const initialState = {
@@ -12,6 +18,8 @@ const initialState = {
 	post: null,
 	error: null,
 	loading: true,
+	liked: null,
+	numLikes: null,
 };
 
 const posts = function (state = initialState, action) {
@@ -58,6 +66,47 @@ const posts = function (state = initialState, action) {
 				error: payload,
 				loading: false,
 			};
+		case LIKE_POST_SUCCESS: {
+			return {
+				...state,
+				error: null,
+				loading: false,
+				liked: payload.liked,
+			};
+		}
+		case GET_POST_LIKED_ERROR:
+		case LIKE_POST_ERROR: {
+			return {
+				...state,
+				loading: false,
+				error: payload,
+				liked: null,
+			};
+		}
+		case GET_POST_LIKED_SUCCESS: {
+			return {
+				...state,
+				error: null,
+				loading: false,
+				liked: payload.liked,
+			};
+		}
+		case GET_LIKES_COUNT_SUCCESS: {
+			return {
+				...state,
+				error: null,
+				loading: false,
+				numLikes: payload.likes,
+			};
+		}
+		case GET_LIKES_COUNT_ERROR: {
+			return {
+				...state,
+				error: payload,
+				loading: false,
+				numLikes: null,
+			};
+		}
 		default:
 			return state;
 	}
