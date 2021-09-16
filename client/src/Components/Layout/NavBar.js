@@ -1,10 +1,13 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Navbar, Nav, FlexboxGrid } from 'rsuite';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import Notifications from '../Notifications/Notifications';
 import './NavBar.scss';
 const NavBar = ({ onSelect, activeKey, ...props }) => {
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+	const [selectNotifications, setSelectNotifications] = useState(false);
+
 	const guestLinks = (
 		<div>
 			<Nav.Item href='/login' className='link'>
@@ -29,15 +32,16 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 			<Nav.Item href='/chats' className='link'>
 				Chats
 			</Nav.Item>
-			<Nav.Item href='/notifications' className='link'>
-				Notifications
-			</Nav.Item>
 			<Nav.Item href='/personal-info' className='link'>
 				Personal Info
 			</Nav.Item>
 			<Nav.Item href='/settings' className='link'>
 				Settings
 			</Nav.Item>
+			<Nav.Item className='link' onSelect={() => setSelectNotifications(!selectNotifications)}>
+				<i className='fas fa-bell nav-icon'></i>
+			</Nav.Item>
+			{selectNotifications && <Notifications />}
 			<Nav.Item
 				href='/settings'
 				className='link'

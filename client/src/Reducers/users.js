@@ -1,10 +1,18 @@
-import { UPDATE_USER_INFO, USER_INFO_ERROR, GET_USERS_SUCCESS, GET_USERS_ERROR } from '../Actions/types';
+import {
+	UPDATE_USER_INFO,
+	USER_INFO_ERROR,
+	GET_USERS_SUCCESS,
+	GET_USERS_ERROR,
+	GET_CONNECTED_USERS_SUCCESS,
+	GET_CONNECTED_USERS_ERROR,
+} from '../Actions/types';
 
 const initialState = {
 	user: null,
 	error: null,
 	loading: true,
 	users: null,
+	connectedUsers: null,
 };
 const users = function (state = initialState, action) {
 	const { type, payload } = action;
@@ -38,6 +46,22 @@ const users = function (state = initialState, action) {
 				error: payload,
 				users: null,
 			};
+		case GET_CONNECTED_USERS_SUCCESS: {
+			return {
+				...state,
+				loading: false,
+				error: null,
+				connectedUsers: payload.users,
+			};
+		}
+		case GET_CONNECTED_USERS_ERROR: {
+			return {
+				...state,
+				loading: false,
+				connectedUsers: null,
+				error: payload,
+			};
+		}
 		default:
 			return state;
 	}

@@ -393,12 +393,12 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 			receiver: receiverID,
 		});
 
-		if (connectRequest) {
+		if (connectRequest && connectRequest.status === 'Pending') {
 			return res.status(400).json({
-				message: 'Request already sent.',
+				message: 'Request already sent',
 			});
 		}
-
+		console.log(connectRequest);
 		connectRequest = new ConnectRequest({
 			sender: senderID,
 			receiver: receiverID,
@@ -408,9 +408,75 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 		await connectRequest.save();
 
 		res.status(201).json({
-			message: 'Connect Request sent!',
-			requestID: connectRequest._id,
+			request: connectRequest,
 		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET
+ * @desc Allows user to get all of his connected users
+ * @access provate
+ * @memberof user
+ */
+
+router.get('/me/connected_users', auth, async (req, res) => {
+	try {
+		const acceptedRequests = await ConnectRequest.find({
+			$or: [{ sender: req.user._id }, { receiver: req.user._id }],
+			status: 'Accepted',
+		});
+		const users = await Promise.all(
+			acceptedRequests.map(async (request) => {
+				let userId = '';
+				if (!req.user._id.equals(request.sender)) {
+					userId = request.sender;
+					console.log(req.user._id, request.sender, request.receiver, userId);
+				} else {
+					userId = request.receiver;
+				}
+
+				const user = await User.findById(userId);
+				return user;
+			})
+		);
+		return res.json({ users });
+	} catch (error) {
+		console.error(error.name);
+		return res.json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET /me/connect/pending?status=
+ * @desc Allows user to get all of his connect requests
+ * @access private
+ * @memberof user
+ */
+
+router.get('/me/connect', auth, async (req, res) => {
+	try {
+		if (req.query.status) {
+			const requests = await ConnectRequest.find({ receiver: req.user._id, status: req.query.status }).populate('sender');
+			console.log(requests);
+			return res.json({
+				requests,
+			});
+		} else {
+			const requests = await ConnectRequest.find({ receiver: req.user._id }).populate('sender');
+			console.log(requests);
+
+			return res.json({
+				requests,
+			});
+		}
 	} catch (error) {
 		console.error(error.name);
 		res.status(500).json({
@@ -444,14 +510,20 @@ router.patch('/:user_id/connect', auth, validateUserID, async (req, res) => {
 				message: 'Connect Request has already been accepted',
 			});
 		}
+		console.log(req.query.accept);
+		if (req.query.accept === 'true') {
+			connectRequest.status = 'Accepted';
+			await connectRequest.save();
 
-		connectRequest.status = 'Accepted';
-		await connectRequest.save();
-
-		res.json({
-			message: 'Connect Request Accepted',
-			requestID: connectRequest._id,
-		});
+			return res.json({
+				request: connectRequest,
+			});
+		} else {
+			await connectRequest.remove();
+			return res.json({
+				message: 'Request Deleted',
+			});
+		}
 	} catch (error) {
 		console.error(error.name);
 		res.status(500).json({
@@ -510,19 +582,21 @@ router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) =>
 	try {
 		const senderID = req.user.id;
 		const receiverID = req.params.user_id;
-
-		let connectRequest = await ConnectRequest.findOne({
-			sender: senderID,
-			receiver: receiverID,
+		const connectRequest = await ConnectRequest.findOne({
+			$or: [
+				{ sender: senderID, receiver: receiverID },
+				{ sender: receiverID, receiver: senderID },
+			],
 		});
-
 		if (!connectRequest) {
-			return res.status(400).json({
+			return res.json({
 				message: 'No Connect Request exists or has already been deleted.',
+				status: 'None',
 			});
 		}
 
-		res.json({
+		console.log('request', connectRequest);
+		return res.json({
 			status: connectRequest.status,
 			requestID: connectRequest._id,
 		});

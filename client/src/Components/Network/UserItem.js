@@ -14,18 +14,13 @@ const UserItem = ({ user, id }) => {
 		const res = await getAvatar(user._id);
 		dispatch(res);
 		setAvatar(res.payload);
-		const userItem = document.getElementById(id);
-		userItem.style.cursor = 'pointer';
-		userItem.onclick = forwardToProfile;
 	}, []);
 
 	const forwardToProfile = () => {
-		console.log('click');
-		console.log(`/users/${user._id}/profile`);
 		history.push(`/users/${user._id}/profile`);
 	};
 	return (
-		<Col md={6} sm={24} xs={24} className='user--panel--container' id={id}>
+		<Col md={6} sm={24} xs={24} className='user--panel--container' id={id} onClick={forwardToProfile}>
 			<Panel className='user--panel'>
 				<Row className='header'>
 					<span>{`${user.firstName} ${user.lastName}`}</span>
@@ -47,9 +42,6 @@ const UserItem = ({ user, id }) => {
 						<div>Employer: None </div>
 					)}
 				</Row>
-				{/* <Row className='info description'>
-					{user.workExperience.length > 0 && <div>Description: {user.workExperience[0].description}</div>}
-				</Row> */}
 			</Panel>
 		</Col>
 	);

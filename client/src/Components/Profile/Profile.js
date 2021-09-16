@@ -2,15 +2,24 @@ import React, { useEffect, useState } from 'react';
 
 import './Profile.scss';
 import { getPersonalInfo } from '../../Actions/personalInfo';
+import { connectRequest, getConnectRequestStatus } from '../../Actions/connectRequests';
 import { getAvatar } from '../../Actions/posts';
 import { Container, FlexboxGrid, Avatar, Row, Nav, Button, List, Loader } from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast, Toaster } from 'react-hot-toast';
+
 const Profile = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
 	const personalInfo = useSelector((state) => state.personalInfo);
+	const connectRequestState = useSelector((state) => state.connectRequest);
+
 	const [currentCategory, setCurrentCategory] = useState('Work Experience');
 	const [avatar, setAvatar] = useState(null);
+	const [requestStatus, setRequestStatus] = useState('');
+	const [requestButtonStatus, setRequestButtonStatus] = useState('');
+	const userId = window.location.pathname.split('/')[2];
+
 	const fetchPersonalInfo = async (userId) => {
 		const resInfo = await getPersonalInfo(userId);
 		const resAvatar = await getAvatar(userId);
@@ -20,10 +29,33 @@ const Profile = () => {
 		setAvatar(resAvatar.payload);
 	};
 
+	const connectWithUser = async () => {
+		const res = await connectRequest(userId);
+		dispatch(res);
+		if (res.payload.isAxiosError) {
+			toast.error(res.payload.response.data.message);
+		} else if (res.payload.request) {
+			toast.success('Connect Request Sent!');
+			setRequestStatus('Request Sent');
+			setRequestButtonStatus('connect-btn--pending');
+		}
+	};
+	const getStatus = async () => {
+		const res = await getConnectRequestStatus(userId);
+		dispatch(res);
+		console.log(res);
+		if (res.payload.status === 'Pending') {
+			setRequestStatus('Request Pending');
+			setRequestButtonStatus('connect-btn--pending');
+		} else if (res.payload.status === 'Accepted') {
+			setRequestStatus('Friends');
+			setRequestButtonStatus('connect-btn--friends');
+		}
+	};
 	useEffect(async () => {
 		if (user) {
-			const userId = window.location.pathname.split('/')[2];
 			await fetchPersonalInfo(userId);
+			await getStatus();
 		}
 	}, [user]);
 
@@ -31,7 +63,6 @@ const Profile = () => {
 		let jsx = '';
 		switch (currentCategory) {
 			case 'Work Experience':
-				console.log(personalInfo);
 				jsx = (
 					<List>
 						{personalInfo.workExperience.map((work) => (
@@ -75,12 +106,12 @@ const Profile = () => {
 				);
 				break;
 		}
-		console.log(jsx);
 		return jsx;
 	};
 
 	return (
 		<Container className='profile--container'>
+			<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
 			<FlexboxGrid justify='start' className='profile--flex--container'>
 				<FlexboxGrid.Item colspan={4}></FlexboxGrid.Item>
 				<FlexboxGrid.Item colspan={16} className='profile--main--container'>
@@ -89,8 +120,21 @@ const Profile = () => {
 					) : (
 						<div>
 							<Row>
-								<Button className='connect-btn' appearance='primary'>
-									Connect
+								<Button
+									className={`connect-btn ${requestButtonStatus}`}
+									appearance='primary'
+									disabled={requestStatus !== ''}
+									onClick={() => {
+										connectWithUser();
+									}}>
+									{requestStatus !== '' ? (
+										<div>
+											<i className='fas fa-check status--icon'></i>
+											<span>{requestStatus}</span>
+										</div>
+									) : (
+										'Connect'
+									)}
 								</Button>
 							</Row>
 							<Row className='profile--container profile--avatar--container'>
