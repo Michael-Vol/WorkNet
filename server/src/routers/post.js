@@ -369,8 +369,8 @@ router.delete('/:post_id/likes', auth, async (req, res) => {
 	}
 });
 /**
- * @name POST /{post_id}/likes
- * @desc Allows user to like a specific post
+ * @name POST /{post_id}/comments
+ * @desc Allows user to comment a specific post
  * @access private
  * @memberof post
  */
@@ -437,12 +437,15 @@ router.get('/:post_id/comments', auth, async (req, res) => {
 		await post
 			.populate({
 				path: 'comments',
+				populate: { path: 'creator', model: 'User' },
+				sortBy: { updatedAt: -1 },
 				options: {
 					limit,
 					skip,
 				},
 			})
 			.execPopulate();
+
 		res.json({ comments: post.comments });
 	} catch (error) {
 		console.log(error);
