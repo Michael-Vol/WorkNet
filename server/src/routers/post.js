@@ -4,6 +4,7 @@ const Post = require('../models/Post');
 const User = require('../models/User');
 const Like = require('../models/Like');
 const Comment = require('../models/Comment');
+const ConnectRequest = require('../models/ConnectRequest');
 const multer = require('multer');
 const sharp = require('sharp');
 const router = express.Router();
@@ -86,6 +87,44 @@ router.get('/', auth, async (req, res) => {
 		});
 	}
 });
+
+/**
+ * @name GET  /personalized
+ * @desc Allows user to get only his personalized posts
+ * @access auth
+ * @memberof post
+ */
+
+router.get('/personalized', auth, async (req, res) => {
+	try {
+		const posts = [];
+
+		//get user-created posts
+		const myPosts = await Post.find({ creator: req.user._id }).populate('creator').sort({ updatedAt: -1 });
+
+		posts.push(myPosts);
+
+		//get friends' posts
+		const friends = await ConnectRequest.find({
+			$or: [{ sender: req.user._id }, { receiver: req.user._id }],
+			status: 'Accepted',
+		}).populate('creator');
+		console.log(friends);
+		friends.forEach(async (friend) => {
+			// console.log(friend);
+			const post = await Post.find({ creator: friend._id });
+			posts.push(post);
+		});
+
+		res.json({ posts });
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
 /**
  * @name GET /{post_id}
  * @desc Allows anyone to get any post
@@ -432,20 +471,18 @@ router.get('/:post_id/comments', auth, async (req, res) => {
 		}
 		const limit = req.query.limit === undefined ? 10 : parseInt(req.query.limit);
 		const skip = req.query.skip === undefined ? 0 : parseInt(req.query.skip);
-		console.log(limit, skip);
-
+		const sort = { updatedAt: -1 };
 		await post
 			.populate({
 				path: 'comments',
 				populate: { path: 'creator', model: 'User' },
-				sortBy: { updatedAt: -1 },
 				options: {
 					limit,
 					skip,
+					sort,
 				},
 			})
 			.execPopulate();
-
 		res.json({ comments: post.comments });
 	} catch (error) {
 		console.log(error);
