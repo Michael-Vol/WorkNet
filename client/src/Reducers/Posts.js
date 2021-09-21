@@ -11,6 +11,8 @@ import {
 	GET_POST_LIKED_ERROR,
 	GET_LIKES_COUNT_SUCCESS,
 	GET_LIKES_COUNT_ERROR,
+	GET_COMMENTS_SUCCESS,
+	GET_COMMENTS_ERROR,
 } from '../Actions/types';
 
 const initialState = {
@@ -20,6 +22,7 @@ const initialState = {
 	loading: true,
 	liked: null,
 	numLikes: null,
+	comments: null,
 };
 
 const posts = function (state = initialState, action) {
@@ -105,6 +108,22 @@ const posts = function (state = initialState, action) {
 				error: payload,
 				loading: false,
 				numLikes: null,
+			};
+		}
+		case GET_COMMENTS_SUCCESS: {
+			return {
+				...state,
+				error: null,
+				loading: false,
+				comments: payload.comments,
+			};
+		}
+		case GET_COMMENTS_ERROR: {
+			return {
+				...state,
+				comments: null,
+				loading: false,
+				error: payload,
 			};
 		}
 		default:

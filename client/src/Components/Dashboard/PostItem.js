@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, Col, Row, Button, Badge, List, Input, InputGroup } from 'rsuite';
 import './PostItem.scss';
 import Moment from 'react-moment';
-import { getAvatar, likePost, getPostLiked, getLikesCount } from '../../Actions/posts';
+import { getAvatar, likePost, getPostLiked, getLikesCount, getComments } from '../../Actions/posts';
 import { useDispatch } from 'react-redux';
 import CommentItem from './CommentItem';
 const PostItem = ({ post, index }) => {
@@ -12,10 +12,13 @@ const PostItem = ({ post, index }) => {
 	const [liked, setliked] = useState(false);
 	const [numLikes, setNumLikes] = useState(0);
 	const [viewComments, setViewComments] = useState(false);
+	const [comments, setComments] = useState([]);
+
 	useEffect(async () => {
 		const res = await getAvatar(post.creator._id);
 		await postLiked();
 		await getNumLikes();
+		await loadComments();
 
 		dispatch(res);
 		setAvatar(res.payload);
@@ -43,7 +46,11 @@ const PostItem = ({ post, index }) => {
 		setliked(res.payload.liked);
 		await getNumLikes();
 	};
-
+	const loadComments = async () => {
+		const res = await getComments(post._id);
+		dispatch(res);
+		setComments(res.payload.comments);
+	};
 	return (
 		<Col md={18} className='container post--container' key={index}>
 			<Row className='post--header'>
@@ -94,9 +101,7 @@ const PostItem = ({ post, index }) => {
 						</InputGroup>
 					</Row>
 					<List className='comments--list'>
-						<CommentItem />
-						<CommentItem />
-						<CommentItem />
+						{comments && comments.map((comment) => <CommentItem comment={comment} />)}
 					</List>
 				</Row>
 			)}
