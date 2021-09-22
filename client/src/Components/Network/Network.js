@@ -47,9 +47,9 @@ const Network = () => {
 	return (
 		<Container className='network--container'>
 			{usersLoading ? (
-				<Row className='users--loading'>
-					<Loader size='lg' className='loader' />
-					<div>Fetching Users </div>
+				<Row className='users--loading--container'>
+					<Loader className='users--loader' size='lg' speed='normal' inverse />
+					<div className='users--loader--text'>Fetching Users </div>
 				</Row>
 			) : (
 				<div>

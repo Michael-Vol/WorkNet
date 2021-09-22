@@ -31,8 +31,12 @@
 	margin-top: 10vh;
 }
 
-.users--loading {
+.users--loading--container {
 	color: $color-white-secondary;
 	font-size: 42px;
 	text-align: center;
+	margin-top: 20vh;
+}
+.users--loader--text {
+	margin-top: 50px;
 }
