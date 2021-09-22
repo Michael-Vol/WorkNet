@@ -64,45 +64,78 @@ const Profile = () => {
 		switch (currentCategory) {
 			case 'Work Experience':
 				jsx = (
-					<List>
-						{personalInfo.workExperience.map((work) => (
-							<List.Item className='item--container work--container'>
+					<div>
+						{personalInfo.workExperience.length === 0 ? (
+							<div className='no--info--container'>
 								<div>
-									<div className='list--item--header'>Work Title: {work.name}</div>
-									<div className='list--item--sector'>Employer: {work.employer}</div>
-									<div className='list--item--description'>{work.description}</div>
+									<i className='fas fa-info-circle fa-lg'></i>
 								</div>
-							</List.Item>
-						))}
-					</List>
+								{personalInfo.name} hasn't posted any info on Work Experience.
+							</div>
+						) : (
+							personalInfo.workExperience.map((work) => (
+								<List>
+									<List.Item className='item--container work--container'>
+										<div>
+											<div className='list--item--header'>Work Title: {work.name}</div>
+											<div className='list--item--sector'>Employer: {work.employer}</div>
+											<div className='list--item--description'>{work.description}</div>
+										</div>
+									</List.Item>
+								</List>
+							))
+						)}
+					</div>
 				);
 				break;
 			case 'Education':
 				jsx = (
-					<List>
-						{personalInfo.education.map((edu) => (
-							<List.Item className='item--container education--container'>
+					<div>
+						{personalInfo.education.length === 0 ? (
+							<div className='no--info--container'>
 								<div>
-									<div className='list--item--header'>Study Field: {edu.name}</div>
-									<div className='list--item--sector'>University: {edu.university}</div>
-									<div className='list--item--description'>{edu.university}</div>
+									<i className='fas fa-info-circle fa-lg'></i>
 								</div>
-							</List.Item>
-						))}
-					</List>
+								{personalInfo.name} hasn't posted any info on Education.
+							</div>
+						) : (
+							<List>
+								{personalInfo.education.map((edu) => (
+									<List.Item className='item--container education--container'>
+										<div>
+											<div className='list--item--header'>Study Field: {edu.name}</div>
+											<div className='list--item--sector'>University: {edu.university}</div>
+											<div className='list--item--description'>{edu.university}</div>
+										</div>
+									</List.Item>
+								))}
+							</List>
+						)}
+					</div>
 				);
 				break;
 			case 'Skills':
 				jsx = (
-					<List>
-						{personalInfo.skills.map((skill) => (
-							<List.Item className='item--container skills-container'>
+					<div>
+						{personalInfo.skills.length === 0 ? (
+							<div className='no--info--container'>
 								<div>
-									<div className='list--item--header'>{skill.name}</div>
+									<i className='fas fa-info-circle fa-lg'></i>
 								</div>
-							</List.Item>
-						))}
-					</List>
+								{personalInfo.name} hasn't posted any info on Skills.
+							</div>
+						) : (
+							<List>
+								{personalInfo.skills.map((skill) => (
+									<List.Item className='item--container skills-container'>
+										<div>
+											<div className='list--item--header'>{skill.name}</div>
+										</div>
+									</List.Item>
+								))}
+							</List>
+						)}
+					</div>
 				);
 				break;
 		}
@@ -111,7 +144,7 @@ const Profile = () => {
 
 	return (
 		<Container className='profile--container'>
-			<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
+			<Toaster position='top-right' toastOptions={{ duration: 2000 }} />
 			<FlexboxGrid justify='start' className='profile--flex--container'>
 				<FlexboxGrid.Item colspan={4}></FlexboxGrid.Item>
 				<FlexboxGrid.Item colspan={16} className='profile--main--container'>

@@ -3,11 +3,12 @@ import './Network.scss';
 
 import { getUsers, getConnectedUsers } from '../../Actions/users';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col, Container, InputGroup, Input, Icon } from 'rsuite';
+import { Row, Col, Container, InputGroup, Input, Icon, Loader } from 'rsuite';
 import UserItem from './UserItem';
 const Network = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
+	const usersLoading = useSelector((state) => state.users.loading);
 	const [users, setUsers] = useState([]);
 	const [filteredUsers, setFilteredUsers] = useState([]);
 	const [connectedUsers, setConnectedUsers] = useState([]);
@@ -45,38 +46,58 @@ const Network = () => {
 
 	return (
 		<Container className='network--container'>
-			<Row className='search--container' gutter={10}>
-				<Col md={22} className='search'>
-					<InputGroup>
-						<Input placeholder='Search All Users' onChange={(value) => searchUsers(value)} />
-						<InputGroup.Button>
-							<Icon icon='search' />
-						</InputGroup.Button>
-					</InputGroup>
-				</Col>
-			</Row>
-			<Row className='users--container' gutter={4}>
-				{isSearching && filteredUsers && (
-					<div>
-						<div className='items--header'>All Users</div>
+			{usersLoading ? (
+				<Row className='users--loading'>
+					<Loader size='lg' className='loader' />
+					<div>Fetching Users </div>
+				</Row>
+			) : (
+				<div>
+					<Row className='search--container' gutter={10}>
+						<Col md={20} className='search'>
+							<InputGroup>
+								<Input
+									className='search--input'
+									placeholder='Search All Users'
+									onChange={(value) => searchUsers(value)}
+								/>
+								<InputGroup.Button>
+									<Icon icon='search' />
+								</InputGroup.Button>
+							</InputGroup>
+						</Col>
+					</Row>
 
-						{filteredUsers.map((usr, index) => {
-							if (usr._id !== user._id) return <UserItem user={usr} key={index} id={`userItem-${index}`} />;
-						})}
-					</div>
-				)}
-			</Row>
-			<Row className='users--container' gutter={4}>
-				{!isSearching && connectedUsers && (
-					<div>
-						<div className='items--header'>Connected Users</div>
-						{connectedUsers.map((usr, index) => {
-							if (usr._id !== user._id)
-								return <UserItem user={usr} key={index} id={`connected-userItem-${index}`} />;
-						})}
-					</div>
-				)}
-			</Row>
+					{isSearching && filteredUsers && (
+						<Row className='users--container' gutter={4}>
+							<div>
+								<div className='items--header'>All Users</div>
+
+								{filteredUsers.map((usr, index) => {
+									if (usr._id !== user._id) return <UserItem user={usr} key={index} id={`userItem-${index}`} />;
+								})}
+							</div>
+						</Row>
+					)}
+					{!isSearching &&
+						(connectedUsers.length === 0 ? (
+							<Row className='no--users--header'>
+								<i className='fas fa-users-slash fa-lg'></i>
+								<div>You are not connected with any users</div>
+							</Row>
+						) : (
+							<Row className='users--container' gutter={4}>
+								<div>
+									<div className='items--header'>Connected Users</div>
+									{connectedUsers.map((usr, index) => {
+										if (usr._id !== user._id)
+											return <UserItem user={usr} key={index} id={`connected-userItem-${index}`} />;
+									})}
+								</div>
+							</Row>
+						))}
+				</div>
+			)}
 		</Container>
 	);
 };

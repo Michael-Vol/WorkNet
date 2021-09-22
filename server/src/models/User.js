@@ -80,6 +80,12 @@ const userSchema = new mongoose.Schema(
 				name: { type: String },
 			},
 		],
+		friends: [
+			{
+				type: mongoose.Types.ObjectId,
+				ref: 'User',
+			},
+		],
 	},
 	{
 		timestamps: true,

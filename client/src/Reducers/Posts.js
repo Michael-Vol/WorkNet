@@ -13,6 +13,8 @@ import {
 	GET_LIKES_COUNT_ERROR,
 	GET_COMMENTS_SUCCESS,
 	GET_COMMENTS_ERROR,
+	POST_COMMENT_SUCCESS,
+	POST_COMMENT_ERROR,
 } from '../Actions/types';
 
 const initialState = {
@@ -122,6 +124,20 @@ const posts = function (state = initialState, action) {
 			return {
 				...state,
 				comments: null,
+				loading: false,
+				error: payload,
+			};
+		}
+		case POST_COMMENT_SUCCESS: {
+			return {
+				...state,
+				loading: false,
+				error: null,
+			};
+		}
+		case POST_COMMENT_ERROR: {
+			return {
+				...state,
 				loading: false,
 				error: payload,
 			};

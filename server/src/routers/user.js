@@ -510,11 +510,15 @@ router.patch('/:user_id/connect', auth, validateUserID, async (req, res) => {
 				message: 'Connect Request has already been accepted',
 			});
 		}
-		console.log(req.query.accept);
 		if (req.query.accept === 'true') {
 			connectRequest.status = 'Accepted';
-			await connectRequest.save();
+			req.user.friends.push(senderID);
+			const sender = await User.findById(senderID);
+			sender.friends.push(req.user._id);
 
+			await connectRequest.save();
+			await req.user.save();
+			await sender.save();
 			return res.json({
 				request: connectRequest,
 			});

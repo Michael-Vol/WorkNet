@@ -1,12 +1,18 @@
-import React, { Fragment, useState } from 'react';
-import { Navbar, Nav, FlexboxGrid } from 'rsuite';
+import React, { Fragment, useState, useEffect } from 'react';
+import { Navbar, Nav, FlexboxGrid, Badge } from 'rsuite';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Notifications from '../Notifications/Notifications';
+import { getMyRequests } from '../../Actions/connectRequests';
 import './NavBar.scss';
 const NavBar = ({ onSelect, activeKey, ...props }) => {
-	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 	const [selectNotifications, setSelectNotifications] = useState(false);
+
+	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+	const user = useSelector((state) => state.auth.user);
+	const myRequests = useSelector((state) => state.connectRequest.requests);
+
+	const dispatch = useDispatch();
 
 	const guestLinks = (
 		<div>
@@ -18,6 +24,18 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 			</Nav.Item>
 		</div>
 	);
+
+	const fetchRequests = async () => {
+		const res = await getMyRequests('Pending');
+		dispatch(res);
+	};
+
+	useEffect(async () => {
+		if (user) {
+			await fetchRequests();
+		}
+	}, [user]);
+
 	const authLinks = (
 		<div>
 			<Nav.Item href='/dashboard' className='link'>
@@ -39,7 +57,11 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 				Settings
 			</Nav.Item>
 			<Nav.Item className='link' onSelect={() => setSelectNotifications(!selectNotifications)}>
-				<i className='fas fa-bell nav-icon'></i>
+				<i className='fas fa-bell nav-icon notifications--icon'>
+					{myRequests && myRequests.length > 0 && (
+						<Badge className='notifications--badge' content={myRequests.length} />
+					)}
+				</i>
 			</Nav.Item>
 			{selectNotifications && <Notifications />}
 			<Nav.Item

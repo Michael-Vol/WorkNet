@@ -97,24 +97,33 @@ router.get('/', auth, async (req, res) => {
 
 router.get('/personalized', auth, async (req, res) => {
 	try {
-		const posts = [];
-
 		//get user-created posts
+		let posts = [];
 		const myPosts = await Post.find({ creator: req.user._id }).populate('creator').sort({ updatedAt: -1 });
 
-		posts.push(myPosts);
-
+		posts.push(...myPosts);
 		//get friends' posts
-		const friends = await ConnectRequest.find({
-			$or: [{ sender: req.user._id }, { receiver: req.user._id }],
-			status: 'Accepted',
-		}).populate('creator');
-		console.log(friends);
-		friends.forEach(async (friend) => {
-			// console.log(friend);
-			const post = await Post.find({ creator: friend._id });
-			posts.push(post);
-		});
+		await Promise.all(
+			req.user.friends.map(async (friendId) => {
+				const friendPosts = await Post.find({ creator: friendId }).populate('creator').sort({ updatedAt: -1 });
+				posts.push(...friendPosts);
+
+				//get posts of non connected users that friends have liked
+
+				const likes = await Like.find({ creator: friendId });
+				const likedPostIds = likes.map((like) => like.post);
+
+				const likedPosts = await Promise.all(
+					likedPostIds.map(async (postId) => {
+						const post = await Post.findById(postId).populate('creator').sort({ updatedAt: -1 });
+						return post;
+					})
+				);
+				posts.push(...likedPosts);
+				return posts;
+			})
+		);
+		console.log('friendposts', posts);
 
 		res.json({ posts });
 	} catch (error) {

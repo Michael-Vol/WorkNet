@@ -59,7 +59,7 @@ const Login = () => {
 
 	return (
 		<Content className='login'>
-			<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
+			<Toaster position='top-right' toastOptions={{ duration: 2000 }} />
 			<FlexboxGrid justify='center'>
 				<FlexboxGrid.Item colspan={8}>
 					<div className='form--container login--container'>

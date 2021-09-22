@@ -4,10 +4,11 @@ import './NotificationItem.scss';
 import { getAvatar } from '../../Actions/posts';
 import { updateRequest } from '../../Actions/connectRequests';
 import { useDispatch } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 const NotificationItem = ({ notification }) => {
 	const dispatch = useDispatch();
 	const [avatar, setavatar] = useState(null);
-
+	const [redirect, setRedirect] = useState(false);
 	const fetchAvatar = async (userId) => {
 		const res = await getAvatar(userId);
 		dispatch(res);
@@ -17,7 +18,6 @@ const NotificationItem = ({ notification }) => {
 	const respondToRequest = async (accept) => {
 		const res = await updateRequest(notification.sender._id, accept);
 		dispatch(res);
-		console.log(res);
 	};
 
 	useEffect(async () => {
@@ -26,8 +26,9 @@ const NotificationItem = ({ notification }) => {
 
 	return (
 		<List.Item className='notifications--item--container'>
+			{redirect && <Redirect to={`/users/${notification.sender._id}/profile`} />}
 			<FlexboxGrid className='notifications--item'>
-				<FlexboxGrid.Item colspan={4} className='avatar'>
+				<FlexboxGrid.Item colspan={4} className='avatar' onClick={() => setRedirect(true)}>
 					<Avatar circle src={`data:image/png;base64,${avatar}`} size='lg' />
 				</FlexboxGrid.Item>
 				<FlexboxGrid.Item colspan={14} className='sender'>

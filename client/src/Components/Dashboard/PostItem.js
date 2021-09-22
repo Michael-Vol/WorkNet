@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, Col, Row, Button, Badge, List, Input, InputGroup } from 'rsuite';
 import './PostItem.scss';
 import Moment from 'react-moment';
-import { getAvatar, likePost, getPostLiked, getLikesCount, getComments } from '../../Actions/posts';
+import { getAvatar, likePost, getPostLiked, getLikesCount, getComments, postComment } from '../../Actions/posts';
 import { useDispatch } from 'react-redux';
 import CommentItem from './CommentItem';
 const PostItem = ({ post, index }) => {
@@ -13,7 +13,7 @@ const PostItem = ({ post, index }) => {
 	const [numLikes, setNumLikes] = useState(0);
 	const [viewComments, setViewComments] = useState(false);
 	const [comments, setComments] = useState([]);
-
+	const [newComment, setNewComment] = useState('');
 	useEffect(async () => {
 		const res = await getAvatar(post.creator._id);
 		await postLiked();
@@ -51,6 +51,13 @@ const PostItem = ({ post, index }) => {
 		dispatch(res);
 		setComments(res.payload.comments);
 	};
+
+	const postNewComment = async () => {
+		const res = await postComment(post._id, newComment);
+		setNewComment('');
+		dispatch(res);
+		await loadComments();
+	};
 	return (
 		<Col md={18} className='container post--container' key={index}>
 			<Row className='post--header'>
@@ -86,7 +93,7 @@ const PostItem = ({ post, index }) => {
 				<Col>
 					<div className='comment--btn' onClick={() => setViewComments(!viewComments)}>
 						<i className='fas fa-comment comment--icon'></i>
-						20 Comments
+						{comments ? comments.length : 0} Comments
 					</div>
 				</Col>
 			</Row>
@@ -94,14 +101,19 @@ const PostItem = ({ post, index }) => {
 				<Row className='comments'>
 					<Row className='write--comment--container'>
 						<InputGroup className='comment--group'>
-							<Input placeholder='Write a Comment' className='write--comment' />
-							<Button appearance='primary' className='post--comment--btn'>
+							<Input
+								placeholder='Write a Comment'
+								className='write--comment'
+								onChange={(value) => setNewComment(value)}
+								value={newComment}
+							/>
+							<Button appearance='primary' className='post--comment--btn' onClick={() => postNewComment()}>
 								Post
 							</Button>
 						</InputGroup>
 					</Row>
 					<List className='comments--list'>
-						{comments && comments.map((comment) => <CommentItem comment={comment} />)}
+						{comments && comments.map((comment, index) => <CommentItem key={index} comment={comment} />)}
 					</List>
 				</Row>
 			)}

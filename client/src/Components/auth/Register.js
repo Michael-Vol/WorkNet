@@ -93,7 +93,7 @@ const Register = (props) => {
 
 	return (
 		<Content className='register'>
-			<Toaster position='top-right' toastOptions={{ duration: 4000 }} />
+			<Toaster position='top-right' toastOptions={{ duration: 2000 }} />
 			<FlexboxGrid justify='center'>
 				<FlexboxGrid.Item>
 					<div className='form--container register--container'>

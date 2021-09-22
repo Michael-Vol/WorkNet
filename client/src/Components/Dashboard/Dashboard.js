@@ -86,7 +86,12 @@ const Dashboard = () => {
 								</Button>
 							</Col>
 							<Col md={12}>
-								<Button className='refresh--posts--btn' onClick={async () => await fetchPosts()}>
+								<Button
+									className='refresh--posts--btn'
+									onClick={async () => {
+										await fetchPosts();
+										await fetchUsers();
+									}}>
 									Refresh
 								</Button>
 							</Col>

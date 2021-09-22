@@ -53,7 +53,6 @@ const PersonalInfo = () => {
 
 			// formData.sector = formData[sector].toLowerCase();
 			const actionData = {};
-			console.log(currentCategory);
 			switch (currentCategory) {
 				case 'workExperience':
 					actionData.name = formData.name;

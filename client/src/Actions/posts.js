@@ -14,6 +14,8 @@ import {
 	GET_LIKES_COUNT_ERROR,
 	GET_COMMENTS_SUCCESS,
 	GET_COMMENTS_ERROR,
+	POST_COMMENT_SUCCESS,
+	POST_COMMENT_ERROR,
 } from './types';
 
 export const getPosts = async () => {
@@ -23,7 +25,7 @@ export const getPosts = async () => {
 				'Content-Type': 'application/json',
 			},
 		};
-		const res = await axios.get('/posts', config);
+		const res = await axios.get('/posts/personalized', config);
 		return {
 			type: GET_POSTS_SUCCESS,
 			payload: res.data,
@@ -161,6 +163,28 @@ export const getComments = async (postId) => {
 	} catch (error) {
 		return {
 			type: GET_COMMENTS_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const postComment = async (postId, comment) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const body = JSON.stringify({ body: comment });
+		const res = await axios.post(`/posts/${postId}/comments`, body, config);
+
+		return {
+			type: GET_COMMENTS_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: POST_COMMENT_ERROR,
 			payload: error,
 		};
 	}

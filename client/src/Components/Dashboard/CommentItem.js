@@ -28,12 +28,7 @@ const CommentItem = ({ comment }) => {
 						</div>
 					</Col>
 				</Row>
-				<Row className='comment--body'>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium alias, nesciunt odio quos obcaecati
-					quisquam facilis quidem sequi. Repellat quibusdam, ipsa nihil voluptatum veritatis aut numquam dolores sequi
-					architecto assumenda aperiam suscipit quos aspernatur nostrum quia alias id nam. Dignissimos illum ipsam
-					maxime impedit laudantium eveniet, adipisci deserunt blanditiis molestias.
-				</Row>
+				<Row className='comment--body'>{comment.body}</Row>
 				<Row className='comment--date'>
 					<Moment format='ddd D/MM  hh:mm a'>{comment && comment.createdAt}</Moment>
 				</Row>
