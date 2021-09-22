@@ -15,6 +15,10 @@ import {
 	GET_COMMENTS_ERROR,
 	POST_COMMENT_SUCCESS,
 	POST_COMMENT_ERROR,
+	GET_REACTIONS_SUCCESS,
+	GET_REACTIONS_ERROR,
+	READ_REACTION_SUCCESS,
+	READ_REACTION_ERROR,
 } from '../Actions/types';
 
 const initialState = {
@@ -25,6 +29,8 @@ const initialState = {
 	liked: null,
 	numLikes: null,
 	comments: null,
+	reactions: null,
+	reactionsUpdated: true,
 };
 
 const posts = function (state = initialState, action) {
@@ -135,11 +141,37 @@ const posts = function (state = initialState, action) {
 				error: null,
 			};
 		}
+		case READ_REACTION_ERROR:
 		case POST_COMMENT_ERROR: {
 			return {
 				...state,
 				loading: false,
 				error: payload,
+			};
+		}
+		case GET_REACTIONS_SUCCESS: {
+			return {
+				...state,
+				loading: false,
+				error: null,
+				reactions: payload,
+				reactionsUpdated: true,
+			};
+		}
+		case GET_REACTIONS_ERROR: {
+			return {
+				...state,
+				loading: false,
+				error: payload,
+				reactions: null,
+			};
+		}
+		case READ_REACTION_SUCCESS: {
+			return {
+				...state,
+				loading: false,
+				error: null,
+				reactionsUpdated: false,
 			};
 		}
 		default:

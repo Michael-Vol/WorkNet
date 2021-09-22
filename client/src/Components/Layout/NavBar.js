@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Notifications from '../Notifications/Notifications';
 import { getMyRequests } from '../../Actions/connectRequests';
+import { getReactions } from '../../Actions/posts';
 import './NavBar.scss';
 const NavBar = ({ onSelect, activeKey, ...props }) => {
 	const [selectNotifications, setSelectNotifications] = useState(false);
@@ -11,6 +12,8 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 	const user = useSelector((state) => state.auth.user);
 	const myRequests = useSelector((state) => state.connectRequest.requests);
+	const myReactions = useSelector((state) => state.posts.reactions);
+	const reactionsUpdated = useSelector((state) => state.posts.reactionsUpdated);
 
 	const dispatch = useDispatch();
 
@@ -30,11 +33,23 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 		dispatch(res);
 	};
 
+	const fetchReactions = async () => {
+		const res = await getReactions();
+		dispatch(res);
+	};
+
 	useEffect(async () => {
 		if (user) {
 			await fetchRequests();
+			await fetchReactions();
 		}
 	}, [user]);
+
+	useEffect(async () => {
+		if (!reactionsUpdated) {
+			await fetchReactions();
+		}
+	}, [reactionsUpdated]);
 
 	const authLinks = (
 		<div>
@@ -58,9 +73,14 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 			</Nav.Item>
 			<Nav.Item className='link' onSelect={() => setSelectNotifications(!selectNotifications)}>
 				<i className='fas fa-bell nav-icon notifications--icon'>
-					{myRequests && myRequests.length > 0 && (
-						<Badge className='notifications--badge' content={myRequests.length} />
-					)}
+					{myRequests &&
+						myReactions &&
+						(myRequests.length > 0 || myReactions.likes.length > 0 || myReactions.comments.length > 0) && (
+							<Badge
+								className='notifications--badge'
+								content={myRequests.length + myReactions.likes.length + myReactions.comments.length}
+							/>
+						)}
 				</i>
 			</Nav.Item>
 			{selectNotifications && <Notifications />}

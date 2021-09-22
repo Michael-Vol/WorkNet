@@ -613,4 +613,93 @@ router.patch('/:post_id/comments/:cmnt_id', auth, async (req, res) => {
 	}
 });
 
+/**
+ * @name GET /reactions
+ * @desc Allows user to get the reactions(likes,comments) to  his posts
+ */
+
+router.get('/all/reactions', auth, async (req, res) => {
+	try {
+		let likes = [];
+		let comments = [];
+		const options = { read: false };
+
+		const posts = await Post.find({ creator: req.user._id });
+
+		await Promise.all(
+			posts.map(async (post) => {
+				const postLikes = await Like.find({ post: post._id, ...options })
+					.populate('creator')
+					.sort({ updatedAt: -1 });
+				const postComments = await Comment.find({ post: post._id, ...options })
+					.populate('creator')
+					.sort({ updatedAt: -1 });
+
+				likes.push(...postLikes);
+				comments.push(...postComments);
+			})
+		);
+
+		return res.json({
+			likes,
+			comments,
+		});
+	} catch (error) {
+		console.error(error);
+		if ((error.name = 'CastError')) {
+			return res.status(400).json({
+				message: 'Invalid Post ID',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name POST /reactions/${reaction_id}/read
+ * @desc Allows user to mark a reaction(like or comment) as read
+ * @access private
+ * @memberof post
+ */
+
+router.post('/reactions/:reaction_id/read', auth, async (req, res) => {
+	try {
+		const like = await Like.findById(req.params.reaction_id);
+		if (!like) {
+			const comment = await Comment.findById(req.params.reaction_id);
+
+			if (!comment) {
+				return res.status(400).json({
+					message: 'Reaction Not found',
+				});
+			}
+
+			comment.read = true;
+			await comment.save();
+
+			return res.json({
+				comment,
+			});
+		}
+
+		like.read = true;
+		await like.save();
+		return res.json({
+			like,
+		});
+	} catch (error) {
+		console.error(error);
+		if ((error.name = 'CastError')) {
+			return res.status(400).json({
+				message: 'Invalid ID',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
 module.exports = router;

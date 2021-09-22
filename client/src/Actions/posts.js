@@ -16,6 +16,10 @@ import {
 	GET_COMMENTS_ERROR,
 	POST_COMMENT_SUCCESS,
 	POST_COMMENT_ERROR,
+	GET_REACTIONS_SUCCESS,
+	GET_REACTIONS_ERROR,
+	READ_REACTION_SUCCESS,
+	READ_REACTION_ERROR,
 } from './types';
 
 export const getPosts = async () => {
@@ -179,12 +183,56 @@ export const postComment = async (postId, comment) => {
 		const res = await axios.post(`/posts/${postId}/comments`, body, config);
 
 		return {
-			type: GET_COMMENTS_SUCCESS,
+			type: POST_COMMENT_SUCCESS,
 			payload: res.data,
 		};
 	} catch (error) {
 		return {
 			type: POST_COMMENT_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getReactions = async () => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		const res = await axios.get(`/posts/all/reactions`, config);
+
+		return {
+			type: GET_REACTIONS_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: GET_REACTIONS_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const readReaction = async (reactionID) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		const res = await axios.post(`/posts/reactions/${reactionID}/read`, config);
+
+		return {
+			type: READ_REACTION_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: READ_REACTION_ERROR,
 			payload: error,
 		};
 	}
