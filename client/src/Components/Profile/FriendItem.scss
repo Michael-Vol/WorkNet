@@ -1,0 +1,25 @@
+@import '../../Styles/main';
+
+.friend--item--container > .rs-panel {
+	background-color: #fff;
+	border: 5px $color-base;
+	border-radius: 10px;
+	display: inline-block;
+	animation: fadeIn 1.5s;
+	margin: 15px;
+	width: 22vh;
+	height: 20vh;
+	display: inline-block;
+	white-space: initial;
+}
+
+.friend--name--container {
+	margin-top: 30px;
+	font-size: 20px;
+}
+
+.friend--item--container:hover > .rs-panel:hover {
+	background-color: $color-base;
+	color: #fff;
+	transition: 0.8s;
+}

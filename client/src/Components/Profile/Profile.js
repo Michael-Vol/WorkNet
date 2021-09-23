@@ -4,15 +4,22 @@ import './Profile.scss';
 import { getPersonalInfo } from '../../Actions/personalInfo';
 import { connectRequest, getConnectRequestStatus } from '../../Actions/connectRequests';
 import { getAvatar } from '../../Actions/posts';
-import { Container, FlexboxGrid, Avatar, Row, Nav, Button, List, Loader, Tag } from 'rsuite';
+import { Container, Grid, FlexboxGrid, Avatar, Row, Nav, Button, List, Loader, Tag, Divider, Placeholder } from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast, Toaster } from 'react-hot-toast';
+import { getFriends } from '../../Actions/users';
+import { useHistory } from 'react-router';
+import FriendItem from './FriendItem';
 
 const Profile = () => {
 	const dispatch = useDispatch();
+	const history = useHistory();
+
 	const user = useSelector((state) => state.auth.user);
 	const personalInfo = useSelector((state) => state.personalInfo);
 	const connectRequestState = useSelector((state) => state.connectRequest);
+	const friends = useSelector((state) => state.users.friends);
+	const friendsLoading = useSelector((state) => state.users.friendsLoading);
 
 	const [currentCategory, setCurrentCategory] = useState('Work Experience');
 	const [avatar, setAvatar] = useState(null);
@@ -40,6 +47,11 @@ const Profile = () => {
 			setRequestButtonStatus('connect-btn--pending');
 		}
 	};
+
+	const fetchFriends = async () => {
+		const res = await getFriends(userId);
+		dispatch(res);
+	};
 	const getStatus = async () => {
 		const res = await getConnectRequestStatus(userId);
 		dispatch(res);
@@ -56,6 +68,7 @@ const Profile = () => {
 		if (user) {
 			await fetchPersonalInfo(userId);
 			await getStatus();
+			await fetchFriends();
 		}
 	}, [user]);
 
@@ -179,29 +192,64 @@ const Profile = () => {
 						<Loader size='lg' content='Fetching Personal Info' className='loader' />
 					) : (
 						<div>
-							<Row>
-								<Button
-									className={`connect-btn ${requestButtonStatus}`}
-									appearance='primary'
-									disabled={requestStatus !== ''}
-									onClick={() => {
-										connectWithUser();
-									}}>
-									{requestStatus !== '' ? (
-										<div>
-											<i className='fas fa-check status--icon'></i>
-											<span>{requestStatus}</span>
-										</div>
-									) : (
-										'Connect'
-									)}
-								</Button>
+							<Row className='main--info--container'>
+								<Row>
+									<div
+										className='back--button'
+										onClick={() => {
+											history.goBack();
+										}}>
+										<i className='fas fa-arrow-left fa-2x back--button--arrow'></i>
+									</div>
+									<Button
+										className={`connect-btn ${requestButtonStatus}`}
+										appearance='primary'
+										disabled={requestStatus !== ''}
+										onClick={() => {
+											connectWithUser();
+										}}>
+										{requestStatus !== '' ? (
+											<div>
+												<i className='fas fa-check status--icon'></i>
+												<span>{requestStatus}</span>
+											</div>
+										) : (
+											'Connect'
+										)}
+									</Button>
+								</Row>
+								<Row className='profile--container profile--avatar--container'>
+									<Avatar circle className='profile--avatar' src={`data:image/png;base64,${avatar}`} />
+								</Row>
+								<Row className='profile--container header--container'>
+									<div className='name--header'>{personalInfo.name}</div>
+								</Row>
 							</Row>
-							<Row className='profile--container profile--avatar--container'>
-								<Avatar circle className='profile--avatar' src={`data:image/png;base64,${avatar}`} />
+							<Row className='section--header'>
+								<span>Friends</span>
+								<Divider className='section--header--divider' />
 							</Row>
-							<Row className='profile--container header--container'>
-								<div className='header'>{personalInfo.name}</div>
+							{friendsLoading ? (
+								<Row className='profile--container profile--friends--container'>
+									<div>
+										<Placeholder.Grid rows={1} columns={5} active />
+									</div>
+								</Row>
+							) : friends.length === 0 ? (
+								<div>
+									<i className='fas fa-users-slash fa-2x'></i>
+									<div className='no--friends'>{personalInfo.name} is not connected with any users.</div>
+								</div>
+							) : (
+								<Row className='profile--container profile--friends--container'>
+									{friends.map((friend, index) => (
+										<FriendItem key={index} friend={friend} />
+									))}{' '}
+								</Row>
+							)}
+							<Row className='section--header'>
+								<span>Personal Info</span>
+								<Divider className='section--header--divider' />
 							</Row>
 							<Row className='profile--container profile--body--container'>
 								<Nav className='profile--navbar' appearance='tabs' justified>

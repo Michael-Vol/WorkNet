@@ -6,6 +6,8 @@ import {
 	GET_USERS_ERROR,
 	GET_CONNECTED_USERS_SUCCESS,
 	GET_CONNECTED_USERS_ERROR,
+	GET_FRIENDS_SUCCESS,
+	GET_FRIENDS_ERROR,
 } from './types';
 
 export const updateUserInfo = async (userInfo) => {
@@ -68,6 +70,27 @@ export const getConnectedUsers = async () => {
 	} catch (error) {
 		return {
 			type: GET_CONNECTED_USERS_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getFriends = async (userId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const res = await axios.get(`/users/${userId}/friends`, config);
+
+		return {
+			type: GET_FRIENDS_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: GET_FRIENDS_ERROR,
 			payload: error,
 		};
 	}

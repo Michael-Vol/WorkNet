@@ -678,11 +678,10 @@ router.get('/:user_id/friends', auth, async (req, res) => {
 
 		friends = await Promise.all(
 			user.friends.map(async (friendId) => {
-				const friend = await User.find(friendId);
+				const friend = await User.findById(friendId);
 				return friend;
 			})
 		);
-		console.log(friends);
 		return res.json({ friends });
 	} catch (error) {
 		console.error(error);

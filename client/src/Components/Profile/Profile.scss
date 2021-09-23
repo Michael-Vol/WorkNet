@@ -1,9 +1,5 @@
 @import '../../Styles/main';
 
-.header {
-	font-size: 36px;
-}
-
 .profile--main--container {
 	text-align: center;
 	background-color: $color-white-secondary;
@@ -93,4 +89,61 @@
 
 .list--item--visibility {
 	float: right;
+}
+
+.profile--friends--container {
+	overflow-x: scroll;
+	overflow-y: hidden;
+	white-space: nowrap;
+	margin-bottom: 20px;
+	height: 25vh;
+	width: 100%;
+	// max-width: 100vh;
+}
+.name--header {
+	color: $color-base-secondary;
+	font-size: 36px;
+	margin-bottom: 20px;
+}
+
+.section--header--divider {
+	background-color: $color-base-secondary;
+	height: 3px;
+}
+.section--header {
+	font-size: 28px;
+	text-align: left;
+	margin-left: 20px;
+	color: $color-base-secondary;
+}
+.profile--friends--container::-webkit-scrollbar {
+	display: none;
+}
+
+.friend--item--container > .rs-panel {
+	background-color: #fff;
+	border: 5px $color-base;
+	border-radius: 10px;
+	display: inline-block;
+	animation: fadeIn 1.5s;
+	margin: 15px;
+	width: 22vh;
+	height: 20vh;
+	display: inline-block;
+	white-space: initial;
+}
+
+.no--friends {
+	font-size: 24px;
+	margin-bottom: 10vh;
+}
+
+.back--button {
+	float: left;
+	margin: 28px 0px 0px 25px;
+	color: lighten($color-base-secondary, 10%);
+}
+.back--button:hover {
+	transition: 0.5s;
+	color: $color-base-secondary;
 }
