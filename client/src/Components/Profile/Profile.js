@@ -4,7 +4,7 @@ import './Profile.scss';
 import { getPersonalInfo } from '../../Actions/personalInfo';
 import { connectRequest, getConnectRequestStatus } from '../../Actions/connectRequests';
 import { getAvatar } from '../../Actions/posts';
-import { Container, FlexboxGrid, Avatar, Row, Nav, Button, List, Loader } from 'rsuite';
+import { Container, FlexboxGrid, Avatar, Row, Nav, Button, List, Loader, Tag } from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast, Toaster } from 'react-hot-toast';
 
@@ -77,7 +77,16 @@ const Profile = () => {
 								<List>
 									<List.Item className='item--container work--container'>
 										<div>
-											<div className='list--item--header'>Work Title: {work.name}</div>
+											<div className='list--item--header'>
+												Work Title: {work.name}
+												<span className='list--item--visibility'>
+													{work.visible ? (
+														<Tag color='blue'>Public</Tag>
+													) : (
+														<Tag color='orange'>Private</Tag>
+													)}
+												</span>
+											</div>
 											<div className='list--item--sector'>Employer: {work.employer}</div>
 											<div className='list--item--description'>{work.description}</div>
 										</div>
@@ -103,7 +112,16 @@ const Profile = () => {
 								{personalInfo.education.map((edu) => (
 									<List.Item className='item--container education--container'>
 										<div>
-											<div className='list--item--header'>Study Field: {edu.name}</div>
+											<div className='list--item--header'>
+												Study Field: {edu.name}
+												<span className='list--item--visibility'>
+													{edu.visible ? (
+														<Tag color='blue'>Public</Tag>
+													) : (
+														<Tag color='orange'>Private</Tag>
+													)}
+												</span>
+											</div>
 											<div className='list--item--sector'>University: {edu.university}</div>
 											<div className='list--item--description'>{edu.university}</div>
 										</div>
@@ -129,7 +147,16 @@ const Profile = () => {
 								{personalInfo.skills.map((skill) => (
 									<List.Item className='item--container skills-container'>
 										<div>
-											<div className='list--item--header'>{skill.name}</div>
+											<div className='list--item--header'>
+												{skill.name}
+												<span className='list--item--visibility'>
+													{skill.visible ? (
+														<Tag color='blue'>Public</Tag>
+													) : (
+														<Tag color='orange'>Private</Tag>
+													)}
+												</span>
+											</div>
 										</div>
 									</List.Item>
 								))}

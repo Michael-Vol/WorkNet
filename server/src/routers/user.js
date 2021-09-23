@@ -89,9 +89,16 @@ router.get('/', auth, async (req, res) => {
 		const users = await User.find({}).select(selectFields);
 		if (req.query.personalInfo) {
 			users.forEach((user) => {
-				user.workExperience.reverse();
-				user.education.reverse();
-				user.skills.reverse();
+				//check if connected with user to allow private visibility
+				const isFriend = req.user.friends.includes(user._id);
+
+				user.workExperience = isFriend
+					? user.workExperience.reverse()
+					: user.workExperience.reverse().filter((work) => work.visible);
+				user.education = isFriend
+					? user.education.reverse()
+					: user.education.reverse().filter((education) => education.visible);
+				user.skills = isFriend ? user.skills.reverse() : user.skills.reverse().filter((skill) => skill.visible);
 			});
 		}
 		res.json({ users });
@@ -239,13 +246,16 @@ router.get('/:user_id/personal-info', auth, async (req, res) => {
 		const user = await User.findById(req.params.user_id);
 
 		//check if connected with user to allow private visibility
+		const isFriend = req.user.friends.includes(req.params.user_id);
 
 		return res.json({
 			firstName: user.firstName,
 			lastName: user.lastName,
-			workExperience: user.workExperience.reverse().filter((work) => work.visible),
-			education: user.education.reverse().filter((education) => education.visible),
-			skills: user.skills.reverse().filter((skill) => skill.visible),
+			workExperience: isFriend
+				? user.workExperience.reverse()
+				: user.workExperience.reverse().filter((work) => work.visible),
+			education: isFriend ? user.education.reverse() : user.education.reverse().filter((education) => education.visible),
+			skills: isFriend ? user.skills.reverse() : user.skills.reverse().filter((skill) => skill.visible),
 		});
 	} catch (error) {
 		console.error(error);
@@ -637,6 +647,46 @@ router.get('/me/posts', auth, async (req, res) => {
 		res.status(500).json({
 			message: 'Server Error',
 		});
+	}
+});
+
+/**
+ * @name GET /:user_id/friends
+ * @desc Allows user to get all of the friends of another user
+ * @access private
+ * @memberof post
+ */
+
+router.get('/:user_id/friends', auth, async (req, res) => {
+	try {
+		const user = await User.findById(req.params.user_id);
+
+		if (!user) {
+			return res.status(400).json({
+				message: 'No User found',
+			});
+		}
+		//check if current user is friends with requested user to set friends visibility
+		const isFriend = req.user.friends.includes(req.params.user_id);
+		let friends = [];
+
+		if (!isFriend) {
+			return res.json({
+				friends,
+			});
+		}
+
+		friends = await Promise.all(
+			user.friends.map(async (friendId) => {
+				const friend = await User.find(friendId);
+				return friend;
+			})
+		);
+		console.log(friends);
+		return res.json({ friends });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: 'Server Error' });
 	}
 });
 
