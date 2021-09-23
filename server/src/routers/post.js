@@ -123,7 +123,6 @@ router.get('/personalized', auth, async (req, res) => {
 				return posts;
 			})
 		);
-		console.log('friendposts', posts);
 
 		res.json({ posts });
 	} catch (error) {

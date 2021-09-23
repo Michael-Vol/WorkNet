@@ -174,13 +174,13 @@ router.post('/me/personal-info', auth, async (req, res) => {
 				let fieldAllowedUpdates = [];
 				switch (update) {
 					case 'skills':
-						fieldAllowedUpdates = ['name'];
+						fieldAllowedUpdates = ['name', 'visible'];
 						break;
 					case 'education':
-						fieldAllowedUpdates = ['name', 'university', 'description'];
+						fieldAllowedUpdates = ['name', 'university', 'description', 'visible'];
 						break;
 					case 'workExperience':
-						fieldAllowedUpdates = ['name', 'employer', 'description'];
+						fieldAllowedUpdates = ['name', 'employer', 'description', 'visible'];
 						break;
 				}
 				if (!fieldAllowedUpdates.includes(fieldUpdate)) {
@@ -237,12 +237,15 @@ router.get('/me/personal-info', auth, async (req, res) => {
 router.get('/:user_id/personal-info', auth, async (req, res) => {
 	try {
 		const user = await User.findById(req.params.user_id);
+
+		//check if connected with user to allow private visibility
+
 		return res.json({
 			firstName: user.firstName,
 			lastName: user.lastName,
-			workExperience: user.workExperience.reverse(),
-			education: user.education.reverse(),
-			skills: user.skills.reverse(),
+			workExperience: user.workExperience.reverse().filter((work) => work.visible),
+			education: user.education.reverse().filter((education) => education.visible),
+			skills: user.skills.reverse().filter((skill) => skill.visible),
 		});
 	} catch (error) {
 		console.error(error);

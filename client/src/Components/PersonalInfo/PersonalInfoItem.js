@@ -1,5 +1,5 @@
 import React from 'react';
-import { Panel, List, Placeholder } from 'rsuite';
+import { Panel, List, Placeholder, Tag } from 'rsuite';
 import { useSelector } from 'react-redux';
 import './PersonalInfoItem.scss';
 const PersonalInfoItem = ({ category, infoData }) => {
@@ -16,9 +16,12 @@ const PersonalInfoItem = ({ category, infoData }) => {
 						infoData.data.map((info, index) => {
 							return (
 								<List.Item className='info--item' key={index}>
-									<p className='info--item__title'>
+									<div className='info--item__title'>
 										{infoData.name && <b>{infoData.name}:</b>} {info.name}
-									</p>
+										<span className='info--item--visibility'>
+											{info.visible ? <Tag color='blue'>Public</Tag> : <Tag color='orange'>Private</Tag>}
+										</span>
+									</div>
 									<p className='info--item__title'>
 										{infoData.sector && (
 											<span>

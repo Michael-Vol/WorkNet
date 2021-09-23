@@ -66,6 +66,7 @@ const userSchema = new mongoose.Schema(
 				name: { type: String, required: true },
 				employer: { type: String, required: true },
 				description: { type: String, required: true },
+				visible: { type: Boolean, default: true },
 			},
 		],
 		education: [
@@ -73,11 +74,13 @@ const userSchema = new mongoose.Schema(
 				name: { type: String, required: true },
 				university: { type: String, required: true },
 				description: { type: String, required: true },
+				visible: { type: Boolean, default: true },
 			},
 		],
 		skills: [
 			{
 				name: { type: String },
+				visible: { type: Boolean, default: true },
 			},
 		],
 		friends: [

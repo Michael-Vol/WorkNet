@@ -14,6 +14,7 @@ import {
 	Button,
 	ButtonToolbar,
 	Modal,
+	Toggle,
 } from 'rsuite';
 import PersonalInfoItem from './PersonalInfoItem';
 import { getMyPersonalInfo, postPersonalInfo } from '../../Actions/personalInfo';
@@ -29,6 +30,7 @@ const PersonalInfo = () => {
 	const [addExperience, setAddExperience] = useState(false);
 	const [formFields, setFormFields] = useState({ fields: {}, model: Schema.Model({}) });
 	const [currentCategory, setCurrentCategory] = useState('workExperience');
+	const [isPublic, setIsPublic] = useState(true);
 	const formInitialState = {
 		name: '',
 		sector: '',
@@ -58,14 +60,17 @@ const PersonalInfo = () => {
 					actionData.name = formData.name;
 					actionData.description = formData.description;
 					actionData.employer = formData.sector;
+					actionData.visible = isPublic;
 					break;
 				case 'education':
 					actionData.name = formData.name;
 					actionData.description = formData.description;
 					actionData.university = formData.sector;
+					actionData.visible = isPublic;
 					break;
 				case 'skills':
 					actionData.name = formData.name;
+					actionData.visible = isPublic;
 					break;
 			}
 			console.log(actionData);
@@ -187,6 +192,19 @@ const PersonalInfo = () => {
 								<FormControl componentClass='textarea' name='description'></FormControl>
 							</FormGroup>
 						)}
+						<Row>
+							<FormGroup key='form__visible'>
+								<ControlLabel className='form__label'>
+									<span className='visibility--text'>{isPublic ? 'Public' : 'Private'}</span>
+								</ControlLabel>
+								<Toggle
+									className='visibility--toggle'
+									checked={isPublic}
+									onChange={() => setIsPublic(!isPublic)}
+								/>
+							</FormGroup>
+						</Row>
+
 						<ButtonToolbar>
 							<Button
 								appearance='primary'
