@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Jobs.scss';
-import { FlexboxGrid, Divider, List, PanelGroup, Panel } from 'rsuite';
+import { FlexboxGrid, Divider, List, PanelGroup, Panel, Row, Col, Button } from 'rsuite';
 import JobItem from './JobItem';
 const Jobs = () => {
 	return (
@@ -11,12 +11,15 @@ const Jobs = () => {
 					Job Posts
 					<Divider className='jobs--divider' />
 				</div>
-				<div className='jobs--main--container'>
-					<div className='jobs--count--header'>24 Job Posts</div>
+				<Row className='jobs--main--container'>
+					<Row className='jobs--options--header'>
+						<Button className='add--post--btn'>Add Post</Button>
+						<span className='jobs--counter'>24 Jobs</span>
+					</Row>
 					<Panel className='jobs--posts--container'>
 						<JobItem />
 					</Panel>
-				</div>
+				</Row>
 			</FlexboxGrid.Item>
 			<FlexboxGrid.Item colspan={3}></FlexboxGrid.Item>
 		</FlexboxGrid>
