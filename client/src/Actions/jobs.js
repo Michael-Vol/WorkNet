@@ -6,6 +6,8 @@ import {
 	APPLY_FOR_JOB_ERROR,
 	CHECK_APPLIED_STATUS_SUCCESS,
 	CHECK_APPLIED_STATUS_ERROR,
+	ADD_JOB_POST_SUCCESS,
+	ADD_JOB_POST_ERROR,
 } from './types';
 
 export const getJobs = async () => {
@@ -66,6 +68,29 @@ export const checkApplicationStatus = async (jobId) => {
 		return {
 			type: CHECK_APPLIED_STATUS_ERROR,
 			error: error,
+		};
+	}
+};
+
+export const addJob = async (data) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const body = JSON.stringify(data);
+
+		const res = await axios.post('/jobs/', body, config);
+
+		return {
+			type: ADD_JOB_POST_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: ADD_JOB_POST_ERROR,
+			payload: error,
 		};
 	}
 };

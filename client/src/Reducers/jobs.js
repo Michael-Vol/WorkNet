@@ -5,6 +5,8 @@ import {
 	APPLY_FOR_JOB_ERROR,
 	CHECK_APPLIED_STATUS_ERROR,
 	CHECK_APPLIED_STATUS_SUCCESS,
+	ADD_JOB_POST_SUCCESS,
+	ADD_JOB_POST_ERROR,
 } from '../Actions/types';
 
 const initialState = {
@@ -63,6 +65,20 @@ const jobs = function (state = initialState, action) {
 				loading: false,
 				error: null,
 				applied: null,
+			};
+		}
+		case ADD_JOB_POST_SUCCESS: {
+			return {
+				...state,
+				loading: false,
+				error: null,
+			};
+		}
+		case ADD_JOB_POST_ERROR: {
+			return {
+				...state,
+				loading: false,
+				error: payload,
 			};
 		}
 		default: {

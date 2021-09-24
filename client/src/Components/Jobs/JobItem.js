@@ -4,10 +4,13 @@ import { useDispatch } from 'react-redux';
 import './JobItem.scss';
 import { getAvatar } from '../../Actions/posts';
 import { checkApplicationStatus, applyJob } from '../../Actions/jobs';
+import { useSelector } from 'react-redux';
 import Moment from 'react-moment';
 
 const JobItem = ({ job }) => {
 	const dispatch = useDispatch();
+
+	const user = useSelector((state) => state.auth.user);
 	const [avatar, setAvatar] = useState(null);
 	const [applied, setApplied] = useState(false);
 	const fetchAvatar = async (userId) => {
@@ -16,9 +19,11 @@ const JobItem = ({ job }) => {
 		setAvatar(res.payload);
 	};
 	const fetchApplicationStatus = async (jobId) => {
-		const res = await checkApplicationStatus(jobId);
-		dispatch(res);
-		setApplied(res.payload.applied);
+		if (job.creator._id !== user._id) {
+			const res = await checkApplicationStatus(jobId);
+			dispatch(res);
+			setApplied(res.payload.open);
+		}
 	};
 	const submitApplication = async (jobId) => {
 		const res = await applyJob(jobId);
@@ -38,7 +43,9 @@ const JobItem = ({ job }) => {
 				</Col>
 				<Col className='job--creator--info'>
 					<span> {job.creator.firstName.concat(' ').concat(job.creator.lastName)} added a new job post</span>
-					<span className='job--creator--date'>23/4/2021 23:39</span>
+					<span className='job--creator--date'>
+						<Moment format='dddd D/M/YYYY'>{job.createdAt}</Moment>
+					</span>
 				</Col>
 				<Divider className='job--header--divider' />
 			</Row>
