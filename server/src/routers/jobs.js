@@ -86,7 +86,7 @@ router.get('/me', auth, async (req, res) => {
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const jobs = await Job.find({}).populate('creator').sort({ updatedAt: -1 });
+		const jobs = await Job.find({}).populate('creator').sort({ createdAt: -1 });
 
 		return res.json({
 			jobs,
@@ -114,7 +114,6 @@ router.patch('/:job_id/apply', auth, async (req, res) => {
 				message: 'Job not found',
 			});
 		}
-		console.log('job', job);
 
 		if (job.applicants.includes(req.user._id)) {
 			return res.status(400).json({
@@ -259,6 +258,43 @@ router.delete('/:job_id', auth, validateJobID, async (req, res) => {
 		});
 	} catch (error) {
 		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET /:job_id/applicants
+ * @desc Allows user to get applicants of one of his job posts
+ * @access private
+ * @memberof job
+ */
+
+router.get('/:job_id/applicants', validateJobID, auth, async (req, res) => {
+	try {
+		//Check if job creator is same as the authenticated user
+		if (!req.job.creator.equals(req.user.id)) {
+			return res.status(400).json({
+				message: 'You are not authenticated to get the applicants.',
+			});
+		}
+
+		let applicants = [];
+		if (req.job.applicants.length > 0 && req.job.open) {
+			applicants = await Promise.all(
+				req.job.applicants.map(async (applicantId) => {
+					const applicant = await User.findById(applicantId);
+					return applicant;
+				})
+			);
+		}
+
+		return res.json({
+			applicants,
+		});
+	} catch (error) {
+		console.error(error);
 		res.status(500).json({
 			message: 'Server Error',
 		});

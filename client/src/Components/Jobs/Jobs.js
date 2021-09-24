@@ -23,6 +23,8 @@ const Jobs = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
 	const jobs = useSelector((state) => state.jobs.jobs);
+	const updatedApplicants = useSelector((state) => state.jobs.updatedApplicants);
+
 	const formRef = useRef();
 	const [addPostOpened, setAddPostOpened] = useState(false);
 	const [formData, setFormData] = useState({
@@ -40,6 +42,11 @@ const Jobs = () => {
 			await fetchJobs();
 		}
 	}, [user]);
+
+	useEffect(async () => {
+		await fetchJobs();
+	}, [updatedApplicants]);
+
 	const { StringType } = Schema.Types;
 	const model = Schema.Model({
 		title: StringType().isRequired('This field is required'),

@@ -56,3 +56,9 @@
 	color: $color-base-secondary;
 	background-color: darken($color-white-secondary, 10%);
 }
+
+.job--own--btn {
+	float: right;
+	background-color: rgb(255, 187, 0);
+	color: #000;
+}

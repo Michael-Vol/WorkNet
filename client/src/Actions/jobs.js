@@ -8,6 +8,10 @@ import {
 	CHECK_APPLIED_STATUS_ERROR,
 	ADD_JOB_POST_SUCCESS,
 	ADD_JOB_POST_ERROR,
+	GET_APPLICANTS_SUCCESS,
+	GET_APPLICANTS_ERROR,
+	SELECT_APPLICANT_SUCCESS,
+	SELECT_APPLICANT_ERROR,
 } from './types';
 
 export const getJobs = async () => {
@@ -90,6 +94,51 @@ export const addJob = async (data) => {
 	} catch (error) {
 		return {
 			type: ADD_JOB_POST_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getApplicants = async (jobId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		const res = await axios.get(`/jobs/${jobId}/applicants`, config);
+
+		return {
+			type: GET_APPLICANTS_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: GET_APPLICANTS_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const selectApplicant = async (jobId, applicantId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const body = JSON.stringify({ applicantId });
+
+		const res = await axios.patch(`/jobs/${jobId}/close`, body, config);
+
+		return {
+			type: SELECT_APPLICANT_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: SELECT_APPLICANT_ERROR,
 			payload: error,
 		};
 	}
