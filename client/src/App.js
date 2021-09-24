@@ -15,6 +15,7 @@ import PersonalInfo from './Components/PersonalInfo/PersonalInfo';
 import Network from './Components/Network/Network';
 import Profile from './Components/Profile/Profile';
 import Jobs from './Components/Jobs/Jobs';
+import Chats from './Components/Chats/Chats';
 import { useDispatch } from 'react-redux';
 import './App.scss';
 
@@ -41,6 +42,7 @@ const App = (props) => {
 					<PrivateRoute exact path='/network' component={Network} />
 					<PrivateRoute exact path='/users/:user_id/profile' component={Profile} />
 					<PrivateRoute exact path='/jobs' component={Jobs} />
+					<PrivateRoute exact path='/chats' component={Chats} />
 				</Switch>
 			</Container>
 		</Router>

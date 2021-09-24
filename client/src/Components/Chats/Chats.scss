@@ -1,0 +1,12 @@
+@import '../../Styles/main';
+
+.user--flex--container {
+	background-color: $color-base-secondary;
+	height: 92vh;
+	border-right: 5px solid $color-base;
+}
+.chats--flex--container {
+	background-color: darken($color-white-secondary, 5%);
+	height: 92vh;
+	overflow-y: scroll;
+}
