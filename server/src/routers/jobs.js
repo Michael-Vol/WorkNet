@@ -1,6 +1,7 @@
 const express = require('express');
 const auth = require('../middleware/auth');
 const Job = require('../models/Job');
+const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
 const validateJobID = require('../middleware/jobValidation');
 
@@ -13,30 +14,81 @@ const router = express.Router();
  * @memberof jobs
  */
 
-router.post('/', auth, body('title').not().isEmpty(), body('body').not().isEmpty(), async (req, res) => {
-	try {
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			return res.status(400).json({
-				errors: errors.array(),
-				message: 'Errors found in request body fields',
+router.post(
+	'/',
+	auth,
+	body('title').not().isEmpty(),
+	body('body').not().isEmpty(),
+	body('keywords').isArray(),
+	async (req, res) => {
+		try {
+			const errors = validationResult(req);
+			if (!errors.isEmpty()) {
+				return res.status(400).json({
+					errors: errors.array(),
+					message: 'Errors found in request body fields',
+				});
+			}
+
+			const { title, body, keywords } = req.body;
+
+			const job = new Job({
+				title,
+				body,
+				keywords,
+				applicants: [],
+				creator: req.user._id,
+			});
+
+			await job.save();
+
+			res.status(201).json({
+				message: 'Job Created!',
+				job,
+			});
+		} catch (error) {
+			console.error(error.name);
+			res.status(500).json({
+				message: 'Server Error',
 			});
 		}
+	}
+);
 
-		const { title, body } = req.body;
+/**
+ * @name GET /
+ * @desc get all jobs created by the authenticated user
+ * @access private
+ * @memberof job
+ */
 
-		const job = new Job({
-			title,
-			body,
-			applicants: [],
-			creator: req.user._id,
+router.get('/me', auth, async (req, res) => {
+	try {
+		const jobs = await Job.find({ creator: req.user.id });
+
+		res.json({
+			jobs,
 		});
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+/**
+ * @name GET /
+ * @desc get all jobs
+ * @access private
+ * @memberof job
+ */
 
-		await job.save();
+router.get('/', auth, async (req, res) => {
+	try {
+		const jobs = await Job.find({}).populate('creator');
 
-		res.status(201).json({
-			message: 'Job Created!',
-			job,
+		return res.json({
+			jobs,
 		});
 	} catch (error) {
 		console.error(error.name);
@@ -47,22 +99,48 @@ router.post('/', auth, body('title').not().isEmpty(), body('body').not().isEmpty
 });
 
 /**
- * @name GET /
- * @desc get all jobs created by the authenticated user
+ * @name PATCH /{job_id}
+ * @desc mark a job post as closed
  * @access private
  * @memberof job
  */
 
-router.get('/', auth, async (req, res) => {
+router.patch('/:job_id', auth, body('applicantId').not().isEmpty(), async (req, res) => {
 	try {
-		const jobs = await Job.find({ creator: req.user.id });
+		const { applicantId } = req.body;
+		const job = await Job.findOne({
+			creator: req.user._id,
+			_id: req.params.job_id,
+			open: true,
+		});
 
-		res.json({
-			jobs,
+		if (!job) {
+			return res.status(400).json({
+				message: 'Job not found',
+			});
+		}
+		const applicant = await User.findById(applicantId);
+		if (!applicant) {
+			return res.status(400).json({
+				message: 'Applicant not found.',
+			});
+		}
+
+		job.acceptedApplicant = applicantId;
+		job.open = false;
+		await job.save();
+
+		return res.json({
+			job,
 		});
 	} catch (error) {
 		console.error(error.name);
-		res.status(500).json({
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'Invalid ID',
+			});
+		}
+		return res.status(500).json({
 			message: 'Server Error',
 		});
 	}

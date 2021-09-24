@@ -14,6 +14,11 @@ const jobSchema = new mongoose.Schema({
 		ref: 'User',
 		required: true,
 	},
+	keywords: [
+		{
+			type: String,
+		},
+	],
 	applicants: [
 		{
 			applicant: {

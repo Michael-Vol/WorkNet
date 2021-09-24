@@ -158,7 +158,7 @@ const PersonalInfo = () => {
 					setAddExperience(false);
 				}}>
 				<Modal.Header>
-					<h3>Add Work Experience</h3>
+					<h3>Add {currentCategory}</h3>
 				</Modal.Header>
 				<Modal.Body>
 					<Form

@@ -29,8 +29,18 @@ const JobItem = () => {
 					</Col>
 				</Row>
 				<Row className='job--info--description'>
+					<Col md={18}>
+						Keywords:
+						<Tag className='keyword--tag'>Software</Tag>
+						<Tag className='keyword--tag'>Engineer</Tag>
+						<Tag className='keyword--tag'>Cloud</Tag>
+						<Tag className='keyword--tag'>AWS</Tag>
+						<Tag className='keyword--tag'>JavaScript</Tag>
+					</Col>
+				</Row>
+				<Row className='job--info--description job--info--body--container'>
 					<Col>
-						Description:
+						<span>Description:</span>
 						<div className='job--info--body'>
 							Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique accusantium, et temporibus nesciunt
 							unde ut cumque aspernatur minus tenetur perferendis necessitatibus perspiciatis laborum in vero at,
