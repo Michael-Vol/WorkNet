@@ -113,9 +113,16 @@ router.patch('/:job_id/apply', auth, async (req, res) => {
 				message: 'Job not found',
 			});
 		}
+		console.log('job', job);
+
+		if (job.applicants.includes(req.user._id)) {
+			return res.status(400).json({
+				message: 'Already applied to this job post',
+			});
+		}
 
 		job.applicants.push(req.user._id);
-
+		await job.save();
 		return res.json({
 			job,
 		});
@@ -201,6 +208,34 @@ router.get('/:job_id', validateJobID, async (req, res) => {
 	}
 });
 
+/**
+ * @name GET /:job_id/check_application
+ * @description Allows user to check if he has applied in a specific job post
+ * @access private
+ * @memberof job
+ */
+router.get('/:job_id/check_application', auth, async (req, res) => {
+	try {
+		const job = await Job.findOne({ _id: req.params.job_id, creator: { $ne: req.user._id } });
+		if (!job) {
+			return res.status(400).json({
+				message: 'Job not found',
+			});
+		}
+
+		const isApplicant = job.applicants.includes(req.user._id);
+
+		return res.json({
+			applied: isApplicant,
+			job,
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
 /**
  * @name DELETE /:job_id
  * @description Delete a specific job

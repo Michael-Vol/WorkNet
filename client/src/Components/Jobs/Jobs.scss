@@ -31,12 +31,30 @@
 	border-radius: 8px;
 }
 
-.jobs--posts--container {
-}
-
 .add--post--btn {
 	margin: 10px 0px 0px 40px;
-	background-color: $color-base-secondary;
 	height: 50px;
 	width: 120px;
+}
+.add--job--modal {
+	height: fit-content;
+}
+.modal--header {
+	font-size: 24px;
+	margin-top: 20px;
+	color: $color-base-secondary;
+}
+
+.submit--job--post {
+	margin-right: 20px;
+}
+.form--keywords {
+	margin-top: 20px;
+}
+.form--keyword--tag {
+	background-color: $color-base-secondary;
+	color: #fff;
+}
+
+.keywords--helpblock {
 }

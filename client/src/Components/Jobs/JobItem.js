@@ -3,19 +3,31 @@ import { Avatar, Panel, Row, Col, Divider, Tag, ButtonGroup, Button } from 'rsui
 import { useDispatch } from 'react-redux';
 import './JobItem.scss';
 import { getAvatar } from '../../Actions/posts';
+import { checkApplicationStatus, applyJob } from '../../Actions/jobs';
 import Moment from 'react-moment';
 
 const JobItem = ({ job }) => {
 	const dispatch = useDispatch();
 	const [avatar, setAvatar] = useState(null);
-
+	const [applied, setApplied] = useState(false);
 	const fetchAvatar = async (userId) => {
 		const res = await getAvatar(userId);
 		dispatch(res);
 		setAvatar(res.payload);
 	};
+	const fetchApplicationStatus = async (jobId) => {
+		const res = await checkApplicationStatus(jobId);
+		dispatch(res);
+		setApplied(res.payload.applied);
+	};
+	const submitApplication = async (jobId) => {
+		const res = await applyJob(jobId);
+		dispatch(res);
+		await fetchApplicationStatus(jobId);
+	};
 	useEffect(async () => {
 		await fetchAvatar(job.creator._id);
+		await fetchApplicationStatus(job._id);
 	}, []);
 
 	return (
@@ -60,8 +72,12 @@ const JobItem = ({ job }) => {
 				</Row>
 			</Row>
 			<Row className='job--apply'>
-				<Button className='job--apply--btn' appearance='primary'>
-					Apply
+				<Button
+					className='job--apply--btn'
+					disabled={applied}
+					appearance='primary'
+					onClick={() => submitApplication(job._id)}>
+					{applied ? 'Applied' : 'Apply'}
 				</Button>
 			</Row>
 		</Row>

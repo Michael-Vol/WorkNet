@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { GET_JOBS_SUCCESS, GET_JOBS_ERROR } from './types';
+import {
+	GET_JOBS_SUCCESS,
+	GET_JOBS_ERROR,
+	APPLY_FOR_JOB_SUCCESS,
+	APPLY_FOR_JOB_ERROR,
+	CHECK_APPLIED_STATUS_SUCCESS,
+	CHECK_APPLIED_STATUS_ERROR,
+} from './types';
 
 export const getJobs = async () => {
 	try {
@@ -18,6 +25,47 @@ export const getJobs = async () => {
 		return {
 			type: GET_JOBS_ERROR,
 			payload: error,
+		};
+	}
+};
+
+export const applyJob = async (jobId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		const res = await axios.patch(`/jobs/${jobId}/apply`, config);
+
+		return {
+			type: APPLY_FOR_JOB_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: APPLY_FOR_JOB_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const checkApplicationStatus = async (jobId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		const res = await axios.get(`/jobs/${jobId}/check_application`, config);
+
+		return { type: CHECK_APPLIED_STATUS_SUCCESS, payload: res.data };
+	} catch (error) {
+		return {
+			type: CHECK_APPLIED_STATUS_ERROR,
+			error: error,
 		};
 	}
 };
