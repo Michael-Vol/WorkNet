@@ -85,13 +85,47 @@ router.get('/me', auth, async (req, res) => {
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const jobs = await Job.find({}).populate('creator');
+		const jobs = await Job.find({}).populate('creator').sort({ updatedAt: -1 });
 
 		return res.json({
 			jobs,
 		});
 	} catch (error) {
 		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+/**
+ * @name PATCH /{job_id}
+ * @desc apply for a specific job
+ * @access private
+ * @memberof job
+ */
+
+router.patch('/:job_id/apply', auth, async (req, res) => {
+	try {
+		const job = await Job.findOne({ _id: req.params.job_id, creator: { $ne: req.user._id } });
+
+		if (!job) {
+			return res.json({
+				message: 'Job not found',
+			});
+		}
+
+		job.applicants.push(req.user._id);
+
+		return res.json({
+			job,
+		});
+	} catch (error) {
+		console.error(error.name);
+		if (error.name === 'CastError') {
+			return res.status(400).json({
+				message: 'Invalid ID',
+			});
+		}
 		res.status(500).json({
 			message: 'Server Error',
 		});
@@ -105,7 +139,7 @@ router.get('/', auth, async (req, res) => {
  * @memberof job
  */
 
-router.patch('/:job_id', auth, body('applicantId').not().isEmpty(), async (req, res) => {
+router.patch('/:job_id/close', auth, body('applicantId').not().isEmpty(), async (req, res) => {
 	try {
 		const { applicantId } = req.body;
 		const job = await Job.findOne({

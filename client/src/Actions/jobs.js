@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_JOBS_SUCCESS, GET_JOBS_ERROR } from './jobs';
+import { GET_JOBS_SUCCESS, GET_JOBS_ERROR } from './types';
 
 export const getJobs = async () => {
 	try {
@@ -10,7 +10,6 @@ export const getJobs = async () => {
 		};
 
 		const res = await axios.get('/jobs/', config);
-
 		return {
 			type: GET_JOBS_SUCCESS,
 			payload: res.data,
