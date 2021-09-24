@@ -1,0 +1,12 @@
+@import '../../Styles/main';
+
+.comment--item {
+	width: 100%;
+	background-color: darken($color-white-secondary, 2%);
+	color: $color-base-secondary;
+	padding: 20px;
+}
+
+.comment--date {
+	float: right;
+}

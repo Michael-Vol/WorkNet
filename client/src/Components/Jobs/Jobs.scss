@@ -1,0 +1,60 @@
+@import '../../Styles/main';
+
+.jobs--container {
+	background-color: $color-white-secondary;
+	border-radius: 8px;
+	border: 2px solid $color-base;
+	height: 90vh;
+	margin-top: 20px;
+	padding: 30px;
+	overflow-y: scroll;
+}
+
+.jobs--header {
+	text-align: left;
+	font-size: 36px;
+	color: $color-base-secondary;
+}
+
+.jobs--divider {
+	background-color: $color-base-secondary;
+	height: 3px;
+}
+
+.jobs--counter {
+	font-size: 22px;
+	color: rgb(0, 152, 179);
+	float: right;
+	width: 10%;
+	text-align: center;
+	padding: 10px;
+	border-radius: 8px;
+}
+
+.add--post--btn {
+	margin: 10px 0px 0px 40px;
+	height: 50px;
+	width: 120px;
+}
+.add--job--modal {
+	height: fit-content;
+}
+.modal--header {
+	font-size: 24px;
+	margin-top: 20px;
+	color: $color-base-secondary;
+}
+
+.submit--job--post {
+	margin-right: 20px;
+}
+.form--keywords {
+	margin-top: 20px;
+}
+.form--keyword--tag {
+	background-color: $color-base-secondary;
+	color: #fff;
+}
+
+.keywords--helpblock {
+}

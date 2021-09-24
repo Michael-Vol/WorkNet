@@ -3,6 +3,7 @@ import auth from './auth';
 import personalInfo from './personalInfo';
 import users from './users';
 import posts from './posts';
+import jobs from './jobs';
 import connectRequest from './connectRequest';
 
-export default combineReducers({ auth, personalInfo, users, posts, connectRequest });
+export default combineReducers({ auth, personalInfo, users, posts, connectRequest, jobs });

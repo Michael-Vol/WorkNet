@@ -16,7 +16,6 @@ const Settings = () => {
 		password2: StringType()
 			.rangeLength(6, 20, 'The password should contain between 6 and 20 alphanumeric characters')
 			.addRule((value, data) => {
-				console.log(value, data.password);
 				if (value !== data.password) {
 					return false;
 				}
@@ -55,7 +54,7 @@ const Settings = () => {
 	}
 	return (
 		<Container>
-			<Toaster position='top-center' toastOptions={{ duration: 4000 }} />
+			<Toaster position='top-center' toastOptions={{ duration: 2000 }} />
 			<FlexboxGrid justify='center'>
 				<FlexboxGrid.Item>
 					<Panel header='Settings' className='settings-panel'>

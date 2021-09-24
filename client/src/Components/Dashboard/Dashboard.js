@@ -41,15 +41,12 @@ const Dashboard = () => {
 	const [formImage, setFormImage] = useState({});
 
 	const fetchPosts = async () => {
-		console.log('fetching posts');
 		const res = await getPosts();
 		dispatch(res);
 	};
 	const fetchUsers = async () => {
-		console.log('fetching users');
 		const res = await getUsers();
 		dispatch(res);
-		console.log(res);
 	};
 
 	useEffect(async () => {
@@ -68,9 +65,7 @@ const Dashboard = () => {
 	const handleFormSubmit = async () => {
 		if (formRef.current.check()) {
 			setNewPost(false);
-			console.log(formData);
 			const res = await addPost(formData, formImage);
-			console.log(res);
 			dispatch(res);
 			await fetchPosts();
 		}
@@ -91,7 +86,12 @@ const Dashboard = () => {
 								</Button>
 							</Col>
 							<Col md={12}>
-								<Button className='refresh--posts--btn' onClick={async () => await fetchPosts()}>
+								<Button
+									className='refresh--posts--btn'
+									onClick={async () => {
+										await fetchPosts();
+										await fetchUsers();
+									}}>
 									Refresh
 								</Button>
 							</Col>
@@ -127,7 +127,6 @@ const Dashboard = () => {
 												autoUpload={false}
 												name='formImage'
 												onChange={(fileList) => {
-													console.log(fileList[0]);
 													setFormImage(fileList[0]);
 												}}>
 												<button>

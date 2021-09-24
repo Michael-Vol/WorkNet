@@ -14,6 +14,7 @@ import PrivateRoute from './Components/Routing/PrivateRoute';
 import PersonalInfo from './Components/PersonalInfo/PersonalInfo';
 import Network from './Components/Network/Network';
 import Profile from './Components/Profile/Profile';
+import Jobs from './Components/Jobs/Jobs';
 import { useDispatch } from 'react-redux';
 import './App.scss';
 
@@ -22,8 +23,7 @@ const App = (props) => {
 	const dispatch = useDispatch();
 	useEffect(async () => {
 		const res = await loadUser();
-		const user = dispatch(res);
-		console.log(user);
+		dispatch(res);
 	}, []);
 	return (
 		<Router>
@@ -40,6 +40,7 @@ const App = (props) => {
 					<PrivateRoute exact path='/settings' component={Settings} />
 					<PrivateRoute exact path='/network' component={Network} />
 					<PrivateRoute exact path='/users/:user_id/profile' component={Profile} />
+					<PrivateRoute exact path='/jobs' component={Jobs} />
 				</Switch>
 			</Container>
 		</Router>

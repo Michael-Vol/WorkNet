@@ -1,48 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { List, FlexboxGrid, Button, ButtonGroup, Avatar } from 'rsuite';
-import './NotificationItem.scss';
 import { getAvatar } from '../../Actions/posts';
-import { updateRequest } from '../../Actions/connectRequests';
-import { useDispatch } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-const NotificationItem = ({ notification }) => {
+import { useSelector, useDispatch } from 'react-redux';
+import { Redirect } from 'react-router';
+import { readReaction } from '../../Actions/posts';
+import './NotificationItem.scss';
+const ReactionItem = ({ reaction, category }) => {
 	const dispatch = useDispatch();
-	const [avatar, setavatar] = useState(null);
+
 	const [redirect, setRedirect] = useState(false);
+	const [avatar, setAvatar] = useState(null);
+
+	const user = useSelector((state) => state.auth.user);
+
 	const fetchAvatar = async (userId) => {
 		const res = await getAvatar(userId);
 		dispatch(res);
-		setavatar(res.payload);
+		setAvatar(res.payload);
 	};
 
-	const respondToRequest = async (accept) => {
-		const res = await updateRequest(notification.sender._id, accept);
+	const respondToReaction = async () => {
+		const res = await readReaction(reaction._id);
 		dispatch(res);
 	};
 
 	useEffect(async () => {
-		await fetchAvatar(notification.sender._id);
-	}, []);
+		if (user) {
+			await fetchAvatar(reaction.creator._id);
+		}
+	}, [user]);
 
 	return (
 		<List.Item className='notifications--item--container'>
-			{redirect && <Redirect to={`/users/${notification.sender._id}/profile`} />}
+			{redirect && <Redirect to={`/users/${reaction.creator._id}/profile`} />}
 			<FlexboxGrid className='notifications--item'>
 				<FlexboxGrid.Item colspan={4} className='avatar' onClick={() => setRedirect(true)}>
 					<Avatar circle src={`data:image/png;base64,${avatar}`} size='lg' />
 				</FlexboxGrid.Item>
 				<FlexboxGrid.Item colspan={14} className='sender'>
 					<span>
-						{notification.sender.firstName.concat(' ').concat(notification.sender.lastName)} wants to connect with you
+						{reaction.creator.firstName.concat(' ').concat(reaction.creator.lastName)} has{' '}
+						{category === 'like' ? 'liked' : 'commented on'} your post
 					</span>
 				</FlexboxGrid.Item>
 				<FlexboxGrid.Item colspan={4} className='connnect-btns'>
 					<ButtonGroup vertical className='connect-btns'>
-						<Button appearance='primary' className='accept' onClick={async () => respondToRequest(true)}>
-							Accept
-						</Button>
-						<Button appearance='ghost' onClick={async () => respondToRequest(false)}>
-							Reject
+						<Button appearance='primary' className='accept' onClick={async () => respondToReaction()}>
+							Ok
 						</Button>
 					</ButtonGroup>
 				</FlexboxGrid.Item>
@@ -51,4 +55,4 @@ const NotificationItem = ({ notification }) => {
 	);
 };
 
-export default NotificationItem;
+export default ReactionItem;

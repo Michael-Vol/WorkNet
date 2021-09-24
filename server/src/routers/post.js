@@ -4,6 +4,7 @@ const Post = require('../models/Post');
 const User = require('../models/User');
 const Like = require('../models/Like');
 const Comment = require('../models/Comment');
+const ConnectRequest = require('../models/ConnectRequest');
 const multer = require('multer');
 const sharp = require('sharp');
 const router = express.Router();
@@ -86,6 +87,52 @@ router.get('/', auth, async (req, res) => {
 		});
 	}
 });
+
+/**
+ * @name GET  /personalized
+ * @desc Allows user to get only his personalized posts
+ * @access auth
+ * @memberof post
+ */
+
+router.get('/personalized', auth, async (req, res) => {
+	try {
+		//get user-created posts
+		let posts = [];
+		const myPosts = await Post.find({ creator: req.user._id }).populate('creator').sort({ updatedAt: -1 });
+
+		posts.push(...myPosts);
+		//get friends' posts
+		await Promise.all(
+			req.user.friends.map(async (friendId) => {
+				const friendPosts = await Post.find({ creator: friendId }).populate('creator').sort({ updatedAt: -1 });
+				posts.push(...friendPosts);
+
+				//get posts of non connected users that friends have liked
+
+				const likes = await Like.find({ creator: friendId });
+				const likedPostIds = likes.map((like) => like.post);
+
+				const likedPosts = await Promise.all(
+					likedPostIds.map(async (postId) => {
+						const post = await Post.findById(postId).populate('creator').sort({ updatedAt: -1 });
+						return post;
+					})
+				);
+				posts.push(...likedPosts);
+				return posts;
+			})
+		);
+
+		res.json({ posts });
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
 /**
  * @name GET /{post_id}
  * @desc Allows anyone to get any post
@@ -220,8 +267,10 @@ router.post('/:post_id/likes', auth, async (req, res) => {
 		};
 		let like = await Like.findOne(likeData);
 		if (like) {
-			return res.status(400).json({
-				message: 'Post is already liked!',
+			await like.remove();
+			return res.json({
+				message: 'Post unliked!',
+				liked: false,
 			});
 		}
 
@@ -229,6 +278,7 @@ router.post('/:post_id/likes', auth, async (req, res) => {
 		await like.save();
 		res.status(201).json({
 			message: 'Post Liked!',
+			liked: true,
 		});
 	} catch (error) {
 		console.error(error.name);
@@ -274,6 +324,46 @@ router.get('/:post_id/likes', async (req, res) => {
 			});
 		}
 		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET /{post_id}/liked
+ * @desc Allows user to check if he has liked a post
+ * @access private
+ * @memberof post
+ */
+
+router.get('/:post_id/liked', auth, async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.post_id);
+
+		if (!post) {
+			return res.status(400).json({
+				message: 'No Post found.',
+			});
+		}
+
+		const like = await Like.findOne({
+			post: post._id,
+			creator: req.user._id,
+		});
+
+		if (!like) {
+			return res.json({
+				liked: false,
+			});
+		}
+
+		return res.json({
+			liked: true,
+		});
+	} catch (error) {
+		console.error(error);
+
+		return res.json({
 			message: 'Server Error',
 		});
 	}
@@ -326,8 +416,8 @@ router.delete('/:post_id/likes', auth, async (req, res) => {
 	}
 });
 /**
- * @name POST /{post_id}/likes
- * @desc Allows user to like a specific post
+ * @name POST /{post_id}/comments
+ * @desc Allows user to comment a specific post
  * @access private
  * @memberof post
  */
@@ -389,14 +479,15 @@ router.get('/:post_id/comments', auth, async (req, res) => {
 		}
 		const limit = req.query.limit === undefined ? 10 : parseInt(req.query.limit);
 		const skip = req.query.skip === undefined ? 0 : parseInt(req.query.skip);
-		console.log(limit, skip);
-
+		const sort = { updatedAt: -1 };
 		await post
 			.populate({
 				path: 'comments',
+				populate: { path: 'creator', model: 'User' },
 				options: {
 					limit,
 					skip,
+					sort,
 				},
 			})
 			.execPopulate();
@@ -513,6 +604,95 @@ router.patch('/:post_id/comments/:cmnt_id', auth, async (req, res) => {
 		if (error.name === 'CastError') {
 			return res.status(400).json({
 				message: 'No Comment found.',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name GET /reactions
+ * @desc Allows user to get the reactions(likes,comments) to  his posts
+ */
+
+router.get('/all/reactions', auth, async (req, res) => {
+	try {
+		let likes = [];
+		let comments = [];
+		const options = { read: false };
+
+		const posts = await Post.find({ creator: req.user._id });
+
+		await Promise.all(
+			posts.map(async (post) => {
+				const postLikes = await Like.find({ post: post._id, ...options })
+					.populate('creator')
+					.sort({ updatedAt: -1 });
+				const postComments = await Comment.find({ post: post._id, ...options })
+					.populate('creator')
+					.sort({ updatedAt: -1 });
+
+				likes.push(...postLikes);
+				comments.push(...postComments);
+			})
+		);
+
+		return res.json({
+			likes,
+			comments,
+		});
+	} catch (error) {
+		console.error(error);
+		if ((error.name = 'CastError')) {
+			return res.status(400).json({
+				message: 'Invalid Post ID',
+			});
+		}
+		res.status(500).json({
+			message: 'Server Error',
+		});
+	}
+});
+
+/**
+ * @name POST /reactions/${reaction_id}/read
+ * @desc Allows user to mark a reaction(like or comment) as read
+ * @access private
+ * @memberof post
+ */
+
+router.post('/reactions/:reaction_id/read', auth, async (req, res) => {
+	try {
+		const like = await Like.findById(req.params.reaction_id);
+		if (!like) {
+			const comment = await Comment.findById(req.params.reaction_id);
+
+			if (!comment) {
+				return res.status(400).json({
+					message: 'Reaction Not found',
+				});
+			}
+
+			comment.read = true;
+			await comment.save();
+
+			return res.json({
+				comment,
+			});
+		}
+
+		like.read = true;
+		await like.save();
+		return res.json({
+			like,
+		});
+	} catch (error) {
+		console.error(error);
+		if ((error.name = 'CastError')) {
+			return res.status(400).json({
+				message: 'Invalid ID',
 			});
 		}
 		res.status(500).json({

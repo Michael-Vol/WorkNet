@@ -6,6 +6,20 @@ import {
 	ADD_POST_SUCCESS,
 	GET_USER_AVATAR_ERROR,
 	GET_USER_AVATAR_SUCCESS,
+	LIKE_POST_SUCCESS,
+	LIKE_POST_ERROR,
+	GET_POST_LIKED_SUCCESS,
+	GET_POST_LIKED_ERROR,
+	GET_LIKES_COUNT_SUCCESS,
+	GET_LIKES_COUNT_ERROR,
+	GET_COMMENTS_SUCCESS,
+	GET_COMMENTS_ERROR,
+	POST_COMMENT_SUCCESS,
+	POST_COMMENT_ERROR,
+	GET_REACTIONS_SUCCESS,
+	GET_REACTIONS_ERROR,
+	READ_REACTION_SUCCESS,
+	READ_REACTION_ERROR,
 } from './types';
 
 export const getPosts = async () => {
@@ -15,7 +29,7 @@ export const getPosts = async () => {
 				'Content-Type': 'application/json',
 			},
 		};
-		const res = await axios.get('/posts', config);
+		const res = await axios.get('/posts/personalized', config);
 		return {
 			type: GET_POSTS_SUCCESS,
 			payload: res.data,
@@ -42,7 +56,6 @@ export const addPost = async (textFields, image) => {
 				'Content-Type': 'multipart/form-data',
 			},
 		};
-		console.log(formData);
 		const res = await axios.post('/posts', formData, config);
 
 		return {
@@ -71,6 +84,155 @@ export const getAvatar = async (userID) => {
 	} catch (error) {
 		return {
 			type: GET_USER_AVATAR_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const likePost = async (postId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		const res = await axios.post(`/posts/${postId}/likes`, config);
+
+		return {
+			type: LIKE_POST_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: LIKE_POST_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getPostLiked = async (postId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const res = await axios.get(`/posts/${postId}/liked`, config);
+		return {
+			type: GET_POST_LIKED_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: GET_POST_LIKED_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getLikesCount = async (postId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const res = await axios.get(`/posts/${postId}/likes`, config);
+		return {
+			type: GET_LIKES_COUNT_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: GET_LIKES_COUNT_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getComments = async (postId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const res = await axios.get(`/posts/${postId}/comments`, config);
+
+		return {
+			type: GET_COMMENTS_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: GET_COMMENTS_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const postComment = async (postId, comment) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const body = JSON.stringify({ body: comment });
+		const res = await axios.post(`/posts/${postId}/comments`, body, config);
+
+		return {
+			type: POST_COMMENT_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: POST_COMMENT_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getReactions = async () => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		const res = await axios.get(`/posts/all/reactions`, config);
+
+		return {
+			type: GET_REACTIONS_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: GET_REACTIONS_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const readReaction = async (reactionID) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		const res = await axios.post(`/posts/reactions/${reactionID}/read`, config);
+
+		return {
+			type: READ_REACTION_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: READ_REACTION_ERROR,
 			payload: error,
 		};
 	}
