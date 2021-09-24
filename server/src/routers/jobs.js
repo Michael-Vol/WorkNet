@@ -48,7 +48,7 @@ router.post('/', auth, body('title').not().isEmpty(), body('body').not().isEmpty
 
 /**
  * @name GET /
- * @desc get all jobs created by the user authenticated
+ * @desc get all jobs created by the authenticated user
  * @access private
  * @memberof job
  */

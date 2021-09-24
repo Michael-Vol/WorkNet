@@ -44,9 +44,7 @@
 	float: right;
 	color: $color-base;
 }
-// .comment--btn:hover {
-// 	text-decoration: underline;
-// }
+
 .like--icon {
 	margin-right: 5px;
 }
@@ -60,9 +58,8 @@
 	background-color: $color-base;
 }
 .comments {
-	// animation: fadeIn 2s;
-	transition: ease-in 2s;
 	background-color: darken($color-white-secondary, 2%);
+	animation: fadeIn 1s;
 }
 
 .comments--list {

@@ -1,0 +1,35 @@
+@import '../../Styles/main';
+
+.jobs--container {
+	background-color: $color-white-secondary;
+	border-radius: 8px;
+	border: 2px solid $color-base;
+	height: 90vh;
+	margin-top: 20px;
+	padding: 30px;
+	overflow-y: scroll;
+}
+
+.jobs--header {
+	text-align: left;
+	font-size: 36px;
+	color: $color-base-secondary;
+}
+
+.jobs--divider {
+	background-color: $color-base-secondary;
+	height: 3px;
+}
+
+.jobs--count--header {
+	font-size: 24px;
+	background-color: rgb(0, 152, 179);
+	width: 15%;
+	text-align: center;
+	color: #fff;
+	padding: 10px;
+	border-radius: 8px;
+}
+
+.jobs--posts--container {
+}

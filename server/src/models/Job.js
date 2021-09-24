@@ -23,10 +23,12 @@ const jobSchema = new mongoose.Schema({
 		},
 	],
 	acceptedApplicant: {
-		type: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'User',
-		},
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+	},
+	open: {
+		type: Boolean,
+		default: true,
 	},
 });
 
