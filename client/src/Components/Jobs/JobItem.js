@@ -100,7 +100,11 @@ const JobItem = ({ job }) => {
 			</Row>
 			<Row className='job--apply'>
 				{ownPost ? (
-					<Button className='job--own--btn' appearance='primary' onClick={() => setShowApplicants(!showApplicants)}>
+					<Button
+						className='job--own--btn'
+						appearance='primary'
+						onClick={() => setShowApplicants(!showApplicants)}
+						disabled={!job.open}>
 						Select Applicant
 					</Button>
 				) : (
@@ -116,7 +120,6 @@ const JobItem = ({ job }) => {
 					<Row className='applicants--container'>
 						{applicants &&
 							applicants.map((applicant, index) => {
-								console.log(applicant);
 								return <UserItem key={index} user={applicant} job={job} />;
 							})}
 					</Row>

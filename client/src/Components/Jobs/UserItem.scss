@@ -7,11 +7,10 @@
 	display: inline-block;
 	animation: fadeIn 1.5s;
 	margin: 50px 15px 15px 15px;
-
-	width: fit-content;
 	height: fit-content;
-	display: inline-block;
 	white-space: initial;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
 .job--user--name--container {

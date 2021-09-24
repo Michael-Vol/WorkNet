@@ -23,36 +23,30 @@ const UserItem = ({ user, job }) => {
 	});
 
 	return (
-		<div>
-			<span className='job--user--item--container'>
-				<Panel>
-					<Row className='job--user--avatar--container'>
-						<Col md={12}>
-							<Avatar
-								className='job--user--avatar'
-								src={`data:image/png;base64,${avatar}`}
-								size='lg'
-								circle></Avatar>
-						</Col>
-						<Col md={8}>
-							{user.firstName} {user.lastName}
-						</Col>
-					</Row>
-					<Row className='select--applicant--container'>
-						<Col>
-							<Button
-								block
-								appearance='primary'
-								onClick={() => {
-									chooseApplicant();
-								}}>
-								Select
-							</Button>
-						</Col>
-					</Row>
-				</Panel>
-			</span>
-		</div>
+		<span className='job--user--item--container'>
+			<Panel>
+				<Row className='job--user--avatar--container'>
+					<Col md={12}>
+						<Avatar className='job--user--avatar' src={`data:image/png;base64,${avatar}`} size='lg' circle></Avatar>
+					</Col>
+					<Col md={8}>
+						{user.firstName} {user.lastName}
+					</Col>
+				</Row>
+				<Row className='select--applicant--container'>
+					<Col>
+						<Button
+							block
+							appearance='primary'
+							onClick={() => {
+								chooseApplicant();
+							}}>
+							Select
+						</Button>
+					</Col>
+				</Row>
+			</Panel>
+		</span>
 	);
 };
 
