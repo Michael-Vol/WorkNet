@@ -14,15 +14,20 @@ const Chats = () => {
 	const sendMessage = async () => {
 		const messageToSend = message;
 		setMessage('');
-		socket.emit('sendMessage', { message: messageToSend, toUser: activeUserId }, (error) => {
+		socket.emit('sendMessage', { message: messageToSend, receiver: activeUserId }, (error) => {
 			console.log(error);
 		});
 	};
+
+	socket.on('message', (message) => {
+		console.log('new message ', message);
+	});
+
 	useEffect(() => {
 		if (user) {
 			const newSocket = io('http://localhost:5000', { transports: ['websocket'] });
 			setSocket(newSocket);
-			newSocket.emit('join', { user: user._id }, (error) => {
+			newSocket.emit('join', { userId: user._id }, (error) => {
 				console.log(error);
 			});
 		}
