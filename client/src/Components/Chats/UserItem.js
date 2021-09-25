@@ -6,7 +6,7 @@ const UserItem = ({ chatActive, userActive = false }) => {
 	const history = useHistory();
 
 	const selectUser = () => {
-		history.push(`/chats/61353fca8d62d004be1abd5c`);
+		history.push(`/chats/61363089a3d67a1964c6db85`);
 	};
 
 	const activeClass = chatActive ? 'user--active' : '';

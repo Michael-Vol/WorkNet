@@ -11,6 +11,7 @@ const Chats = () => {
 	const [message, setMessage] = useState('');
 	const [socket, setSocket] = useState(null);
 	const activeUserId = window.location.pathname.replace('/chats/', '');
+
 	const sendMessage = async () => {
 		const messageToSend = message;
 		setMessage('');
@@ -19,9 +20,11 @@ const Chats = () => {
 		});
 	};
 
-	socket.on('message', (message) => {
-		console.log('new message ', message);
-	});
+	if (socket) {
+		socket.on('message', (message) => {
+			console.log('new message ', message);
+		});
+	}
 
 	useEffect(() => {
 		if (user) {
