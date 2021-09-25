@@ -9,7 +9,9 @@ const addUser = ({ userId, socketId }) => {
 	}
 	//Check if user is already in chat
 	const existingUser = users.find((user) => user.userId === userId);
+	console.log(users);
 	if (existingUser) {
+		console.log(`replacing ${existingUser.userId} socket ${existingUser.socketId} with ${socketId}`);
 		return (existingUser.socketId = socketId);
 	}
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './Chats.scss';
 import { Row, Col, FlexboxGrid, Avatar, Button, Input } from 'rsuite';
 import UserItem from './UserItem';
@@ -9,30 +9,47 @@ import { io } from 'socket.io-client';
 const Chats = () => {
 	const user = useSelector((state) => state.auth.user);
 	const [message, setMessage] = useState('');
-	const [socket, setSocket] = useState(null);
+	// const [socket, setSocket] = useState(null);
+	const [messages, setMessages] = useState([]);
 	const activeUserId = window.location.pathname.replace('/chats/', '');
+	const socketRef = useRef();
 
 	const sendMessage = async () => {
 		const messageToSend = message;
+		setMessages([...messages, { message, creator: 'me' }]);
 		setMessage('');
-		socket.emit('sendMessage', { message: messageToSend, receiver: activeUserId }, (error) => {
+		socketRef.current.emit('sendMessage', { message: messageToSend, receiver: activeUserId }, (error) => {
 			console.log(error);
 		});
 	};
 
-	if (socket) {
-		socket.on('message', (message) => {
-			console.log('new message ', message);
-		});
-	}
-
+	const handleKeyDown = (e) => {
+		if (e.key === 'Enter') {
+			sendMessage();
+		}
+	};
+	useEffect(() => {
+		console.log(messages);
+	}, [messages]);
 	useEffect(() => {
 		if (user) {
 			const newSocket = io('http://localhost:5000', { transports: ['websocket'] });
 			console.log(newSocket);
-			setSocket(newSocket);
+			// setSocket(newSocket);
+			socketRef.current = newSocket;
 			newSocket.emit('join', { userId: user._id }, (error) => {
 				console.log(error);
+			});
+
+			socketRef.current.on('message', (receivedMessage) => {
+				console.log(messages);
+				setMessages([
+					...messages,
+					{
+						message: receivedMessage.message,
+						creator: 'friend',
+					},
+				]);
 			});
 		}
 	}, [user]);
@@ -66,23 +83,10 @@ const Chats = () => {
 					</Col>
 				</Row>
 				<Row className='chat--body--container'>
-					<Message />
-					<Message mine />
-					<Message />
-					<Message />
-					<Message mine />
-					<Message />
-					<Message />
-					<Message mine />
-					<Message />
-					<Message mine />
-					<Message />
-					<Message mine />
-					<Message />
-					<Message />
-					<Message mine />
-					<Message />
-					<Message />
+					{messages &&
+						messages.map((message, index) => {
+							return <Message message={message} key={index} mine={message.creator === 'me'} />;
+						})}
 				</Row>
 				<Row className='chat--footer--container'>
 					<Col className='text--input--container' md={20}>
@@ -91,6 +95,7 @@ const Chats = () => {
 							className='text--input'
 							placeholder='Write a message...'
 							onChange={(value) => setMessage(value)}
+							onKeyDown={(e) => handleKeyDown(e)}
 						/>
 					</Col>
 					<Col className='send--message--container' md={2}>
