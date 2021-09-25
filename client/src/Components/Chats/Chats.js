@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Chats.scss';
 import { Row, Col, FlexboxGrid, Avatar, Button, Input } from 'rsuite';
 import UserItem from './UserItem';
@@ -6,12 +6,23 @@ import Message from './Message';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 
-const socket = io();
 const Chats = () => {
 	const user = useSelector((state) => state.auth.user);
+	const [message, setMessage] = useState('');
+	const [socket, setSocket] = useState(null);
+
+	const sendMessage = async () => {
+		const messageToSend = message;
+		setMessage('');
+		socket.emit('sendMessage', { message: messageToSend }, (error) => {
+			console.log(error);
+		});
+	};
 	useEffect(() => {
 		if (user) {
-			socket.emit('join', { user: user._id }, (error) => {
+			const newSocket = io('http://localhost:5000', { transports: ['websocket'] });
+			setSocket(newSocket);
+			newSocket.emit('join', { user: user._id }, (error) => {
 				console.log(error);
 			});
 		}
@@ -66,10 +77,20 @@ const Chats = () => {
 				</Row>
 				<Row className='chat--footer--container'>
 					<Col className='text--input--container' md={20}>
-						<Input className='text--input' placeholder='Write a message...' />
+						<Input
+							value={message}
+							className='text--input'
+							placeholder='Write a message...'
+							onChange={(value) => setMessage(value)}
+						/>
 					</Col>
 					<Col className='send--message--container' md={2}>
-						<Button className='send--message--btn' appearance='primary'>
+						<Button
+							className='send--message--btn'
+							appearance='primary'
+							onClick={() => {
+								sendMessage();
+							}}>
 							Send
 						</Button>
 					</Col>
