@@ -56,3 +56,18 @@
 	color: $color-base-secondary;
 	background-color: darken($color-white-secondary, 10%);
 }
+
+.job--own--btn {
+	float: right;
+	background-color: rgb(255, 187, 0);
+	color: #000;
+}
+
+.applicants--container {
+	overflow-x: scroll;
+	overflow-y: hidden;
+	white-space: nowrap;
+	margin-bottom: 20px;
+	height: 25vh;
+	width: 100%;
+}

@@ -5,6 +5,12 @@ import {
 	APPLY_FOR_JOB_ERROR,
 	CHECK_APPLIED_STATUS_ERROR,
 	CHECK_APPLIED_STATUS_SUCCESS,
+	ADD_JOB_POST_SUCCESS,
+	ADD_JOB_POST_ERROR,
+	GET_APPLICANTS_SUCCESS,
+	GET_APPLICANTS_ERROR,
+	SELECT_APPLICANT_SUCCESS,
+	SELECT_APPLICANT_ERROR,
 } from '../Actions/types';
 
 const initialState = {
@@ -12,6 +18,8 @@ const initialState = {
 	jobs: null,
 	job: null,
 	applied: null,
+	applicants: null,
+	updatedApplicants: false,
 };
 
 const jobs = function (state = initialState, action) {
@@ -63,6 +71,46 @@ const jobs = function (state = initialState, action) {
 				loading: false,
 				error: null,
 				applied: null,
+			};
+		}
+		case ADD_JOB_POST_SUCCESS: {
+			return {
+				...state,
+				loading: false,
+				error: null,
+			};
+		}
+		case SELECT_APPLICANT_ERROR:
+		case ADD_JOB_POST_ERROR: {
+			return {
+				...state,
+				loading: false,
+				error: payload,
+			};
+		}
+		case GET_APPLICANTS_SUCCESS: {
+			return {
+				...state,
+				loading: false,
+				error: null,
+				applicants: payload.applicants,
+				updatedApplicants: false,
+			};
+		}
+		case GET_APPLICANTS_ERROR: {
+			return {
+				...state,
+				loading: false,
+				error: payload,
+				applicants: null,
+			};
+		}
+		case SELECT_APPLICANT_SUCCESS: {
+			return {
+				...state,
+				loading: false,
+				error: null,
+				updatedApplicants: true,
 			};
 		}
 		default: {

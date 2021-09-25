@@ -1,0 +1,27 @@
+@import '../../Styles/main';
+
+.job--user--item--container > .rs-panel {
+	background-color: $color-white-secondary;
+	border: 5px $color-base;
+	border-radius: 10px;
+	display: inline-block;
+	animation: fadeIn 1.5s;
+	margin: 50px 15px 15px 15px;
+	height: fit-content;
+	white-space: initial;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.job--user--name--container {
+	margin-top: 30px;
+	font-size: 20px;
+}
+
+.job--user--avatar {
+	margin-left: 30px;
+}
+
+.select--applicant--container {
+	margin-top: 20px;
+}

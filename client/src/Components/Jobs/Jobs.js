@@ -7,7 +7,6 @@ import {
 	Modal,
 	Panel,
 	Row,
-	Col,
 	Button,
 	Form,
 	FormGroup,
@@ -18,12 +17,14 @@ import {
 	HelpBlock,
 } from 'rsuite';
 import JobItem from './JobItem';
-import { getJobs } from '../../Actions/jobs';
+import { getJobs, addJob } from '../../Actions/jobs';
 import { useDispatch, useSelector } from 'react-redux';
 const Jobs = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
 	const jobs = useSelector((state) => state.jobs.jobs);
+	const updatedApplicants = useSelector((state) => state.jobs.updatedApplicants);
+
 	const formRef = useRef();
 	const [addPostOpened, setAddPostOpened] = useState(false);
 	const [formData, setFormData] = useState({
@@ -41,6 +42,11 @@ const Jobs = () => {
 			await fetchJobs();
 		}
 	}, [user]);
+
+	useEffect(async () => {
+		await fetchJobs();
+	}, [updatedApplicants]);
+
 	const { StringType } = Schema.Types;
 	const model = Schema.Model({
 		title: StringType().isRequired('This field is required'),
@@ -49,10 +55,17 @@ const Jobs = () => {
 	});
 	const handleSubmit = async () => {
 		if (!formRef.current.check()) {
-			console.log('Cannot Submit Form');
 			return toast.error('Cannot Submit Form. Check your fields and submit again.');
 		}
+		formData.keywords = formData.keywords.split(',');
+		console.log(formData.keywords);
 		console.log(formData);
+		const res = await addJob(formData);
+		dispatch(res);
+
+		setAddPostOpened(false);
+		toast.success('Job Post Submitted!');
+		await fetchJobs();
 	};
 	return (
 		<FlexboxGrid className='jobs--flex--container'>
@@ -73,10 +86,15 @@ const Jobs = () => {
 								<ControlLabel className='form--control--label'>Keywords</ControlLabel>
 								<FormControl name='keywords' />
 								<HelpBlock className='keywords--helpblock'>Please separate keywords with comma(,)</HelpBlock>
-								{formData.keywords &&
-									formData.keywords.split(',').map((keyword) => {
+								{typeof formData.keywords === 'string' &&
+									formData.keywords &&
+									formData.keywords.split(',').map((keyword, index) => {
 										if (keyword !== '') {
-											return <Tag className='form--keyword--tag'>{keyword}</Tag>;
+											return (
+												<Tag className='form--keyword--tag' key={index}>
+													{keyword}
+												</Tag>
+											);
 										}
 									})}
 							</FormGroup>

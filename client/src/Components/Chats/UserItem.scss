@@ -1,0 +1,38 @@
+@import '../../Styles/main';
+
+.chat--user--container {
+	background-color: $color-white-secondary;
+	color: $color-base;
+	padding: 20px;
+	height: 90px;
+}
+
+.chat--user--container:hover {
+	transition: 0.5s;
+	background-color: darken($color-white-secondary, 5%);
+}
+.user--avatar--container {
+	margin-left: 10px;
+}
+
+.user--name--container {
+	font-size: 16px;
+}
+
+.user--active {
+	background-color: darken($color-white-secondary, 10%);
+}
+
+.text--preview {
+	font-size: 12px;
+	margin-top: 5px;
+	color: $color-grey;
+}
+
+.user--online {
+	background-color: rgb(1, 201, 134);
+}
+
+.user--offline {
+	background-color: $color-grey;
+}
