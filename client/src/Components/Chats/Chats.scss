@@ -35,25 +35,30 @@
 	overflow-y: scroll;
 }
 .chat--footer--container {
-	height: 10%;
+	padding: 0px 30px 0px 30px;
 }
-.text--input--container {
-	margin: 20px 0px 0px 20px;
+.text--input--group {
+	margin-top: 20px;
+	border-radius: 10px;
+	background-color: #fff;
 }
-.text--input {
-	width: 100%;
-	margin: 10px;
-	border-radius: 12px;
-}
+
 .send--message--container {
 	margin: 30px;
 }
 .send--message--btn {
-	width: 80px;
 	float: right;
+	margin: 10px;
+}
+.send--icon {
+	margin-left: 10px;
 }
 
 .user--flex--container::-webkit-scrollbar,
 .chat--body--container::-webkit-scrollbar {
-	display: none; /* for Chrome, Safari, and Opera */
+	display: none !important; /* for Chrome, Safari, and Opera */
+}
+
+* {
+	-ms-overflow-style: none;
 }

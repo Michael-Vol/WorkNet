@@ -1,23 +1,40 @@
 @import '../../Styles/main';
 
 .message {
-	margin: 10px;
-	max-width: 40%;
 	border-radius: 10px;
 	padding: 12px;
 	font-size: 14px;
 }
 .friends--message {
 	float: left;
-	background-color: #dddddd;
-	color: #000;
+	margin: 10px 10px 15px 10px;
 }
 .my-message {
 	float: right;
+	margin: 10px 10px 15px 10px;
+}
+.message--body--my-message {
 	color: #fff;
 	background-color: $color-teal-secondary;
 }
+.message--body--friends--message {
+	background-color: #dddddd;
+	color: #000;
+}
+
 .clearfix {
 	clear: both;
 	display: table;
+}
+
+.message--timestamp {
+	background-color: #fff;
+	color: $color-base;
+}
+
+.message--timestamp--my-message {
+	text-align: right;
+}
+.message--timestamp--friends--message {
+	text-align: left;
 }

@@ -15,10 +15,8 @@ const generateChat = (server) => {
 		});
 
 		socket.on('sendMessage', ({ message, receiver }, callback) => {
-			console.log(receiver);
 			const userSocketId = getUser(receiver);
-			console.log('before send', userSocketId, message);
-			socket.broadcast.to(userSocketId).emit('message', { message });
+			socket.broadcast.to(userSocketId).emit('message', message);
 		});
 	});
 };

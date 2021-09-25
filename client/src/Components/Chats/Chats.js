@@ -1,26 +1,30 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './Chats.scss';
-import { Row, Col, FlexboxGrid, Avatar, Button, Input } from 'rsuite';
+import { Row, Col, FlexboxGrid, Avatar, Button, Input, InputGroup } from 'rsuite';
 import UserItem from './UserItem';
 import Message from './Message';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
+import moment from 'moment';
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 const Chats = () => {
 	const user = useSelector((state) => state.auth.user);
 	const [message, setMessage] = useState('');
-	// const [socket, setSocket] = useState(null);
 	const [messages, setMessages] = useState([]);
 	const activeUserId = window.location.pathname.replace('/chats/', '');
 	const socketRef = useRef();
 
 	const sendMessage = async () => {
-		const messageToSend = message;
-		setMessages([...messages, { message, creator: 'me' }]);
-		setMessage('');
-		socketRef.current.emit('sendMessage', { message: messageToSend, receiver: activeUserId }, (error) => {
-			console.log(error);
-		});
+		if (message !== '') {
+			const messageToSend = message;
+			const newMessage = { message, creator: 'me', timestamp: moment() };
+			setMessages([...messages, newMessage]);
+			setMessage('');
+			socketRef.current.emit('sendMessage', { message: newMessage, receiver: activeUserId }, (error) => {
+				console.log(error);
+			});
+		}
 	};
 
 	const handleKeyDown = (e) => {
@@ -37,22 +41,23 @@ const Chats = () => {
 			console.log(newSocket);
 			// setSocket(newSocket);
 			socketRef.current = newSocket;
-			newSocket.emit('join', { userId: user._id }, (error) => {
+			socketRef.current.emit('join', { userId: user._id }, (error) => {
 				console.log(error);
 			});
 
 			socketRef.current.on('message', (receivedMessage) => {
-				console.log(messages);
+				console.log('received', receivedMessage);
 				setMessages([
 					...messages,
 					{
 						message: receivedMessage.message,
 						creator: 'friend',
+						timestamp: receivedMessage.timestamp,
 					},
 				]);
 			});
 		}
-	}, [user]);
+	}, [user, messages]);
 	return (
 		<FlexboxGrid>
 			<FlexboxGrid.Item colspan={5} className='user--flex--container'>
@@ -82,31 +87,32 @@ const Chats = () => {
 						</Button>
 					</Col>
 				</Row>
-				<Row className='chat--body--container'>
+				<ScrollToBottom className='chat--body--container'>
 					{messages &&
 						messages.map((message, index) => {
 							return <Message message={message} key={index} mine={message.creator === 'me'} />;
 						})}
-				</Row>
+				</ScrollToBottom>
 				<Row className='chat--footer--container'>
-					<Col className='text--input--container' md={20}>
-						<Input
-							value={message}
-							className='text--input'
-							placeholder='Write a message...'
-							onChange={(value) => setMessage(value)}
-							onKeyDown={(e) => handleKeyDown(e)}
-						/>
-					</Col>
-					<Col className='send--message--container' md={2}>
-						<Button
-							className='send--message--btn'
-							appearance='primary'
-							onClick={() => {
-								sendMessage();
-							}}>
-							Send
-						</Button>
+					<Col className='text--input--container'>
+						<InputGroup className='text--input--group'>
+							<Input
+								className='text--input'
+								value={message}
+								placeholder='Write a message...'
+								onChange={(value) => setMessage(value)}
+								onKeyDown={(e) => handleKeyDown(e)}
+							/>
+							<Button
+								className='send--message--btn'
+								appearance='primary'
+								onClick={() => {
+									sendMessage();
+								}}>
+								Send
+								<i className='fas fa-paper-plane send--icon'></i>
+							</Button>
+						</InputGroup>
 					</Col>
 				</Row>
 			</FlexboxGrid.Item>

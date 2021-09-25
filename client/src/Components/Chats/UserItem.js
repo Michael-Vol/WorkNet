@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Row, Col, Avatar, Badge } from 'rsuite';
 import { useHistory } from 'react-router-dom';
 import './UserItem.scss';
+
 const UserItem = ({ chatActive, userActive = false }) => {
 	const history = useHistory();
 
