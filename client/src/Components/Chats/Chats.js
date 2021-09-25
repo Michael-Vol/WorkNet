@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Chats.scss';
 import { Row, Col, FlexboxGrid, Avatar, Button, Input } from 'rsuite';
 import UserItem from './UserItem';
 import Message from './Message';
+import { useSelector } from 'react-redux';
+import { io } from 'socket.io-client';
+
+const socket = io();
 const Chats = () => {
+	const user = useSelector((state) => state.auth.user);
+	useEffect(() => {
+		if (user) {
+			socket.emit('join', { user: user._id }, (error) => {
+				console.log(error);
+			});
+		}
+	}, [user]);
 	return (
 		<FlexboxGrid>
 			<FlexboxGrid.Item colspan={5} className='user--flex--container'>
