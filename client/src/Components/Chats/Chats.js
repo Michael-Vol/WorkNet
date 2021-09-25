@@ -10,11 +10,11 @@ const Chats = () => {
 	const user = useSelector((state) => state.auth.user);
 	const [message, setMessage] = useState('');
 	const [socket, setSocket] = useState(null);
-
+	const activeUserId = window.location.pathname.replace('/chats/', '');
 	const sendMessage = async () => {
 		const messageToSend = message;
 		setMessage('');
-		socket.emit('sendMessage', { message: messageToSend }, (error) => {
+		socket.emit('sendMessage', { message: messageToSend, toUser: activeUserId }, (error) => {
 			console.log(error);
 		});
 	};

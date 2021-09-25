@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Avatar, Badge } from 'rsuite';
+import { useHistory } from 'react-router-dom';
 import './UserItem.scss';
 const UserItem = ({ chatActive, userActive = false }) => {
+	const history = useHistory();
+
+	const selectUser = () => {
+		history.push(`/chats/61353fca8d62d004be1abd5c`);
+	};
+
 	const activeClass = chatActive ? 'user--active' : '';
 	const activeBadge = userActive ? 'user--online' : 'user--offline';
 	return (
-		<Row className={`chat--user--container ${activeClass}`}>
+		<Row className={`chat--user--container ${activeClass}`} onClick={selectUser}>
 			<Row>
 				<Col md={6} className='user--avatar--container'>
 					<Avatar circle />

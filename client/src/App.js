@@ -42,7 +42,7 @@ const App = (props) => {
 					<PrivateRoute exact path='/network' component={Network} />
 					<PrivateRoute exact path='/users/:user_id/profile' component={Profile} />
 					<PrivateRoute exact path='/jobs' component={Jobs} />
-					<PrivateRoute exact path='/chats' component={Chats} />
+					<PrivateRoute path='/chats' component={Chats} />
 				</Switch>
 			</Container>
 		</Router>
