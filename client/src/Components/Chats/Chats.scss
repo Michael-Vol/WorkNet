@@ -4,9 +4,56 @@
 	background-color: $color-base-secondary;
 	height: 92vh;
 	border-right: 5px solid $color-base;
+	overflow-y: scroll;
 }
+
 .chats--flex--container {
-	background-color: darken($color-white-secondary, 5%);
+	background-color: $color-white-secondary;
 	height: 92vh;
 	overflow-y: scroll;
+}
+
+.chat--header--container {
+	height: 8%;
+	// background-color: darken($color-white-secondary, 7%);
+	padding: 10px;
+}
+
+.header--info--container {
+	font-size: 22px;
+	margin-top: 5px;
+}
+
+.visit--profile--btn {
+	float: right;
+	margin-top: 2px;
+}
+.chat--body--container {
+	height: 80%;
+	padding: 10px;
+	background-color: #fff;
+	overflow-y: scroll;
+}
+.chat--footer--container {
+	height: 10%;
+}
+.text--input--container {
+	margin: 20px 0px 0px 20px;
+}
+.text--input {
+	width: 100%;
+	margin: 10px;
+	border-radius: 12px;
+}
+.send--message--container {
+	margin: 30px;
+}
+.send--message--btn {
+	width: 80px;
+	float: right;
+}
+
+.user--flex--container::-webkit-scrollbar,
+.chat--body--container::-webkit-scrollbar {
+	display: none; /* for Chrome, Safari, and Opera */
 }

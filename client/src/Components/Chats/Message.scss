@@ -1,0 +1,23 @@
+@import '../../Styles/main';
+
+.message {
+	margin: 10px;
+	max-width: 40%;
+	border-radius: 10px;
+	padding: 12px;
+	font-size: 14px;
+}
+.friends--message {
+	float: left;
+	background-color: #dddddd;
+	color: #000;
+}
+.my-message {
+	float: right;
+	color: #fff;
+	background-color: $color-teal-secondary;
+}
+.clearfix {
+	clear: both;
+	display: table;
+}
