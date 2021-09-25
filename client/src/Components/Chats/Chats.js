@@ -29,6 +29,7 @@ const Chats = () => {
 	useEffect(() => {
 		if (user) {
 			const newSocket = io('http://localhost:5000', { transports: ['websocket'] });
+			console.log(newSocket);
 			setSocket(newSocket);
 			newSocket.emit('join', { userId: user._id }, (error) => {
 				console.log(error);

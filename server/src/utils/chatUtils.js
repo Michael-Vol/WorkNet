@@ -1,4 +1,4 @@
-const users = [];
+let users = [];
 
 const addUser = ({ userId, socketId }) => {
 	//Validate ids
@@ -8,11 +8,9 @@ const addUser = ({ userId, socketId }) => {
 		};
 	}
 	//Check if user is already in chat
-
-	if (users.find((user) => user.userId === userId && user.socketId === socketId)) {
-		return {
-			error: 'User already in chat',
-		};
+	const existingUser = users.find((user) => user.userId === userId);
+	if (existingUser) {
+		return (existingUser.socketId = socketId);
 	}
 
 	//Create and store user
@@ -22,10 +20,12 @@ const addUser = ({ userId, socketId }) => {
 	};
 
 	users.push(user);
+	console.log(users);
 };
 
 const getUser = (userId) => {
-	const user = users.find((user) => user === userId);
+	console.log(users);
+	const user = users.find((user) => user.userId === userId);
 	if (!user) {
 		return {
 			error: "User is not active / doesn't exist",

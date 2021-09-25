@@ -2,7 +2,7 @@ const express = require('express');
 const socketio = require('socket.io');
 const User = require('../models/User');
 const { createServer } = require('http');
-const { addUser, getUser, removeUser } = require('../utils/chatUtils');
+const { addUser, getUser, removeUser, cleanUsers } = require('../utils/chatUtils');
 
 const generateChat = (server) => {
 	const io = socketio(server);
@@ -15,9 +15,10 @@ const generateChat = (server) => {
 		});
 
 		socket.on('sendMessage', ({ message, receiver }, callback) => {
-			console.log(`got message ${message}`);
+			console.log(receiver);
 			const userSocketId = getUser(receiver);
-			io.sockets.socket(userSocketId).emit('message', { message });
+			console.log('before send', userSocketId, message);
+			socket.broadcast.to(userSocketId).emit('message', { message });
 		});
 	});
 };
