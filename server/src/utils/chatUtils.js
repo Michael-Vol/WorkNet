@@ -1,5 +1,4 @@
 let users = [];
-
 const addUser = ({ userId, socketId }) => {
 	//Validate ids
 	if (!userId || !socketId) {
@@ -9,9 +8,7 @@ const addUser = ({ userId, socketId }) => {
 	}
 	//Check if user is already in chat
 	const existingUser = users.find((user) => user.userId === userId);
-	console.log(users);
 	if (existingUser) {
-		console.log(`replacing ${existingUser.userId} socket ${existingUser.socketId} with ${socketId}`);
 		return (existingUser.socketId = socketId);
 	}
 
@@ -22,11 +19,9 @@ const addUser = ({ userId, socketId }) => {
 	};
 
 	users.push(user);
-	console.log(users);
 };
 
-const getUser = (userId) => {
-	console.log(users);
+const getSocket = (userId) => {
 	const user = users.find((user) => user.userId === userId);
 	if (!user) {
 		return {
@@ -35,6 +30,15 @@ const getUser = (userId) => {
 	}
 	return user.socketId;
 };
+const getUser = (socketId) => {
+	const user = users.find((user) => user.socketId === socketId);
+	if (!user) {
+		return {
+			error: "User is not active / doesn't exist",
+		};
+	}
+	return user.userId;
+};
 
 const removeUser = (userId) => {
 	const index = users.findIndex((user) => user.userId === userId);
@@ -42,9 +46,13 @@ const removeUser = (userId) => {
 		return users.splice(index, 1)[0];
 	}
 };
-
+const getAllUserIds = () => {
+	return users.map((user) => user.userId);
+};
 module.exports = {
 	addUser,
+	getSocket,
 	getUser,
 	removeUser,
+	getAllUserIds,
 };

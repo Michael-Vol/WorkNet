@@ -34,11 +34,8 @@ const Chats = () => {
 	const [activeUserAvatar, setActiveUserAvatar] = useState(null);
 	const [noPreviousMessages, setNoPreviousMessages] = useState(false);
 	const [activeUserId, setActiveUserId] = useState('');
-
+	const [onlineUsers, setOnlineUsers] = useState([]);
 	const socketRef = useRef();
-
-	const newSocket = io('http://localhost:5000', { transports: ['websocket'] });
-	socketRef.current = newSocket;
 
 	const fetchConnectedUsers = async () => {
 		const res = await getConnectedUsers();
@@ -124,10 +121,7 @@ const Chats = () => {
 	}, [activeUserId]);
 
 	useEffect(async () => {
-		if (user) {
-			socketRef.current.emit('join', { userId: user._id }, (error) => {
-				console.log(error);
-			});
+		if (user && socketRef.current) {
 			socketRef.current.on('message', (receivedMessage) => {
 				setMessages([
 					...messages,
@@ -143,6 +137,20 @@ const Chats = () => {
 
 	useEffect(async () => {
 		if (user) {
+			const newSocket = io('http://localhost:5000', { transports: ['websocket'] });
+			socketRef.current = newSocket;
+			socketRef.current.emit('join', { userId: user._id }, (error) => {
+				console.log(error);
+			});
+			socketRef.current.on('userOnline', (receivedOnlineUsers) => {
+				console.log(receivedOnlineUsers);
+				setOnlineUsers(receivedOnlineUsers);
+			});
+			socketRef.current.on('userOffline', (receivedOnlineUsers) => {
+				console.log(receivedOnlineUsers);
+				setOnlineUsers(receivedOnlineUsers);
+			});
+
 			await fetchConnectedUsers();
 			await fetchChats();
 		}
@@ -172,7 +180,10 @@ const Chats = () => {
 				{chats &&
 					chats.map((chat, index) => {
 						const friend = typeof chat.userOne === 'string' ? chat.userTwo : chat.userOne;
-						return <UserItem onClick={changeActiveUser} chat={chat} user={friend} key={index} />;
+						const userActive = onlineUsers.some((userId) => friend._id === userId);
+						return (
+							<UserItem onClick={changeActiveUser} userActive={userActive} chat={chat} user={friend} key={index} />
+						);
 					})}
 			</FlexboxGrid.Item>
 			<FlexboxGrid.Item colspan={19} className='chats--flex--container'>
