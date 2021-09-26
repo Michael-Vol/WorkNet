@@ -11,7 +11,7 @@ import { getConnectedUsers } from '../../Actions/users';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import SelectUserItem from './SelectUserItem';
-import { getChats, addNewMessage } from '../../Actions/chat';
+import { getChats, addNewMessage, getMessages } from '../../Actions/chat';
 import { getAvatar } from '../../Actions/posts';
 import { Link } from 'react-router-dom';
 
@@ -24,6 +24,7 @@ const Chats = () => {
 	const chatId = useSelector((state) => state.chats.chatId);
 	const userId = useSelector((state) => state.chats.userId);
 	const chats = useSelector((state) => state.chats.chats);
+	const previousMessages = useSelector((state) => state.chats.messages);
 
 	const [message, setMessage] = useState('');
 	const [messages, setMessages] = useState([]);
@@ -42,7 +43,10 @@ const Chats = () => {
 		const res = await getChats();
 		dispatch(res);
 	};
-
+	const fetchMessages = async (chatId) => {
+		const res = await getMessages(chatId);
+		dispatch(res);
+	};
 	const sendMessage = async () => {
 		if (message !== '') {
 			const newMessage = { message, creator: 'me', timestamp: moment() };
@@ -79,8 +83,8 @@ const Chats = () => {
 		}
 	}, [activeUser]);
 
-	useEffect(() => {
-		if (chats && chats.length > 0) {
+	useEffect(async () => {
+		if (chats) {
 			const newActiveChat = chats.find((chat) => {
 				return (
 					(typeof chat.userOne === 'string' ? chat.userOne === activeUserId : chat.userOne._id === activeUserId) ||
@@ -91,6 +95,8 @@ const Chats = () => {
 				const user = typeof newActiveChat.userOne === 'string' ? newActiveChat.userTwo : newActiveChat.userOne;
 				setActiveUser(user);
 			}
+			console.log(newActiveChat._id);
+			await fetchMessages(newActiveChat._id);
 		}
 	}, [activeUserId]);
 	useEffect(() => {
@@ -169,6 +175,10 @@ const Chats = () => {
 					</Col>
 				</Row>
 				<ScrollToBottom className='chat--body--container'>
+					{previousMessages &&
+						previousMessages.map((message, index) => {
+							return <Message previous message={message} key={index} mine={message.sender === user._id} />;
+						})}
 					{messages &&
 						messages.map((message, index) => {
 							return <Message message={message} key={index} mine={message.creator === 'me'} />;
