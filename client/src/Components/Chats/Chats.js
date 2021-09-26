@@ -51,6 +51,9 @@ const Chats = () => {
 			socketRef.current.emit('sendMessage', { message: newMessage, receiver: activeUserId }, (error) => {
 				console.log(error);
 			});
+			const res = await addNewMessage(newMessage.message, activeChat._id);
+			dispatch(res);
+			console.log(res.payload);
 		}
 	};
 
@@ -70,7 +73,6 @@ const Chats = () => {
 
 	useEffect(async () => {
 		if (activeUser) {
-			console.log(activeUser);
 			const res = await getAvatar(activeUser._id);
 			dispatch(res);
 			setActiveUserAvatar(res.payload);
@@ -79,15 +81,16 @@ const Chats = () => {
 
 	useEffect(() => {
 		if (chats && chats.length > 0) {
-			console.log(chats, 'new');
 			const newActiveChat = chats.find((chat) => {
 				return (
 					(typeof chat.userOne === 'string' ? chat.userOne === activeUserId : chat.userOne._id === activeUserId) ||
 					(typeof chat.userTwo === 'string' ? chat.userTwo === activeUserId : chat.userTwo._id === activeUserId)
 				);
 			});
-			const user = typeof newActiveChat.userOne === 'string' ? newActiveChat.userTwo : newActiveChat.userOne;
-			setActiveUser(user);
+			if (newActiveChat) {
+				const user = typeof newActiveChat.userOne === 'string' ? newActiveChat.userTwo : newActiveChat.userOne;
+				setActiveUser(user);
+			}
 		}
 	}, [activeUserId]);
 	useEffect(() => {

@@ -5,6 +5,8 @@ import {
 	GET_CHAT_ERROR,
 	ADD_NEW_MESSAGE_SUCCESS,
 	ADD_NEW_MESSAGE_ERROR,
+	GET_MESSAGES_SUCCESS,
+	GET_MESSAGES_ERROR,
 } from '../Actions/types';
 
 const initialState = {
@@ -14,6 +16,7 @@ const initialState = {
 	error: null,
 	chats: null,
 	newMessage: null,
+	messages: null,
 };
 
 const chats = function (state = initialState, action) {
@@ -67,6 +70,22 @@ const chats = function (state = initialState, action) {
 				loading: false,
 				error: payload,
 				newMessage: null,
+			};
+		}
+		case GET_MESSAGES_SUCCESS: {
+			return {
+				...state,
+				loading: false,
+				error: null,
+				messages: payload.messages,
+			};
+		}
+		case GET_MESSAGES_ERROR: {
+			return {
+				...state,
+				loading: false,
+				error: payload,
+				messages: null,
 			};
 		}
 		default:

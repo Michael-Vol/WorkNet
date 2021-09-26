@@ -6,6 +6,8 @@ import {
 	GET_CHAT_ERROR,
 	ADD_NEW_MESSAGE_SUCCESS,
 	ADD_NEW_MESSAGE_ERROR,
+	GET_MESSAGES_SUCCESS,
+	GET_MESSAGES_ERROR,
 } from './types';
 
 export const createNewChat = async (user) => {
@@ -58,7 +60,9 @@ export const addNewMessage = async (message, chatId) => {
 				'Content-Type': 'application/json',
 			},
 		};
-		const body = JSON.stringify({ message });
+		const body = JSON.stringify({ body: message });
+
+		console.log(body, chatId);
 		const res = await axios.post(`/chats/${chatId}/messages`, body, config);
 
 		return {
@@ -68,6 +72,27 @@ export const addNewMessage = async (message, chatId) => {
 	} catch (error) {
 		return {
 			type: ADD_NEW_MESSAGE_ERROR,
+			payload: error,
+		};
+	}
+};
+
+export const getMessages = async (chatId) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+		const res = await axios.get(`/chats/${chatId}/messages`, config);
+
+		return {
+			type: GET_MESSAGES_SUCCESS,
+			payload: res.data,
+		};
+	} catch (error) {
+		return {
+			type: GET_MESSAGES_ERROR,
 			payload: error,
 		};
 	}
