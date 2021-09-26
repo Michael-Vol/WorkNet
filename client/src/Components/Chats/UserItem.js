@@ -6,7 +6,7 @@ import { getAvatar } from '../../Actions/posts';
 
 import './UserItem.scss';
 
-const UserItem = ({ chat, user, chatActive, userActive = false }) => {
+const UserItem = ({ chat, user, chatActive, onClick, userActive = false }) => {
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const me = useSelector((state) => state.auth.user);
@@ -14,7 +14,7 @@ const UserItem = ({ chat, user, chatActive, userActive = false }) => {
 	const [avatar, setAvatar] = useState(null);
 
 	const selectUser = () => {
-		history.push(`/chats/${user._id}`);
+		// history.push(`/chats/${user._id}`);
 	};
 
 	useEffect(async () => {
@@ -26,7 +26,11 @@ const UserItem = ({ chat, user, chatActive, userActive = false }) => {
 	const activeClass = chatActive ? 'user--active' : '';
 	const activeBadge = userActive ? 'user--online' : 'user--offline';
 	return (
-		<Row className={`chat--user--container ${activeClass}`} onClick={selectUser}>
+		<Row
+			className={`chat--user--container ${activeClass}`}
+			onClick={() => {
+				onClick(user._id);
+			}}>
 			<Row>
 				<Col md={6} className='user--avatar--container'>
 					<Avatar circle src={`data:image/png;base64,${avatar}`} className='select--user--avatar' />
@@ -37,7 +41,7 @@ const UserItem = ({ chat, user, chatActive, userActive = false }) => {
 					<Row className='text--preview'>
 						<Col>
 							{me && chat && chat.lastMessage && (
-								<span>
+								<span className='last--message'>
 									{chat.lastMessage.sender === me._id ? 'You' : user.firstName} : {chat.lastMessage.body}
 								</span>
 							)}

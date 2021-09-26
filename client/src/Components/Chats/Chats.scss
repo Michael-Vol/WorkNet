@@ -59,6 +59,16 @@
 	max-height: 70vh;
 	overflow-y: auto;
 }
+.load--more--container {
+	text-align: center;
+	font-size: 12px;
+}
+.load--more--icon {
+	display: block;
+}
+.load--more--link {
+	font-size: 14px;
+}
 .user--flex--container::-webkit-scrollbar,
 .chat--body--container::-webkit-scrollbar,
 .create--chat--container::-webkit-scrollbar {

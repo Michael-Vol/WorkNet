@@ -239,7 +239,7 @@ router.get('/:chat_id/messages', auth, async (req, res) => {
 		// Check for required query params
 		const limit = req.query.limit === undefined ? 10 : parseInt(req.query.limit);
 		const skip = req.query.skip === undefined ? 0 : parseInt(req.query.skip);
-
+		console.log(skip);
 		const messages = Chat.aggregate([
 			{
 				$match: { _id: mongoose.Types.ObjectId(req.params.chat_id) },
@@ -257,10 +257,10 @@ router.get('/:chat_id/messages', auth, async (req, res) => {
 				$sort: { 'messages.createdAt': -1 },
 			},
 			{
-				$limit: limit,
+				$skip: skip,
 			},
 			{
-				$skip: skip,
+				$limit: limit,
 			},
 			{
 				$sort: { 'messages.createdAt': 1 },

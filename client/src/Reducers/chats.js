@@ -77,7 +77,7 @@ const chats = function (state = initialState, action) {
 				...state,
 				loading: false,
 				error: null,
-				messages: payload.messages,
+				messages: state.messages ? payload.messages.concat(state.messages) : payload.messages,
 			};
 		}
 		case GET_MESSAGES_ERROR: {

@@ -23,15 +23,18 @@ const Chats = () => {
 	const chatId = useSelector((state) => state.chats.chatId);
 	const userId = useSelector((state) => state.chats.userId);
 	const chats = useSelector((state) => state.chats.chats);
-	const previousMessages = useSelector((state) => state.chats.messages);
 
 	const [message, setMessage] = useState('');
+	const [previousMessages, setPreviousMessages] = useState([]);
 	const [messages, setMessages] = useState([]);
 	const [createChat, setCreateChat] = useState(false);
 	const [activeChat, setActiveChat] = useState(null);
 	const [activeUser, setActiveUser] = useState(null);
+	const [skippedMessages, setSkippedMessages] = useState(0);
 	const [activeUserAvatar, setActiveUserAvatar] = useState(null);
-	let activeUserId = window.location.pathname.replace('/chats/', '');
+	const [noPreviousMessages, setNoPreviousMessages] = useState(false);
+	const [activeUserId, setActiveUserId] = useState('');
+
 	const socketRef = useRef();
 
 	const newSocket = io('http://localhost:5000', { transports: ['websocket'] });
@@ -45,10 +48,21 @@ const Chats = () => {
 	const fetchChats = async () => {
 		const res = await getChats();
 		dispatch(res);
+		if (activeUserId === '') {
+			setActiveUserId(
+				typeof res.payload.chats[0].userOne === 'string'
+					? res.payload.chats[0].userTwo._id
+					: res.payload.chats[0].userOne._id
+			);
+		}
 	};
-	const fetchMessages = async (chatId) => {
-		const res = await getMessages(chatId);
-		dispatch(res);
+	const fetchMessages = async (chatId, skip) => {
+		const res = await getMessages(chatId, skip);
+		if (res.payload.messages.length > 0) {
+			setPreviousMessages((state) => [...res.payload.messages, ...state]);
+			return dispatch(res);
+		}
+		setNoPreviousMessages(true);
 	};
 	const sendMessage = async () => {
 		if (message !== '') {
@@ -68,11 +82,18 @@ const Chats = () => {
 			sendMessage();
 		}
 	};
+	const changeActiveUser = (id) => {
+		setPreviousMessages([]);
+		setMessages([]);
+		setSkippedMessages(0);
+		setNoPreviousMessages(false);
+		setActiveUserId(id);
+	};
 
 	useEffect(async () => {
 		if (chatId) {
 			setCreateChat(false);
-			history.push(`/chats/${userId}`);
+			setActiveUserId(userId);
 			await fetchChats();
 		}
 	}, [chatId]);
@@ -87,9 +108,6 @@ const Chats = () => {
 
 	useEffect(async () => {
 		if (chats) {
-			if (activeUserId === '/chats') {
-				activeUserId = typeof chats[0].userOne === 'string' ? chats[0].userTwo._id : chats[0].userOne._id;
-			}
 			const newActiveChat = chats.find((chat) => {
 				return (
 					(typeof chat.userOne === 'string' ? chat.userOne === activeUserId : chat.userOne._id === activeUserId) ||
@@ -99,13 +117,11 @@ const Chats = () => {
 			if (newActiveChat) {
 				const user = typeof newActiveChat.userOne === 'string' ? newActiveChat.userTwo : newActiveChat.userOne;
 				setActiveChat(newActiveChat);
-				history.push(`/chats/${user._id}`);
 				setActiveUser(user);
-				console.log(newActiveChat._id);
-				await fetchMessages(newActiveChat._id);
+				await fetchMessages(newActiveChat._id, skippedMessages);
 			}
 		}
-	}, [chats, activeUserId]);
+	}, [activeUserId]);
 
 	useEffect(async () => {
 		if (user) {
@@ -122,7 +138,6 @@ const Chats = () => {
 					},
 				]);
 			});
-			await fetchChats();
 		}
 	}, [user, messages]);
 
@@ -154,11 +169,10 @@ const Chats = () => {
 						</Button>
 					</Col>
 				</Row>
-				{/* <UserItem chatActive userActive /> */}
 				{chats &&
 					chats.map((chat, index) => {
 						const friend = typeof chat.userOne === 'string' ? chat.userTwo : chat.userOne;
-						return <UserItem chat={chat} user={friend} key={index} />;
+						return <UserItem onClick={changeActiveUser} chat={chat} user={friend} key={index} />;
 					})}
 			</FlexboxGrid.Item>
 			<FlexboxGrid.Item colspan={19} className='chats--flex--container'>
@@ -176,6 +190,18 @@ const Chats = () => {
 					</Col>
 				</Row>
 				<ScrollToBottom className='chat--body--container'>
+					{!noPreviousMessages && (
+						<Link className='load--more--container'>
+							<Row
+								onClick={() => {
+									fetchMessages(activeChat._id, skippedMessages + 10);
+									setSkippedMessages(skippedMessages + 10);
+								}}>
+								<i className='fas fa-chevron-up load--more--icon'></i>
+								<span className='load--more--link'>Load More</span>
+							</Row>
+						</Link>
+					)}
 					{previousMessages &&
 						previousMessages.map((message, index) => {
 							return <Message previous message={message} key={index} mine={message.sender === user._id} />;

@@ -76,14 +76,14 @@ export const addNewMessage = async (message, chatId) => {
 	}
 };
 
-export const getMessages = async (chatId) => {
+export const getMessages = async (chatId, skip = 0) => {
 	try {
 		const config = {
 			headers: {
 				'Content-Type': 'application/json',
 			},
 		};
-		const res = await axios.get(`/chats/${chatId}/messages`, config);
+		const res = await axios.get(`/chats/${chatId}/messages?skip=${skip}`, config);
 
 		return {
 			type: GET_MESSAGES_SUCCESS,
