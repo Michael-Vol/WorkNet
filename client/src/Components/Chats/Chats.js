@@ -14,7 +14,6 @@ import SelectUserItem from './SelectUserItem';
 import { getChats, addNewMessage, getMessages } from '../../Actions/chat';
 import { getAvatar } from '../../Actions/posts';
 import { Link } from 'react-router-dom';
-
 const Chats = () => {
 	const dispatch = useDispatch();
 	const history = useHistory();
@@ -32,8 +31,12 @@ const Chats = () => {
 	const [activeChat, setActiveChat] = useState(null);
 	const [activeUser, setActiveUser] = useState(null);
 	const [activeUserAvatar, setActiveUserAvatar] = useState(null);
-	const activeUserId = window.location.pathname.replace('/chats/', '');
+	let activeUserId = window.location.pathname.replace('/chats/', '');
 	const socketRef = useRef();
+
+	const newSocket = io('http://localhost:5000', { transports: ['websocket'] });
+	socketRef.current = newSocket;
+
 	const fetchConnectedUsers = async () => {
 		const res = await getConnectedUsers();
 		dispatch(res);
@@ -57,7 +60,6 @@ const Chats = () => {
 			});
 			const res = await addNewMessage(newMessage.message, activeChat._id);
 			dispatch(res);
-			console.log(res.payload);
 		}
 	};
 
@@ -85,6 +87,9 @@ const Chats = () => {
 
 	useEffect(async () => {
 		if (chats) {
+			if (activeUserId === '/chats') {
+				activeUserId = typeof chats[0].userOne === 'string' ? chats[0].userTwo._id : chats[0].userOne._id;
+			}
 			const newActiveChat = chats.find((chat) => {
 				return (
 					(typeof chat.userOne === 'string' ? chat.userOne === activeUserId : chat.userOne._id === activeUserId) ||
@@ -93,33 +98,20 @@ const Chats = () => {
 			});
 			if (newActiveChat) {
 				const user = typeof newActiveChat.userOne === 'string' ? newActiveChat.userTwo : newActiveChat.userOne;
+				setActiveChat(newActiveChat);
+				history.push(`/chats/${user._id}`);
 				setActiveUser(user);
+				console.log(newActiveChat._id);
+				await fetchMessages(newActiveChat._id);
 			}
-			console.log(newActiveChat._id);
-			await fetchMessages(newActiveChat._id);
 		}
-	}, [activeUserId]);
-	useEffect(() => {
-		if (chats && chats.length > 0) {
-			const chatId = typeof chats[0].userOne === 'string' ? chats[0].userTwo._id : chats[0].userOne._id;
-			const user = typeof chats[0].userOne === 'string' ? chats[0].userTwo : chats[0].userOne;
-			history.push(`/chats/${chatId}`);
-			setActiveChat(chats[0]);
-			setActiveUser(user);
-		}
-	}, [chats]);
+	}, [chats, activeUserId]);
 
 	useEffect(async () => {
 		if (user) {
-			await fetchConnectedUsers();
-			await fetchChats();
-
-			const newSocket = io('http://localhost:5000', { transports: ['websocket'] });
-			socketRef.current = newSocket;
 			socketRef.current.emit('join', { userId: user._id }, (error) => {
 				console.log(error);
 			});
-
 			socketRef.current.on('message', (receivedMessage) => {
 				setMessages([
 					...messages,
@@ -132,6 +124,14 @@ const Chats = () => {
 			});
 		}
 	}, [user, messages]);
+
+	useEffect(async () => {
+		if (user) {
+			await fetchConnectedUsers();
+			await fetchChats();
+		}
+	}, [user]);
+
 	return (
 		<FlexboxGrid>
 			<Modal show={createChat} onHide={() => setCreateChat(false)} className='create--chat--container'>

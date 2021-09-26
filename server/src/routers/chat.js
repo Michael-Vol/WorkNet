@@ -20,7 +20,7 @@ router.post('/', auth, async (req, res) => {
 		const { user } = req.body;
 		const userTwoID = user;
 
-		//check if user id is in request body
+		// check if user id is in request body
 		if (!userTwoID) {
 			return res.status(400).json({
 				message: 'No user id provided.',
@@ -32,7 +32,7 @@ router.post('/', auth, async (req, res) => {
 			});
 		}
 
-		//check if userTwoId belongs to an existing user
+		// check if userTwoId belongs to an existing user
 		const userTwo = await User.findById(userTwoID);
 		if (!userTwo) {
 			return res.status(400).json({
@@ -40,7 +40,7 @@ router.post('/', auth, async (req, res) => {
 			});
 		}
 
-		//Check if chat is already created
+		// Check if chat is already created
 		let chat = await Chat.findOne({ userOne: userOneID, userTwo: userTwoID });
 		const reverseChat = await Chat.findOne({ userOne: userTwoID, userTwo: userOneID });
 		if (chat || reverseChat) {
@@ -105,7 +105,10 @@ router.get('/', auth, async (req, res) => {
 
 router.get('/:chat_id', auth, async (req, res) => {
 	try {
-		const chat = await Chat.findOne({ _id: req.params.chat_id, $or: [{ userOne: req.user.id }, { userTwo: req.user.id }] });
+		const chat = await Chat.findOne({
+			_id: req.params.chat_id,
+			$or: [{ userOne: req.user.id }, { userTwo: req.user.id }],
+		});
 		if (!chat) {
 			return res.status(400).json({
 				message: 'Chat not found.',
@@ -137,7 +140,10 @@ router.get('/:chat_id', auth, async (req, res) => {
 
 router.delete('/:chat_id', auth, async (req, res) => {
 	try {
-		const chat = await Chat.findOne({ _id: req.params.chat_id, $or: [{ userOne: req.user.id }, { userTwo: req.user.id }] });
+		const chat = await Chat.findOne({
+			_id: req.params.chat_id,
+			$or: [{ userOne: req.user.id }, { userTwo: req.user.id }],
+		});
 		if (!chat) {
 			return res.status(400).json({
 				message: 'Chat not found.',
@@ -168,7 +174,10 @@ router.delete('/:chat_id', auth, async (req, res) => {
 
 router.post('/:chat_id/messages', auth, async (req, res) => {
 	try {
-		const chat = await Chat.findOne({ _id: req.params.chat_id, $or: [{ userOne: req.user.id }, { userTwo: req.user.id }] });
+		const chat = await Chat.findOne({
+			_id: req.params.chat_id,
+			$or: [{ userOne: req.user.id }, { userTwo: req.user.id }],
+		});
 		if (!chat) {
 			return res.status(400).json({
 				message: 'Chat not found.',
@@ -206,40 +215,60 @@ router.post('/:chat_id/messages', auth, async (req, res) => {
 /**
  * @name GET /{chat_id}
  * @desc get a specified number of messages of a chat in descending order
- * @params limit = the number of messages to send back, skip = the number of messages to skip
+ * @params limit = the number of messages to send back, skip = the number of
+ * messages to skip
  * @access private
  * @memberof chat
  */
 
 router.get('/:chat_id/messages', auth, async (req, res) => {
 	try {
-		const chat = await Chat.findOne({ _id: req.params.chat_id, $or: [{ userOne: req.user.id }, { userTwo: req.user.id }] });
+		const chat = await Chat.findOne({
+			_id: req.params.chat_id,
+			$or: [{ userOne: req.user.id }, { userTwo: req.user.id }],
+		});
 		if (!chat) {
 			return res.status(400).json({
 				message: 'Chat not found.',
 			});
 		}
-		//Check for required query params
+		// Check for required query params
 		const limit = req.query.limit === undefined ? 10 : parseInt(req.query.limit);
 		const skip = req.query.skip === undefined ? 0 : parseInt(req.query.skip);
 
-		console.log(limit, skip);
-		await chat
-			.populate({
-				path: 'messages',
-				options: {
-					limit,
-					skip,
+		const messages = Chat.aggregate([
+			{
+				$match: { _id: mongoose.Types.ObjectId(req.params.chat_id) },
+			},
+			{
+				$lookup: {
+					from: 'messages',
+					localField: '_id',
+					foreignField: 'chat',
+					as: 'messages',
 				},
-			})
-			.execPopulate();
-
-		console.log(chat.messages);
-		res.json({
-			messages: chat.messages,
+			},
+			{ $unwind: '$messages' },
+			{
+				$sort: { 'messages.createdAt': -1 },
+			},
+			{
+				$limit: limit,
+			},
+			{
+				$skip: skip,
+			},
+			{
+				$sort: { 'messages.createdAt': 1 },
+			},
+		]).exec((error, chats) => {
+			const selectedMessages = chats.map((chat) => chat.messages);
+			res.json({
+				messages: selectedMessages,
+			});
 		});
 	} catch (error) {
-		console.error(error.name);
+		console.error(error);
 		if (error.name === 'CastError') {
 			return res.status(400).json({
 				message: 'Chat not found.',

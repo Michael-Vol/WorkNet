@@ -62,7 +62,6 @@ export const addNewMessage = async (message, chatId) => {
 		};
 		const body = JSON.stringify({ body: message });
 
-		console.log(body, chatId);
 		const res = await axios.post(`/chats/${chatId}/messages`, body, config);
 
 		return {
