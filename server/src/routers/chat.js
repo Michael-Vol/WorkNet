@@ -56,6 +56,7 @@ router.post('/', auth, async (req, res) => {
 		res.status(201).json({
 			message: 'Chat created.',
 			chat_id: chat._id,
+			user_id: user,
 		});
 	} catch (error) {
 		console.error(error.name);
@@ -75,19 +76,26 @@ router.post('/', auth, async (req, res) => {
 
 router.get('/', auth, async (req, res) => {
 	try {
-		const chats = await Chat.find({ $or: [{ userOne: req.user.id }, { userTwo: req.user.id }] });
+		let chats = await Chat.find({ $or: [{ userOne: req.user.id }, { userTwo: req.user.id }] });
+
+		chats = await Promise.all(
+			chats.map(async (chat) => {
+				const fieldToPopulate = chat.userOne.equals(req.user.id) ? 'userTwo' : 'userOne';
+				await chat.populate(fieldToPopulate).execPopulate();
+				return chat;
+			})
+		);
 		res.json({
 			chats,
 		});
 	} catch (error) {
-		console.error(error.name);
+		console.error(error);
 
 		res.status(500).json({
 			message: 'Server Error',
 		});
 	}
 });
-
 /**
  * @name GET /{chat_id}
  * @desc retrieve the data of a  chat

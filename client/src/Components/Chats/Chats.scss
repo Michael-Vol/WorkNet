@@ -2,14 +2,14 @@
 
 .user--flex--container {
 	background-color: $color-base-secondary;
-	height: 92vh;
+	height: 91vh;
 	border-right: 5px solid $color-base;
 	overflow-y: scroll;
 }
 
 .chats--flex--container {
 	background-color: $color-white-secondary;
-	height: 92vh;
+	height: 91vh;
 	overflow-y: scroll;
 }
 
@@ -30,6 +30,7 @@
 }
 .chat--body--container {
 	height: 80%;
+	width: 100%;
 	padding: 10px;
 	background-color: #fff;
 	overflow-y: scroll;
@@ -38,13 +39,13 @@
 	padding: 0px 30px 0px 30px;
 }
 .text--input--group {
-	margin-top: 20px;
+	margin-top: 10px;
 	border-radius: 10px;
 	background-color: #fff;
 }
 
 .send--message--container {
-	margin: 30px;
+	margin: 20px;
 }
 .send--message--btn {
 	float: right;
@@ -54,11 +55,20 @@
 	margin-left: 10px;
 }
 
+.create--chat--container {
+	max-height: 70vh;
+	overflow-y: auto;
+}
 .user--flex--container::-webkit-scrollbar,
-.chat--body--container::-webkit-scrollbar {
-	display: none !important; /* for Chrome, Safari, and Opera */
+.chat--body--container::-webkit-scrollbar,
+.create--chat--container::-webkit-scrollbar {
+	display: none; /* for Chrome, Safari, and Opera */
 }
 
 * {
 	-ms-overflow-style: none;
+}
+
+.new--chat--container {
+	margin: 10px;
 }
