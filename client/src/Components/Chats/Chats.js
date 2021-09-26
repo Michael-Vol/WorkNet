@@ -122,6 +122,7 @@ const Chats = () => {
 					},
 				]);
 			});
+			await fetchChats();
 		}
 	}, [user, messages]);
 
@@ -157,7 +158,7 @@ const Chats = () => {
 				{chats &&
 					chats.map((chat, index) => {
 						const friend = typeof chat.userOne === 'string' ? chat.userTwo : chat.userOne;
-						return <UserItem user={friend} key={index} />;
+						return <UserItem chat={chat} user={friend} key={index} />;
 					})}
 			</FlexboxGrid.Item>
 			<FlexboxGrid.Item colspan={19} className='chats--flex--container'>

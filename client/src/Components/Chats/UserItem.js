@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Avatar, Badge } from 'rsuite';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAvatar } from '../../Actions/posts';
 
 import './UserItem.scss';
 
-const UserItem = ({ user, chatActive, userActive = false }) => {
+const UserItem = ({ chat, user, chatActive, userActive = false }) => {
 	const history = useHistory();
 	const dispatch = useDispatch();
+	const me = useSelector((state) => state.auth.user);
 
 	const [avatar, setAvatar] = useState(null);
 
@@ -34,7 +35,13 @@ const UserItem = ({ user, chatActive, userActive = false }) => {
 				<Col md={14} className='user--name--container'>
 					<Row> {user.firstName.concat(' ').concat(user.lastName)}</Row>
 					<Row className='text--preview'>
-						<Col>Sample Message</Col>
+						<Col>
+							{me && chat && chat.lastMessage && (
+								<span>
+									{chat.lastMessage.sender === me._id ? 'You' : user.firstName} : {chat.lastMessage.body}
+								</span>
+							)}
+						</Col>
 					</Row>
 				</Col>
 			</Row>

@@ -82,9 +82,13 @@ router.get('/', auth, async (req, res) => {
 			chats.map(async (chat) => {
 				const fieldToPopulate = chat.userOne.equals(req.user.id) ? 'userTwo' : 'userOne';
 				await chat.populate(fieldToPopulate).execPopulate();
+				await chat.populate('messages').execPopulate();
+				chat.messages.length > 0 ? (chat.lastMessage = chat.messages[chat.messages.length - 1]) : (chat.lastMessage = {});
+				await chat.save();
 				return chat;
 			})
 		);
+
 		res.json({
 			chats,
 		});
