@@ -16,7 +16,23 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 	const reactionsUpdated = useSelector((state) => state.posts.reactionsUpdated);
 
 	const dispatch = useDispatch();
-
+	console.log(user);
+	const adminLinks = (
+		<div>
+			<Nav.Item href='/adminpanel' className='link'>
+				Administrator Panel
+			</Nav.Item>
+			<Nav.Item
+				href='/'
+				className='link'
+				onSelect={() => {
+					localStorage.removeItem('token');
+				}}>
+				<i className='fas fa-sign-out-alt nav-icon'></i>
+				Logout
+			</Nav.Item>
+		</div>
+	);
 	const guestLinks = (
 		<div>
 			<Nav.Item href='/login' className='link'>
@@ -85,7 +101,7 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 			</Nav.Item>
 			{selectNotifications && <Notifications />}
 			<Nav.Item
-				href='/settings'
+				href='/'
 				className='link'
 				onSelect={() => {
 					localStorage.removeItem('token');
@@ -106,7 +122,7 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 				<Navbar.Body>
 					<FlexboxGrid justify='end'>
 						<Nav onSelect={onSelect} activeKey={activeKey}>
-							<Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
+							<Fragment>{isAuthenticated && user ? (user.isAdmin ? adminLinks : authLinks) : guestLinks}</Fragment>
 						</Nav>
 					</FlexboxGrid>
 				</Navbar.Body>
