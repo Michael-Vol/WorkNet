@@ -16,7 +16,6 @@ const NavBar = ({ onSelect, activeKey, ...props }) => {
 	const reactionsUpdated = useSelector((state) => state.posts.reactionsUpdated);
 
 	const dispatch = useDispatch();
-	console.log(user);
 	const adminLinks = (
 		<div>
 			<Nav.Item href='/adminpanel' className='link'>

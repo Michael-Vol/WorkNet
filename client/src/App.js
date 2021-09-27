@@ -11,11 +11,13 @@ import { Container, Header } from 'rsuite';
 import axios from 'axios';
 import { loadUser } from './Actions/auth';
 import PrivateRoute from './Components/Routing/PrivateRoute';
+import AdminRoute from './Components/Routing/AdminRoute';
 import PersonalInfo from './Components/PersonalInfo/PersonalInfo';
 import Network from './Components/Network/Network';
 import Profile from './Components/Profile/Profile';
 import Jobs from './Components/Jobs/Jobs';
 import Chats from './Components/Chats/Chats';
+import AdminPanel from './Components/Admin/AdminPanel';
 import { useDispatch } from 'react-redux';
 import './App.scss';
 
@@ -43,6 +45,7 @@ const App = (props) => {
 					<PrivateRoute exact path='/users/:user_id/profile' component={Profile} />
 					<PrivateRoute exact path='/jobs' component={Jobs} />
 					<PrivateRoute path='/chats' component={Chats} />
+					<AdminRoute path='/adminpanel' component={AdminPanel} />
 				</Switch>
 			</Container>
 		</Router>
