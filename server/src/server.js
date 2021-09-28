@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 5000;
 
 //Serve up React Static Files
 console.log(path.join(__dirname, '..', '..', 'client/build'));
-app.use(express.static(path.join(__dirname, '..', '..', 'client/build')));
+// app.use(express.static(path.join(__dirname, '..', '..', 'client/build')));
 
 //Use json body parser
 app.use(express.json());
@@ -42,6 +42,9 @@ app.use('/api/jobs', jobsRouter);
 // 	console.log(url);
 // 	res.sendFile(url);
 // });
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dirname, '../../client/build/index.html'));
+});
 server.listen(PORT, () => {
 	console.log(`Server is up on port ${PORT}`);
 });
