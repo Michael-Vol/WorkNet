@@ -7,7 +7,7 @@ const initialState = {
 	skills: null,
 	loading: true,
 	error: null,
-};
+}; //define initial state
 
 const personalInfo = function (state = initialState, action) {
 	const { type, payload } = action;
