@@ -34,14 +34,6 @@ app.use('/api/posts', postRouter);
 app.use('/api/chats', chatRouter);
 app.use('/api/jobs', jobsRouter);
 
-//Catch-all handler
-// app.get('*', (req, res) => {
-// 	let url = path.join(__dirname, '..', '..', 'client/build', 'index.html');
-// 	console.log(url);
-// 	if (!url.startsWith('/app/')) url = url.substring(1);
-// 	console.log(url);
-// 	res.sendFile(url);
-// });
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });

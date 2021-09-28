@@ -25,7 +25,6 @@ const FriendItem = ({ friend }) => {
 	}, [user]);
 
 	const redirectToProfile = () => {
-		console.log(friend._id);
 		// history.push(`/users/${friend._id}/profile`);
 	};
 	return (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './Chats.scss';
-import { Row, Col, FlexboxGrid, Avatar, Button, Input, InputGroup, Modal } from 'rsuite';
+import { Row, Col, FlexboxGrid, Avatar, Button, Input, InputGroup, Modal, Container } from 'rsuite';
 import UserItem from './UserItem';
 import Message from './Message';
 import { useSelector } from 'react-redux';
@@ -35,6 +35,9 @@ const Chats = () => {
 	const [noPreviousMessages, setNoPreviousMessages] = useState(false);
 	const [activeUserId, setActiveUserId] = useState('');
 	const [onlineUsers, setOnlineUsers] = useState([]);
+	const [typingTimer, setTypingTimer] = useState(null);
+	const [amTyping, setAmTyping] = useState(false);
+	const [friendTyping, setFriendTyping] = useState(false);
 	const socketRef = useRef();
 
 	const fetchConnectedUsers = async () => {
@@ -79,6 +82,29 @@ const Chats = () => {
 			sendMessage();
 		}
 	};
+	const handleKeyUp = (e) => {
+		window.clearTimeout(typingTimer);
+		setTypingTimer(
+			window.setTimeout(() => {
+				setAmTyping(false);
+			}, 1000)
+		);
+	};
+	const handleKeyPress = (e) => {
+		if (e.key !== 'Enter') {
+			window.clearTimeout(typingTimer);
+			setAmTyping(true);
+		}
+	};
+	useEffect(() => {
+		if (socketRef.current) {
+			if (amTyping) {
+				socketRef.current.emit('amTyping', { receiver: activeUserId }, (error) => console.log(error));
+			} else {
+				socketRef.current.emit('amNotTyping', { receiver: activeUserId }, (error) => console.log(error));
+			}
+		}
+	}, [amTyping]);
 	const changeActiveUser = (id) => {
 		setPreviousMessages([]);
 		setMessages([]);
@@ -137,7 +163,7 @@ const Chats = () => {
 
 	useEffect(async () => {
 		if (user) {
-			const newSocket = io({
+			const newSocket = io('http://localhost:5000/', {
 				transports: ['websocket'],
 			});
 			socketRef.current = newSocket;
@@ -145,14 +171,17 @@ const Chats = () => {
 				console.log(error);
 			});
 			socketRef.current.on('userOnline', (receivedOnlineUsers) => {
-				console.log(receivedOnlineUsers);
 				setOnlineUsers(receivedOnlineUsers);
 			});
 			socketRef.current.on('userOffline', (receivedOnlineUsers) => {
-				console.log(receivedOnlineUsers);
 				setOnlineUsers(receivedOnlineUsers);
 			});
-
+			socketRef.current.on('isTyping', () => {
+				setFriendTyping(true);
+			});
+			socketRef.current.on('isNotTyping', () => {
+				setFriendTyping(false);
+			});
 			await fetchConnectedUsers();
 			await fetchChats();
 		}
@@ -223,7 +252,15 @@ const Chats = () => {
 						messages.map((message, index) => {
 							return <Message message={message} key={index} mine={message.creator === 'me'} />;
 						})}
+					{previousMessages.length > 0 && friendTyping && (
+						<div className='typing-indicator clearfix'>
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+					)}
 				</ScrollToBottom>
+
 				<Row className='chat--footer--container'>
 					<Col className='text--input--container'>
 						<InputGroup className='text--input--group'>
@@ -233,6 +270,8 @@ const Chats = () => {
 								placeholder='Write a message...'
 								onChange={(value) => setMessage(value)}
 								onKeyDown={(e) => handleKeyDown(e)}
+								onKeyPress={(e) => handleKeyPress(e)}
+								onKeyUp={(e) => handleKeyUp(e)}
 							/>
 							<Button
 								className='send--message--btn'

@@ -51,7 +51,6 @@ const ActionCell = ({ rowData, dataKey, users, checkedKeys, ...props }) => {
 	const renderMenu = ({ onClose, left, top, className }, ref) => {
 		const handleSelect = (eventKey) => {
 			onClose();
-			console.log(eventKey);
 			const data = users.filter((user) => checkedKeys.includes(user._id));
 			if (data.length === 0) {
 				return toast.error('Please select user(s) to export');

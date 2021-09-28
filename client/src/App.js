@@ -25,7 +25,6 @@ const App = (props) => {
 	axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || 'https://michaelvol-worknet.herokuapp.com/api';
 	const dispatch = useDispatch();
 	useEffect(async () => {
-		console.log(process.env.REACT_APP_BASE_URL);
 		const res = await loadUser();
 		dispatch(res);
 	}, []);

@@ -18,6 +18,16 @@ const generateChat = (server) => {
 			const userSocketId = getSocket(receiver);
 			socket.broadcast.to(userSocketId).emit('message', message);
 		});
+		socket.on('amTyping', ({ receiver }) => {
+			const userSocketId = getSocket(receiver);
+
+			socket.broadcast.to(userSocketId).emit('isTyping');
+		});
+		socket.on('amNotTyping', ({ receiver }) => {
+			const userSocketId = getSocket(receiver);
+
+			socket.broadcast.to(userSocketId).emit('isNotTyping');
+		});
 		socket.on('disconnect', () => {
 			const userId = getUser(socket.id);
 			console.log(`User ${userId} left`);
