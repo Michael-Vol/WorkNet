@@ -25,7 +25,6 @@ const generateChat = (server) => {
 		});
 		socket.on('amNotTyping', ({ receiver }) => {
 			const userSocketId = getSocket(receiver);
-
 			socket.broadcast.to(userSocketId).emit('isNotTyping');
 		});
 		socket.on('disconnect', () => {

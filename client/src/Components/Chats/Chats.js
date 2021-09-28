@@ -163,9 +163,10 @@ const Chats = () => {
 
 	useEffect(async () => {
 		if (user) {
-			const newSocket = io('http://localhost:5000/', {
-				transports: ['websocket'],
-			});
+			let newSocket;
+			process.env.REACT_APP_WEBSOCKET_URL
+				? (newSocket = io(process.env.REACT_APP_WEBSOCKET_URL, { transports: ['websocket'] }))
+				: (newSocket = io({ transports: ['websocket'] }));
 			socketRef.current = newSocket;
 			socketRef.current.emit('join', { userId: user._id }, (error) => {
 				console.log(error);
