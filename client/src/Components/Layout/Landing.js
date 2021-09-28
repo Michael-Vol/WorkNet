@@ -1,12 +1,12 @@
 import React from 'react';
 import { Button, ButtonToolbar } from 'rsuite';
 import { Grid, Row, Col, Container, Content } from 'rsuite';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import './Landing.scss';
 const Landing = (props) => {
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
+	const history = useHistory();
 	if (isAuthenticated) {
 		return <Redirect to='/dashboard' />;
 	}
@@ -22,11 +22,12 @@ const Landing = (props) => {
 				</Row>
 				<Row className='show-grid'>
 					<ButtonToolbar>
-						<Button size='lg' className='landing__btn'>
-							<Link to='/login'>Login</Link>
+						<Button size='lg' className='landing__btn' onClick={() => history.push('/login')}>
+							{/* <Link to='/login'>Login</Link> */}
+							<span className='auth--btn'> Login</span>
 						</Button>
-						<Button size='lg' className='landing__btn'>
-							<Link to='/register'>Register</Link>
+						<Button size='lg' className='landing__btn' onClick={() => history.push('/register')}>
+							<span className='auth--btn'> Register</span>
 						</Button>
 					</ButtonToolbar>
 				</Row>
