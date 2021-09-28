@@ -137,7 +137,7 @@ const Chats = () => {
 
 	useEffect(async () => {
 		if (user) {
-			const newSocket = io(process.env.REACT_APP_BASE_URL || 'https://michaelvol-worknet.herokuapp.com/api', {
+			const newSocket = io({
 				transports: ['websocket'],
 			});
 			socketRef.current = newSocket;
