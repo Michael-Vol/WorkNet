@@ -36,7 +36,7 @@ app.use('/api/jobs', jobsRouter);
 
 //Catch-all handler
 app.get('*', (req, res) => {
-	let url = path.join(__dirname, '../client/build', 'index.html');
+	let url = path.join(__dirname, '..', '..', 'client/build', 'index.html');
 	if (!url.startsWith('/app/'))
 		// since we're on local windows
 		url = url.substring(1);
