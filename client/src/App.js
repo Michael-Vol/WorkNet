@@ -22,7 +22,7 @@ import { useDispatch } from 'react-redux';
 import './App.scss';
 
 const App = (props) => {
-	axios.defaults.baseURL = 'http://localhost:5000';
+	axios.defaults.baseURL = 'https://localhost:5000';
 	const dispatch = useDispatch();
 	useEffect(async () => {
 		const res = await loadUser();

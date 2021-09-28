@@ -1,19 +1,31 @@
 const express = require('express');
 const app = express();
+const fs = require('fs');
 const connectDB = require('./config/db');
 const userRouter = require('./routers/user');
 const postRouter = require('./routers/post');
 const chatRouter = require('./routers/chat');
 const jobsRouter = require('./routers/jobs');
 const cors = require('cors');
-const http = require('http');
+const https = require('https');
 const generateChat = require('./chat/socket');
-
+const dotenv = require('dotenv');
+const path = require('path');
+dotenv.config({
+	path: path.resolve(__dirname, './config/.env'),
+});
 //Connect to Database
 connectDB();
 
 //Generate Chat Socket
-const server = http.createServer(app);
+const server = https.createServer(
+	{
+		key: fs.readFileSync('key.pem'),
+		cert: fs.readFileSync('cert.pem'),
+		passphrase: process.env.HTTPS_PASSPHRASE,
+	},
+	app
+);
 generateChat(server);
 
 const PORT = process.env.PORT || 5000;
