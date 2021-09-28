@@ -20,7 +20,8 @@ generateChat(server);
 const PORT = process.env.PORT || 5000;
 
 //Serve up React Static Files
-app.use(express.static(path.join(__dirname, '../client/build')));
+console.log(path.join(__dirname, '..', '..', 'client/build'));
+app.use(express.static(path.join(__dirname, '..', '..', 'client/build')));
 
 //Use json body parser
 app.use(express.json());
@@ -35,9 +36,9 @@ app.use('/api/jobs', jobsRouter);
 
 //Catch-all handler
 
-app.get('*', (req, res) => {
-	res.sendFile(path.join(__dirname, '..', '..', 'client/build/index.html'));
-});
+// app.get('*', (req, res) => {
+// 	res.sendFile(path.join(__dirname, '..', '..', 'client/build/index.html'));
+// });
 
 server.listen(PORT, () => {
 	console.log(`Server is up on port ${PORT}`);
