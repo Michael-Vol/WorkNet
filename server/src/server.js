@@ -35,13 +35,13 @@ app.use('/api/chats', chatRouter);
 app.use('/api/jobs', jobsRouter);
 
 //Catch-all handler
-app.get('*', (req, res) => {
-	let url = path.join(__dirname, '..', '..', 'client/build', 'index.html');
-	if (!url.startsWith('/app/'))
-		// since we're on local windows
-		url = url.substring(1);
-	res.sendFile(url);
-});
+// app.get('*', (req, res) => {
+// 	let url = path.join(__dirname, '..', '..', 'client/build', 'index.html');
+// 	console.log(url);
+// 	if (!url.startsWith('/app/')) url = url.substring(1);
+// 	console.log(url);
+// 	res.sendFile(url);
+// });
 server.listen(PORT, () => {
 	console.log(`Server is up on port ${PORT}`);
 });
