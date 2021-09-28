@@ -123,7 +123,13 @@ router.get('/personalized', auth, async (req, res) => {
 				return posts;
 			})
 		);
-
+		//Remove Duplicates from posts array
+		posts = posts.reduce((unique, value) => {
+			if (!unique.some((post) => post._id.equals(value._id))) {
+				unique.push(value);
+			}
+			return unique;
+		}, []);
 		res.json({ posts });
 	} catch (error) {
 		console.error(error.name);
