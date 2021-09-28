@@ -18,24 +18,3 @@
 .user--name--container {
 	font-size: 16px;
 }
-
-.user--active {
-	background-color: darken($color-white-secondary, 10%);
-}
-
-.text--preview {
-	font-size: 12px;
-	margin-top: 5px;
-	color: $color-grey;
-}
-
-.user--online {
-	background-color: rgb(1, 201, 134);
-}
-
-.user--offline {
-	background-color: $color-grey;
-}
-
-.last--message {
-}

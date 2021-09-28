@@ -21,22 +21,14 @@ const Landing = (props) => {
 					<h3 className='landing__subtitle'>The Social Network for Professionals</h3>
 				</Row>
 				<Row className='show-grid'>
-					{/* <Col xs={3}> */}
 					<ButtonToolbar>
 						<Button size='lg' className='landing__btn'>
-							{/* <span className='btn'> */}
 							<Link to='/login'>Login</Link>
-							{/* </span> */}
 						</Button>
-						{/* </Col> */}
-						{/* <Col xs={3}> */}
 						<Button size='lg' className='landing__btn'>
-							{/* <span className='btn'> */}
 							<Link to='/register'>Register</Link>
-							{/* </span> */}
 						</Button>
 					</ButtonToolbar>
-					{/* </Col> */}
 				</Row>
 			</Grid>
 		</Content>

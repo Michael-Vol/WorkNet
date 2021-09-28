@@ -20,6 +20,7 @@ import {
 } from 'rsuite';
 const Login = () => {
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+	const user = useSelector((state) => state.auth.user);
 	const [loginData, setLoginData] = useState({
 		email: '',
 		password: '',
@@ -34,8 +35,9 @@ const Login = () => {
 	if (cancel) {
 		return <Redirect to='/' />;
 	}
-	if (isAuthenticated) {
-		return <Redirect to='/dashboard' />;
+	if (isAuthenticated && user) {
+		const link = user.isAdmin ? '/adminpanel' : '/dashboard';
+		return <Redirect to={link} />;
 	}
 	const { StringType } = Schema.Types;
 	const model = Schema.Model({

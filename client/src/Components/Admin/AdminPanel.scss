@@ -1,0 +1,33 @@
+@import '../../Styles/main';
+
+.admin--panel--container {
+	background-color: $color-white-secondary;
+	height: 90vh;
+	margin-top: 10px;
+	border-radius: 10px;
+	padding: 30px;
+}
+
+.panel--header--container {
+	font-size: 24px;
+	color: $color-base;
+}
+.header--divider {
+	height: 3px;
+	background-color: $color-base;
+}
+.table--container {
+	margin-top: 20px;
+}
+.dropdown--item {
+	font-size: 16px;
+	color: $color-base;
+}
+
+.profile--link {
+	font-size: 14px;
+}
+
+.profile--cell {
+	margin-top: 5px;
+}

@@ -83,8 +83,8 @@ router.get('/me', auth, async (req, res) => {
 router.get('/', auth, async (req, res) => {
 	try {
 		req.query.personalInfo
-			? (selectFields = 'firstName lastName email workExperience education skills avatar')
-			: (selectFields = 'firstName lastName email avatar');
+			? (selectFields = 'firstName lastName email workExperience education skills avatar phoneNumber')
+			: (selectFields = 'firstName lastName email avatar phoneNumber');
 
 		const users = await User.find({}).select(selectFields);
 		if (req.query.personalInfo) {
@@ -167,7 +167,6 @@ router.post('/me', auth, async (req, res) => {
 
 router.post('/me/personal-info', auth, async (req, res) => {
 	try {
-		console.log(req.body);
 		const allowedUpdates = ['workExperience', 'education', 'skills'];
 		const userUpdates = Object.keys(req.body);
 		userUpdates.forEach((update) => {
@@ -311,7 +310,6 @@ router.post(
 				.png()
 				.toBuffer();
 			req.user.avatar = avatarBuffer;
-			console.log(req.user);
 			await req.user.save();
 			res.set('Content-Type', 'image/png');
 			res.send(req.user.avatar);
@@ -411,7 +409,6 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 				message: 'Request already sent',
 			});
 		}
-		console.log(connectRequest);
 		connectRequest = new ConnectRequest({
 			sender: senderID,
 			receiver: receiverID,
@@ -449,7 +446,6 @@ router.get('/me/connected_users', auth, async (req, res) => {
 				let userId = '';
 				if (!req.user._id.equals(request.sender)) {
 					userId = request.sender;
-					console.log(req.user._id, request.sender, request.receiver, userId);
 				} else {
 					userId = request.receiver;
 				}
@@ -478,13 +474,11 @@ router.get('/me/connect', auth, async (req, res) => {
 	try {
 		if (req.query.status) {
 			const requests = await ConnectRequest.find({ receiver: req.user._id, status: req.query.status }).populate('sender');
-			console.log(requests);
 			return res.json({
 				requests,
 			});
 		} else {
 			const requests = await ConnectRequest.find({ receiver: req.user._id }).populate('sender');
-			console.log(requests);
 
 			return res.json({
 				requests,
@@ -612,7 +606,6 @@ router.get('/:user_id/connect/status', auth, validateUserID, async (req, res) =>
 			});
 		}
 
-		console.log('request', connectRequest);
 		return res.json({
 			status: connectRequest.status,
 			requestID: connectRequest._id,
@@ -666,8 +659,8 @@ router.get('/:user_id/friends', auth, async (req, res) => {
 				message: 'No User found',
 			});
 		}
-		//check if current user is friends with requested user to set friends visibility
-		const isFriend = req.user.friends.includes(req.params.user_id);
+		//check if current user is friends with requested user to set friends visibility (except admin)
+		const isFriend = req.user.isAdmin || req.user.friends.includes(req.params.user_id);
 		let friends = [];
 
 		if (!isFriend) {
