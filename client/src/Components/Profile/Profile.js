@@ -86,9 +86,9 @@ const Profile = () => {
 								{personalInfo.name} hasn't posted any info on Work Experience.
 							</div>
 						) : (
-							personalInfo.workExperience.map((work) => (
+							personalInfo.workExperience.map((work, index) => (
 								<List>
-									<List.Item className='item--container work--container'>
+									<List.Item className='item--container work--container' key={index}>
 										<div>
 											<div className='list--item--header'>
 												Work Title: {work.name}
@@ -204,7 +204,7 @@ const Profile = () => {
 									<Button
 										className={`connect-btn ${requestButtonStatus}`}
 										appearance='primary'
-										disabled={requestStatus !== ''}
+										disabled={requestStatus !== '' || user.isAdmin}
 										onClick={() => {
 											connectWithUser();
 										}}>

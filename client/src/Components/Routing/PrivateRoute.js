@@ -11,7 +11,7 @@ const PrivateRoute = ({ component: Component }) => {
 			<Route
 				render={(props) =>
 					isAuthenticated && user ? (
-						user.isAdmin ? (
+						user.isAdmin && !window.location.pathname.startsWith('/users/') ? (
 							<Redirect to='/adminpanel' />
 						) : (
 							<Component {...props} />

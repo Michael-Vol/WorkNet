@@ -83,8 +83,8 @@ router.get('/me', auth, async (req, res) => {
 router.get('/', auth, async (req, res) => {
 	try {
 		req.query.personalInfo
-			? (selectFields = 'firstName lastName email workExperience education skills avatar')
-			: (selectFields = 'firstName lastName email avatar');
+			? (selectFields = 'firstName lastName email workExperience education skills avatar phoneNumber')
+			: (selectFields = 'firstName lastName email avatar phoneNumber');
 
 		const users = await User.find({}).select(selectFields);
 		if (req.query.personalInfo) {
@@ -659,8 +659,8 @@ router.get('/:user_id/friends', auth, async (req, res) => {
 				message: 'No User found',
 			});
 		}
-		//check if current user is friends with requested user to set friends visibility
-		const isFriend = req.user.friends.includes(req.params.user_id);
+		//check if current user is friends with requested user to set friends visibility (except admin)
+		const isFriend = req.user.isAdmin || req.user.friends.includes(req.params.user_id);
 		let friends = [];
 
 		if (!isFriend) {
