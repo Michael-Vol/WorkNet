@@ -35,11 +35,13 @@ app.use('/api/chats', chatRouter);
 app.use('/api/jobs', jobsRouter);
 
 //Catch-all handler
-
-// app.get('*', (req, res) => {
-// 	res.sendFile(path.join(__dirname, '..', '..', 'client/build/index.html'));
-// });
-
+app.get('*', (req, res) => {
+	let url = path.join(__dirname, '../client/build', 'index.html');
+	if (!url.startsWith('/app/'))
+		// since we're on local windows
+		url = url.substring(1);
+	res.sendFile(url);
+});
 server.listen(PORT, () => {
 	console.log(`Server is up on port ${PORT}`);
 });
