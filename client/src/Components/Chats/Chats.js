@@ -137,7 +137,9 @@ const Chats = () => {
 
 	useEffect(async () => {
 		if (user) {
-			const newSocket = io('http://localhost:5000', { transports: ['websocket'] });
+			const newSocket = io(process.env.REACT_APP_BASE_URL || 'https://michaelvol-worknet.herokuapp.com/api', {
+				transports: ['websocket'],
+			});
 			socketRef.current = newSocket;
 			socketRef.current.emit('join', { userId: user._id }, (error) => {
 				console.log(error);
