@@ -26,7 +26,7 @@
 .landing--background {
 	// background:
 	background-image: $color-teal-gradient-opaque, url(/Images/landing-background-vector.jpg);
-	 background-size:  cover;
+	background-size: cover;
 }
 
 .show-grid {
@@ -35,4 +35,9 @@
 
 .landing--grid {
 	margin-top: 10%;
+}
+
+.auth--btn {
+	font-size: 20px;
+	color: $color-base;
 }
