@@ -7,6 +7,7 @@ const chatRouter = require('./routers/chat');
 const jobsRouter = require('./routers/jobs');
 const cors = require('cors');
 const http = require('http');
+const path = require('path');
 const generateChat = require('./chat/socket');
 
 //Connect to Database
@@ -18,16 +19,25 @@ generateChat(server);
 
 const PORT = process.env.PORT || 5000;
 
+//Serve up React Static Files
+app.use(express.static(path.join(__dirname, '../client/build')));
+
 //Use json body parser
 app.use(express.json());
 //Setup CORS for Cross-Origin
 app.use(cors());
 //Setup Routes
 
-app.use('/users', userRouter);
-app.use('/posts', postRouter);
-app.use('/chats', chatRouter);
-app.use('/jobs', jobsRouter);
+app.use('/api/users', userRouter);
+app.use('/api/posts', postRouter);
+app.use('/api/chats', chatRouter);
+app.use('/api/jobs', jobsRouter);
+
+//Catch-all handler
+
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dirname + '../client/build/index.html'));
+});
 
 server.listen(PORT, () => {
 	console.log(`Server is up on port ${PORT}`);
