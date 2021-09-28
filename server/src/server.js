@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 5000;
 
 //Serve up React Static Files
 console.log(path.join(__dirname, '..', '..', 'client/build'));
-// app.use(express.static(path.join(__dirname, '..', '..', 'client/build')));
+app.use(express.static(path.join(__dirname, '..', '..', 'client/build')));
 
 //Use json body parser
 app.use(express.json());
