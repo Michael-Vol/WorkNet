@@ -22,8 +22,7 @@ import { useDispatch } from 'react-redux';
 import './App.scss';
 
 const App = (props) => {
-	// axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || 'http://localhost:5000/api';
-	axios.defaults.baseURL = '/api';
+	axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || 'https://michaelvol-worknet.herokuapp.com/api';
 	const dispatch = useDispatch();
 	useEffect(async () => {
 		console.log(process.env.REACT_APP_BASE_URL);

@@ -43,6 +43,7 @@ const Dashboard = () => {
 	const fetchPosts = async () => {
 		const res = await getPosts();
 		dispatch(res);
+		console.log(res.payload);
 	};
 	const fetchUsers = async () => {
 		const res = await getUsers();
