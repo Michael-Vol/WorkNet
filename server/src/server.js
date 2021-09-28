@@ -7,25 +7,18 @@ const postRouter = require('./routers/post');
 const chatRouter = require('./routers/chat');
 const jobsRouter = require('./routers/jobs');
 const cors = require('cors');
-const https = require('https');
+const http = require('http');
 const generateChat = require('./chat/socket');
 const dotenv = require('dotenv');
 const path = require('path');
-dotenv.config({
-	path: path.resolve(__dirname, './config/.env'),
-});
+// dotenv.config({
+// 	path: path.resolve(__dirname, './config/.env'),
+// });
 //Connect to Database
 connectDB();
 
 //Generate Chat Socket
-const server = https.createServer(
-	{
-		key: fs.readFileSync('key.pem'),
-		cert: fs.readFileSync('cert.pem'),
-		passphrase: process.env.HTTPS_PASSPHRASE,
-	},
-	app
-);
+const server = http.createServer(app);
 generateChat(server);
 
 const PORT = process.env.PORT || 5000;

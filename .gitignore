@@ -1,6 +1,7 @@
 server/node_modules/
 server/src/config/.env
 client/node_modules/
+client/.env
 node_modules
 src/config/.env
 server/cert.pem
