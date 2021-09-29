@@ -85,15 +85,15 @@ const PostItem = ({ post, index }) => {
 				{imageConverted && post.image && <img className='post--image' src={`data:image/png;base64,${post.image.data}`} />}{' '}
 			</Row>
 			{post.includesVideo && (
-				<Row className='video-player'>
-					<ReactPlayer
-						controls
-						playing
-						muted
-						className='react-player'
-						url={`https://${process.env.REACT_APP_AWS_BUCKET_NAME}.s3.${process.env.REACT_APP_AWS_BUCKET_REGION}.amazonaws.com/${post.videoFileName}`}
-					/>
-				</Row>
+				<ReactPlayer
+					controls
+					playing
+					muted
+					width='100%'
+					height='100%'
+					className='react-player'
+					url={`https://${process.env.REACT_APP_AWS_BUCKET_NAME}.s3.${process.env.REACT_APP_AWS_BUCKET_REGION}.amazonaws.com/${post.videoFileName}`}
+				/>
 			)}
 			<Row className='post--actions'>
 				<Col md={4}>

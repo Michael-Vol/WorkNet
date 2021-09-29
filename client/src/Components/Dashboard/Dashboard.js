@@ -6,7 +6,6 @@ import {
 	Form,
 	FormGroup,
 	Divider,
-	Grid,
 	Row,
 	Col,
 	FlexboxGrid,
@@ -145,11 +144,11 @@ const Dashboard = () => {
 
 	return (
 		<Container className='dashboard--container'>
-			<FlexboxGrid justify='start' className='dashboard--flex--container'>
-				<FlexboxGrid.Item colspan={3}>
+			<FlexboxGrid justify='space-between' className='dashboard--flex--container'>
+				<FlexboxGrid.Item as={Col} colspan={4} md={6}>
 					<SideNav />
 				</FlexboxGrid.Item>
-				<FlexboxGrid.Item colspan={17} className='container posts--container'>
+				<FlexboxGrid.Item colspan={14} md={6} as={Col} className='container posts--container'>
 					<Row className='container create--post--container'>
 						<Row className='new--post--header'>
 							<Col md={12}>
@@ -270,7 +269,7 @@ const Dashboard = () => {
 						)}
 					</Row>
 				</FlexboxGrid.Item>
-				<FlexboxGrid.Item colspan={3} className='users--list--container'>
+				<FlexboxGrid.Item as={Col} colspan={4} md={6} className='users--list--container'>
 					{users && users.map((user, index) => <UserItem user={user} key={index} />)}
 				</FlexboxGrid.Item>
 			</FlexboxGrid>
