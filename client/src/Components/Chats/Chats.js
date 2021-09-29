@@ -14,6 +14,7 @@ import SelectUserItem from './SelectUserItem';
 import { getChats, addNewMessage, getMessages } from '../../Actions/chat';
 import { getAvatar } from '../../Actions/posts';
 import { Link } from 'react-router-dom';
+
 const Chats = () => {
 	const dispatch = useDispatch();
 	const history = useHistory();
@@ -48,7 +49,7 @@ const Chats = () => {
 	const fetchChats = async () => {
 		const res = await getChats();
 		dispatch(res);
-		if (activeUserId === '') {
+		if (activeUserId === '' && res.payload.chats.length > 0) {
 			setActiveUserId(
 				typeof res.payload.chats[0].userOne === 'string'
 					? res.payload.chats[0].userTwo._id

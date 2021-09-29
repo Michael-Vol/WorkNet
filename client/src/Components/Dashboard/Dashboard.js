@@ -17,6 +17,7 @@ import {
 	Icon,
 	Schema,
 	Placeholder,
+	Progress,
 } from 'rsuite';
 import './Dashboard.scss';
 import { getPosts } from '../../Actions/posts';
@@ -26,6 +27,8 @@ import { addPost, getAvatar } from '../../Actions/posts';
 import PostItem from './PostItem';
 import { getUsers } from '../../Actions/users';
 import UserItem from './UserItem';
+import AWS from 'aws-sdk';
+
 const Dashboard = () => {
 	const formRef = useRef();
 	const dispatch = useDispatch();
@@ -39,7 +42,10 @@ const Dashboard = () => {
 		body: '',
 	});
 	const [formImage, setFormImage] = useState({});
-
+	const [formVideo, setFormVideo] = useState(null);
+	const [videoUploadPercentage, setVideoUploadPercentage] = useState(0);
+	const [videoStartedUploading, setVideoStartedUploading] = useState(false);
+	const [S3Client, setS3Client] = useState(null);
 	const fetchPosts = async () => {
 		const res = await getPosts();
 		dispatch(res);
@@ -50,12 +56,60 @@ const Dashboard = () => {
 		dispatch(res);
 	};
 
+	const uploadToAWS = async (file) => {
+		setVideoStartedUploading(true);
+		if (S3Client) {
+			const params = {
+				Bucket: process.env.REACT_APP_AWS_BUCKET_NAME,
+				Key: file.name,
+				Body: file.blobFile,
+			};
+			S3Client.putObject(params)
+				.on('httpUploadProgress', (evt) => {
+					setVideoUploadPercentage(Math.round((evt.loaded / evt.total) * 100));
+				})
+				.send((err) => {
+					if (err) console.log(err);
+				});
+		}
+	};
+	useEffect(() => {
+		if (videoUploadPercentage === 100) {
+			setTimeout(() => {
+				setVideoStartedUploading(false);
+			}, 1000);
+		}
+	});
 	useEffect(async () => {
 		if (user) {
 			await fetchPosts();
 			await fetchUsers();
+
+			AWS.config.update({
+				accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+				secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
+			});
+
+			const myBucket = new AWS.S3({
+				params: { Bucket: process.env.REACT_APP_AWS_BUCKET_NAME },
+				region: process.env.REACT_APP_AWS_BUCKET_REGION,
+			});
+			setS3Client(myBucket);
 		}
 	}, [user]);
+
+	useEffect(async () => {
+		if (!videoStartedUploading && formVideo) {
+			//upload rest post data
+			const res = await addPost({ ...formData, includesVideo: true, videoFileName: formVideo.name }, formImage);
+			setNewPost(false);
+			setVideoUploadPercentage(0);
+			setFormVideo(null);
+			dispatch(res);
+			await fetchPosts();
+		}
+	}, [videoStartedUploading]);
+
 	const { StringType } = Schema.Types;
 
 	const model = Schema.Model({
@@ -65,6 +119,9 @@ const Dashboard = () => {
 
 	const handleFormSubmit = async () => {
 		if (formRef.current.check()) {
+			if (formVideo) {
+				return uploadToAWS(formVideo);
+			}
 			setNewPost(false);
 			const res = await addPost(formData, formImage);
 			dispatch(res);
@@ -123,6 +180,7 @@ const Dashboard = () => {
 										</FormGroup>
 										<FormGroup className='form__image'>
 											<Uploader
+												className='image--uploader'
 												listType='picture'
 												multiple={false}
 												autoUpload={false}
@@ -134,6 +192,23 @@ const Dashboard = () => {
 													<Icon icon='camera-retro' size='lg' />
 												</button>
 											</Uploader>
+											<Uploader
+												autoUpload={false}
+												multiple={false}
+												listType='picture'
+												onChange={(fileList) => {
+													setFormVideo(fileList[0]);
+												}}>
+												<button>
+													<i className='fas fa-video fa-lg'></i>
+												</button>
+											</Uploader>
+											{videoStartedUploading && (
+												<Progress.Line
+													percent={videoUploadPercentage}
+													status={videoUploadPercentage < 100 ? 'active' : 'success'}
+												/>
+											)}
 										</FormGroup>
 										<FormGroup>
 											<ButtonToolbar className='add--post--toolbar'>

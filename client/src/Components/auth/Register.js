@@ -84,6 +84,10 @@ const Register = (props) => {
 			toast.error('Please upload an Avatar.');
 		} else {
 			const [firstName, lastName] = name.split(' ');
+			if (!lastName) {
+				setSubmitted(false);
+				return toast.error('Please provide a Full Name separated by spaces');
+			}
 			const res = await registerUser({ firstName, lastName, email, password, phone, avatar });
 			dispatch(res);
 		}

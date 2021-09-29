@@ -5,6 +5,8 @@ import Moment from 'react-moment';
 import { getAvatar, likePost, getPostLiked, getLikesCount, getComments, postComment } from '../../Actions/posts';
 import { useDispatch } from 'react-redux';
 import CommentItem from './CommentItem';
+import ReactPlayer from 'react-player/lazy';
+
 const PostItem = ({ post, index }) => {
 	const dispatch = useDispatch();
 	const [avatar, setAvatar] = useState([]);
@@ -82,6 +84,15 @@ const PostItem = ({ post, index }) => {
 			<Row className='post--image--container'>
 				{imageConverted && post.image && <img className='post--image' src={`data:image/png;base64,${post.image.data}`} />}{' '}
 			</Row>
+			{post.includesVideo && (
+				<ReactPlayer
+					controls
+					playing
+					muted
+					// width='100%'
+					url={`https://${process.env.REACT_APP_AWS_BUCKET_NAME}.s3.${process.env.REACT_APP_AWS_BUCKET_REGION}.amazonaws.com/${post.videoFileName}`}
+				/>
+			)}
 			<Row className='post--actions'>
 				<Col md={4}>
 					<Button appearance='ghost' className='like--btn' onClick={() => postLike()}>
