@@ -31,7 +31,7 @@ const upload = multer({
 router.post('/', auth, upload.single('image'), async (req, res) => {
 	try {
 		const { title, body } = req.body;
-
+		console.log(req.body);
 		if (body == '' || title == '') {
 			return res.status(400).send({
 				message: 'Cannot create an empty post.',
@@ -41,6 +41,8 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
 		const post = new Post({
 			title,
 			body,
+			includesVideo: req.body.includesVideo,
+			videoFileName: req.body.videoFileName,
 			creator: req.user._id,
 		});
 

@@ -17,6 +17,14 @@ const postSchema = new mongoose.Schema(
 		image: {
 			type: Buffer,
 		},
+		includesVideo: {
+			type: Boolean,
+			default: false,
+		},
+		videoFileName: {
+			type: String,
+			default: null,
+		},
 	},
 	{ timestamps: true }
 );
