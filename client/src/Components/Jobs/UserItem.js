@@ -3,7 +3,6 @@ import { Row, Col, Panel, Avatar, Button } from 'rsuite';
 import './UserItem.scss';
 import { getAvatar } from '../../Actions/posts';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { selectApplicant } from '../../Actions/jobs';
 const UserItem = ({ user, job }) => {
 	const dispatch = useDispatch();
@@ -18,8 +17,8 @@ const UserItem = ({ user, job }) => {
 		const res = await selectApplicant(job._id, user._id);
 		dispatch(res);
 	};
-	useEffect(async () => {
-		await fetchAvatar();
+	useEffect(() => {
+		fetchAvatar();
 	});
 
 	return (

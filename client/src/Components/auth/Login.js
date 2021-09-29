@@ -5,19 +5,7 @@ import { loginUser } from '../../Actions/auth';
 import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import {
-	Form,
-	FormGroup,
-	Button,
-	ButtonToolbar,
-	Schema,
-	Content,
-	FlexboxGrid,
-	Panel,
-	Loader,
-	ControlLabel,
-	FormControl,
-} from 'rsuite';
+import { Form, FormGroup, Button, ButtonToolbar, Schema, Content, FlexboxGrid, Panel, ControlLabel, FormControl } from 'rsuite';
 const Login = () => {
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 	const user = useSelector((state) => state.auth.user);

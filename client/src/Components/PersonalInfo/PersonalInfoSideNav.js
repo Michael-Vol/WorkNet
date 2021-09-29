@@ -1,7 +1,6 @@
 import React from 'react';
-import { Nav, Icon, Sidenav } from 'rsuite';
+import { Nav, Icon, Sidenav, Icon } from 'rsuite';
 import './PersonalInfoSideNav.scss';
-import { Icon } from '@rsuite/icons';
 
 const PersonalInfoSideNav = () => {
 	return (

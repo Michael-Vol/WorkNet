@@ -37,14 +37,14 @@ const Jobs = () => {
 		dispatch(res);
 	};
 
-	useEffect(async () => {
+	useEffect(() => {
 		if (user) {
-			await fetchJobs();
+			fetchJobs();
 		}
 	}, [user]);
 
-	useEffect(async () => {
-		await fetchJobs();
+	useEffect(() => {
+		fetchJobs();
 	}, [updatedApplicants]);
 
 	const { StringType } = Schema.Types;

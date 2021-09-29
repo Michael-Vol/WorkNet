@@ -24,9 +24,9 @@ const ReactionItem = ({ reaction, category }) => {
 		dispatch(res);
 	};
 
-	useEffect(async () => {
+	useEffect(() => {
 		if (user) {
-			await fetchAvatar(reaction.creator._id);
+			fetchAvatar(reaction.creator._id);
 		}
 	}, [user]);
 

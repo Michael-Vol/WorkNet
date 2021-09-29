@@ -17,6 +17,7 @@ import {
 	Progress,
 	ControlLabel,
 	FormControl,
+	Icon
 } from 'rsuite';
 import './Dashboard.scss';
 import { getPosts } from '../../Actions/posts';
@@ -26,7 +27,6 @@ import { addPost, getAvatar } from '../../Actions/posts';
 import PostItem from './PostItem';
 import { getUsers } from '../../Actions/users';
 import UserItem from './UserItem';
-import { Icon } from '@rsuite/icons';
 
 import AWS from 'aws-sdk';
 

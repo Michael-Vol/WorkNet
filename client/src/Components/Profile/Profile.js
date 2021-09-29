@@ -4,7 +4,7 @@ import './Profile.scss';
 import { getPersonalInfo } from '../../Actions/personalInfo';
 import { connectRequest, getConnectRequestStatus } from '../../Actions/connectRequests';
 import { getAvatar } from '../../Actions/posts';
-import { Container, Grid, FlexboxGrid, Avatar, Row, Nav, Button, List, Loader, Tag, Divider, Placeholder } from 'rsuite';
+import { Container, FlexboxGrid, Avatar, Row, Nav, Button, List, Loader, Tag, Divider, Placeholder } from 'rsuite';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast, Toaster } from 'react-hot-toast';
 import { getFriends } from '../../Actions/users';
@@ -17,7 +17,6 @@ const Profile = () => {
 
 	const user = useSelector((state) => state.auth.user);
 	const personalInfo = useSelector((state) => state.personalInfo);
-	const connectRequestState = useSelector((state) => state.connectRequest);
 	const friends = useSelector((state) => state.users.friends);
 	const friendsLoading = useSelector((state) => state.users.friendsLoading);
 
@@ -55,7 +54,6 @@ const Profile = () => {
 	const getStatus = async () => {
 		const res = await getConnectRequestStatus(userId);
 		dispatch(res);
-		console.log(res);
 		if (res.payload.status === 'Pending') {
 			setRequestStatus('Request Pending');
 			setRequestButtonStatus('connect-btn--pending');
@@ -178,6 +176,8 @@ const Profile = () => {
 					</div>
 				);
 				break;
+			default:
+				return;
 		}
 		return jsx;
 	};

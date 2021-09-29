@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Panel, Row, Col, Divider, Tag, ButtonGroup, Button } from 'rsuite';
+import { Avatar, Row, Col, Divider, Tag, Button } from 'rsuite';
 import { useDispatch } from 'react-redux';
 import './JobItem.scss';
 import { getAvatar } from '../../Actions/posts';

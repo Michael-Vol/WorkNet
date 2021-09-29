@@ -4,7 +4,6 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../Actions/auth';
 import { Redirect } from 'react-router-dom';
-import { Icon } from '@rsuite/icons';
 import {
 	Uploader,
 	Form,
@@ -17,6 +16,7 @@ import {
 	FlexboxGrid,
 	ControlLabel,
 	FormControl,
+	Icon,
 } from 'rsuite';
 
 const Register = (props) => {

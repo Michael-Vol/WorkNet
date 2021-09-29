@@ -3,9 +3,8 @@ import './Network.scss';
 
 import { getUsers, getConnectedUsers } from '../../Actions/users';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col, Container, InputGroup, Input, Loader } from 'rsuite';
+import { Row, Col, Container, InputGroup, Input, Loader, Icon } from 'rsuite';
 import UserItem from './UserItem';
-import { Icon } from '@rsuite/icons';
 
 const Network = () => {
 	const dispatch = useDispatch();

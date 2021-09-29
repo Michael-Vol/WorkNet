@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './UserItem.scss';
-import { Col, Row, Panel, Avatar, Button } from 'rsuite';
+import { Col, Row, Panel, Avatar } from 'rsuite';
 import { getAvatar } from '../../Actions/posts';
 import { useDispatch } from 'react-redux';
-import { Redirect } from 'react-router';
 import { useHistory } from 'react-router';
 const UserItem = ({ user, id }) => {
 	const dispatch = useDispatch();

@@ -23,7 +23,6 @@ const PersonalInfo = () => {
 	const formRef = useRef();
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
-	const loading = useSelector((state) => state.personalInfo.loading);
 
 	const [personalInfo, setPersonalInfo] = useState({});
 	const infoCategories = ['Work Experience', 'Education', 'Skills'];
@@ -42,9 +41,9 @@ const PersonalInfo = () => {
 		const personalInfo = dispatch(res);
 		setPersonalInfo(personalInfo.payload);
 	};
-	useEffect(async () => {
+	useEffect(() => {
 		if (user) {
-			await fetchInfo();
+			fetchInfo();
 		}
 	}, [user, getMyPersonalInfo]);
 
@@ -72,6 +71,9 @@ const PersonalInfo = () => {
 					actionData.name = formData.name;
 					actionData.visible = isPublic;
 					break;
+				default:
+					actionData.name = formData.name;
+					actionData.visible = isPublic;
 			}
 			console.log(actionData);
 
@@ -119,6 +121,8 @@ const PersonalInfo = () => {
 						name: StringType().isRequired('This field is required'),
 					}),
 				});
+			default:
+				return;
 		}
 	};
 	return (
@@ -129,7 +133,6 @@ const PersonalInfo = () => {
 						return (
 							<Button
 								onClick={() => {
-									let categoryName = '';
 									switch (category) {
 										case 'Work Experience':
 											setCurrentCategory('workExperience');
@@ -140,6 +143,8 @@ const PersonalInfo = () => {
 										case 'Skills':
 											setCurrentCategory('skills');
 											break;
+										default:
+											return;
 									}
 									createFormFields(category);
 									setAddExperience(!addExperience);
