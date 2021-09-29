@@ -1,6 +1,8 @@
 import React from 'react';
 import { Nav, Icon, Sidenav } from 'rsuite';
 import './PersonalInfoSideNav.scss';
+import { Icon } from '@rsuite/icons';
+
 const PersonalInfoSideNav = () => {
 	return (
 		<Sidenav activeKey='1' className='sidenav--container' appearance='inverse'>

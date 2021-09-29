@@ -10,11 +10,11 @@ import {
 	Button,
 	Form,
 	FormGroup,
-	FormControl,
-	ControlLabel,
 	Schema,
 	Tag,
 	HelpBlock,
+	ControlLabel,
+	FormControl,
 } from 'rsuite';
 import JobItem from './JobItem';
 import { getJobs, addJob } from '../../Actions/jobs';

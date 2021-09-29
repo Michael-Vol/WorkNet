@@ -8,13 +8,13 @@ import {
 	Form,
 	ButtonGroup,
 	FormGroup,
-	FormControl,
-	ControlLabel,
 	Schema,
 	Button,
 	ButtonToolbar,
 	Modal,
 	Toggle,
+	ControlLabel,
+	FormControl,
 } from 'rsuite';
 import PersonalInfoItem from './PersonalInfoItem';
 import { getMyPersonalInfo, postPersonalInfo } from '../../Actions/personalInfo';

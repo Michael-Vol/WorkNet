@@ -4,19 +4,19 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../Actions/auth';
 import { Redirect } from 'react-router-dom';
+import { Icon } from '@rsuite/icons';
 import {
 	Uploader,
 	Form,
 	FormGroup,
-	FormControl,
-	ControlLabel,
 	HelpBlock,
-	Icon,
 	Button,
 	ButtonToolbar,
 	Schema,
 	Content,
 	FlexboxGrid,
+	ControlLabel,
+	FormControl,
 } from 'rsuite';
 
 const Register = (props) => {

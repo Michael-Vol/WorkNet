@@ -8,8 +8,6 @@ import { Redirect } from 'react-router-dom';
 import {
 	Form,
 	FormGroup,
-	FormControl,
-	ControlLabel,
 	Button,
 	ButtonToolbar,
 	Schema,
@@ -17,6 +15,8 @@ import {
 	FlexboxGrid,
 	Panel,
 	Loader,
+	ControlLabel,
+	FormControl,
 } from 'rsuite';
 const Login = () => {
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);

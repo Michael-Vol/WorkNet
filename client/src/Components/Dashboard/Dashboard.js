@@ -5,8 +5,6 @@ import {
 	Button,
 	Form,
 	FormGroup,
-	FormControl,
-	ControlLabel,
 	Divider,
 	Grid,
 	Row,
@@ -14,10 +12,11 @@ import {
 	FlexboxGrid,
 	Modal,
 	Uploader,
-	Icon,
 	Schema,
 	Placeholder,
 	Progress,
+	ControlLabel,
+	FormControl,
 } from 'rsuite';
 import './Dashboard.scss';
 import { getPosts } from '../../Actions/posts';
@@ -27,6 +26,8 @@ import { addPost, getAvatar } from '../../Actions/posts';
 import PostItem from './PostItem';
 import { getUsers } from '../../Actions/users';
 import UserItem from './UserItem';
+import { Icon } from '@rsuite/icons';
+
 import AWS from 'aws-sdk';
 
 const Dashboard = () => {
