@@ -17,7 +17,7 @@ import {
 	Progress,
 	ControlLabel,
 	FormControl,
-	Icon
+	Icon,
 } from 'rsuite';
 import './Dashboard.scss';
 import { getPosts } from '../../Actions/posts';
@@ -55,6 +55,19 @@ const Dashboard = () => {
 	const fetchUsers = async () => {
 		const res = await getUsers();
 		dispatch(res);
+	};
+
+	const refreshDashboard = async () => {
+		setFormData({
+			title: '',
+			body: '',
+		});
+		setFormImage({});
+		setFormVideo(null);
+		setVideoUploadPercentage(0);
+		setVideoStartedUploading(false);
+		await fetchPosts();
+		await fetchUsers();
 	};
 
 	const uploadToAWS = async (file) => {
@@ -136,7 +149,7 @@ const Dashboard = () => {
 				<FlexboxGrid.Item colspan={3}>
 					<SideNav />
 				</FlexboxGrid.Item>
-				<FlexboxGrid.Item colspan={16} className='container posts--container'>
+				<FlexboxGrid.Item colspan={17} className='container posts--container'>
 					<Row className='container create--post--container'>
 						<Row className='new--post--header'>
 							<Col md={12}>
@@ -148,8 +161,7 @@ const Dashboard = () => {
 								<Button
 									className='refresh--posts--btn'
 									onClick={async () => {
-										await fetchPosts();
-										await fetchUsers();
+										await refreshDashboard();
 									}}>
 									Refresh
 								</Button>
@@ -240,27 +252,25 @@ const Dashboard = () => {
 						<span>Posts</span>
 						<Divider className='posts--divider' />
 					</Row>
-					<Grid className='test'>
-						<Row>
-							{!posts ? (
-								<div>
-									<Col md={18} className='container post--container'>
-										<Placeholder.Paragraph active />
-									</Col>
-									<Col md={18} className='container post--container'>
-										<Placeholder.Paragraph active />
-									</Col>
-									<Col md={18} className='container post--container'>
-										<Placeholder.Paragraph active />
-									</Col>
-								</div>
-							) : (
-								posts.map((post, index) => <PostItem key={index} post={post} />)
-							)}
-						</Row>
-					</Grid>
+					<Row>
+						{!posts ? (
+							<div>
+								<Col md={18} className='container post--container'>
+									<Placeholder.Paragraph active />
+								</Col>
+								<Col md={18} className='container post--container'>
+									<Placeholder.Paragraph active />
+								</Col>
+								<Col md={18} className='container post--container'>
+									<Placeholder.Paragraph active />
+								</Col>
+							</div>
+						) : (
+							posts.map((post, index) => <PostItem key={index} post={post} />)
+						)}
+					</Row>
 				</FlexboxGrid.Item>
-				<FlexboxGrid.Item colspan={4} className='users--list--container'>
+				<FlexboxGrid.Item colspan={3} className='users--list--container'>
 					{users && users.map((user, index) => <UserItem user={user} key={index} />)}
 				</FlexboxGrid.Item>
 			</FlexboxGrid>
