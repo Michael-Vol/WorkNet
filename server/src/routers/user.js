@@ -639,7 +639,7 @@ router.get('/me/posts', auth, async (req, res) => {
 
 router.get('/:user_id/friends', auth, async (req, res) => {
 	try {
-		const user = await User.findById(req.params.user_id);
+		let user = await User.findById(req.params.user_id);
 
 		if (!user) {
 			return res.status(400).json({
@@ -648,21 +648,14 @@ router.get('/:user_id/friends', auth, async (req, res) => {
 		}
 		//check if current user is friends with requested user to set friends visibility (except admin)
 		const isFriend = req.user.isAdmin || req.user.friends.includes(req.params.user_id);
-		let friends = [];
 
 		if (!isFriend) {
 			return res.json({
-				friends,
+				friends: [],
 			});
 		}
-
-		friends = await Promise.all(
-			user.friends.map(async (friendId) => {
-				const friend = await User.findById(friendId);
-				return friend;
-			})
-		);
-		return res.json({ friends });
+		user = await req.user.populate('friends', '_id firstName lastName email phoneNumber').execPopulate();
+		return res.json({ friends: user.friends });
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ message: 'Server Error' });

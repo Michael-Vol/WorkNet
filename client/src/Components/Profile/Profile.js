@@ -32,7 +32,7 @@ const Profile = () => {
 		dispatch(resInfo);
 		dispatch(resAvatar);
 
-		setAvatar(resAvatar.payload);
+		setAvatar(resAvatar.payload.avatar);
 	};
 
 	const connectWithUser = async () => {
