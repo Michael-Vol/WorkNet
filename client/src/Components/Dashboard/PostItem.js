@@ -105,7 +105,7 @@ const PostItem = ({ post, index }) => {
 				/>
 			)}
 			<Row className='post--actions'>
-				<Col md={4}>
+				<Col md={5}>
 					<Button appearance='ghost' className='like--btn' onClick={() => postLike()}>
 						<i className='fas fa-thumbs-up like--icon'></i>
 						{liked ? 'Unlike' : 'Like'}
@@ -113,12 +113,10 @@ const PostItem = ({ post, index }) => {
 					</Button>
 				</Col>
 				{likes && likes.length > 0 && (
-					<Col md={18} className='like--avatars'>
-						<Row>
-							{likes.map((like, index) => {
-								return <LikeAvatarItem userId={like.creator} key={index} />;
-							})}
-						</Row>
+					<Col xs={24} sm={24} md={8} className='like--avatars'>
+						{likes.map((like, index) => {
+							return <LikeAvatarItem userId={like.creator} key={index} />;
+						})}
 					</Col>
 				)}
 				<Col>
