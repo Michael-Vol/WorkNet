@@ -322,7 +322,8 @@ router.get('/:post_id/likes', async (req, res) => {
 			});
 		}
 
-		const likes = await Like.find({ post: postID });
+		const likes = await Like.find({ post: postID }).populate('creator');
+		console.log(likes);
 		res.json({
 			likes,
 		});

@@ -27,24 +27,27 @@
 }
 
 .post--actions {
-	margin-top: 15px;
-	height: 50px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	height: fit-content;
 	border-radius: 10px;
 	padding-top: 7px;
 }
-// .post--actions:hover {
-// 	color: $color-white-secondary;
-// }
+
 .like--btn {
 	width: fit-content;
 }
 .comment--btn {
 	width: fit-content;
-	margin-top: 5px;
+	margin: 5px;
 	float: right;
 	color: $color-base;
+	padding-right: 10px;
 }
-
+.comment--btn:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
 .like--icon {
 	margin-right: 5px;
 }
@@ -60,6 +63,7 @@
 .comments {
 	background-color: darken($color-white-secondary, 2%);
 	animation: fadeIn 1s;
+	border-radius: 10px;
 }
 
 .comments--list {
@@ -100,4 +104,8 @@
 
 .like--avatar {
 	margin-right: 3px;
+}
+.likes--description {
+	margin-left: 5px;
+	color: $color-base-secondary;
 }

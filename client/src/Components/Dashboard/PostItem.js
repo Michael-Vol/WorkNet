@@ -113,18 +113,31 @@ const PostItem = ({ post, index }) => {
 					</Button>
 				</Col>
 				{likes && likes.length > 0 && (
-					<Col xs={24} sm={24} md={8} className='like--avatars'>
-						{likes.map((like, index) => {
-							return <LikeAvatarItem userId={like.creator} key={index} />;
-						})}
+					<Col>
+						<Row>
+							<Col xs={24} sm={24} md={8} className='like--avatars'>
+								{likes.map((like, index) => {
+									return <LikeAvatarItem userId={like.creator._id} key={index} />;
+								})}
+							</Col>
+						</Row>
+						<Row className='likes--description'>
+							<span>
+								Liked by {likes[0].creator.firstName}
+								{likes.length > 1 && <span>,{likes[1].creator.firstName}</span>}
+								{likes.length > 2 && <span> and others</span>}
+							</span>
+						</Row>
 					</Col>
 				)}
-				<Col>
-					<div className='comment--btn' onClick={() => setViewComments(!viewComments)}>
-						<i className='fas fa-comment comment--icon'></i>
-						{comments ? comments.length : 0} Comments
-					</div>
-				</Col>
+				<Row>
+					<Col>
+						<div className='comment--btn' onClick={() => setViewComments(!viewComments)}>
+							<i className='fas fa-comment comment--icon'></i>
+							{comments ? comments.length : 0} Comments
+						</div>
+					</Col>
+				</Row>
 			</Row>
 			{viewComments && (
 				<Row className='comments'>
