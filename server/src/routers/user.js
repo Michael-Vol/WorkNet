@@ -438,25 +438,9 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 
 router.get('/me/connected_users', auth, async (req, res) => {
 	try {
-		// const acceptedRequests = await ConnectRequest.find({
-		// 	$or: [{ sender: req.user._id }, { receiver: req.user._id }],
-		// 	status: 'Accepted',
-		// });
-		// const users = await Promise.all(
-		// 	acceptedRequests.map(async (request) => {
-		// 		let userId = '';
-		// 		if (!req.user._id.equals(request.sender)) {
-		// 			userId = request.sender;
-		// 		} else {
-		// 			userId = request.receiver;
-		// 		}
-
-		// 		const user = await User.findById(userId);
-		// 		return user;
-		// 	})
-		// );
-		// console.log(users);
-		const connectedUsers = await req.user.populate('friends', '_id firstName lastName email phoneNumber').execPopulate();
+		const connectedUsers = await req.user
+			.populate('friends', '_id firstName lastName email phoneNumber workExperience')
+			.execPopulate();
 		return res.json({ users: connectedUsers.friends });
 	} catch (error) {
 		console.error(error);
