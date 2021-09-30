@@ -22,9 +22,9 @@ import './Dashboard.scss';
 import { getPosts } from '../../Actions/posts';
 import SideNav from './SideNav.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPost, getAvatar } from '../../Actions/posts';
+import { addPost } from '../../Actions/posts';
 import PostItem from './PostItem';
-import { getUsers } from '../../Actions/users';
+import { getConnectedUsers } from '../../Actions/users';
 import UserItem from './UserItem';
 
 import AWS from 'aws-sdk';
@@ -33,7 +33,8 @@ const Dashboard = () => {
 	const formRef = useRef();
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
-	const users = useSelector((state) => state.users.users);
+	const users = useSelector((state) => state.users.connectedUsers);
+	const usersLoading = useSelector((state) => state.users.connectedUsersLoading);
 	let posts = useSelector((state) => state.posts.posts);
 
 	const [newPost, setNewPost] = useState(false);
@@ -49,10 +50,9 @@ const Dashboard = () => {
 	const fetchPosts = async () => {
 		const res = await getPosts();
 		dispatch(res);
-		console.log(res.payload);
 	};
 	const fetchUsers = async () => {
-		const res = await getUsers();
+		const res = await getConnectedUsers();
 		dispatch(res);
 	};
 
@@ -270,7 +270,24 @@ const Dashboard = () => {
 					</Row>
 				</FlexboxGrid.Item>
 				<FlexboxGrid.Item as={Col} colspan={4} md={6} className='users--list--container'>
-					{users && users.map((user, index) => <UserItem user={user} key={index} />)}
+					<Row className='users--list--header'>
+						<span>Friends</span>
+					</Row>
+					{usersLoading ? (
+						<div>
+							<Col md={18} className='container '>
+								<Placeholder.Paragraph active graph='circle' />
+							</Col>
+							<Col md={18} className='container '>
+								<Placeholder.Paragraph active graph='circle' />
+							</Col>
+							<Col md={18} className='container '>
+								<Placeholder.Paragraph active graph='circle' />
+							</Col>
+						</div>
+					) : (
+						users.map((user, index) => <UserItem user={user} key={index} />)
+					)}
 				</FlexboxGrid.Item>
 			</FlexboxGrid>
 		</Container>

@@ -13,10 +13,6 @@ const UserItem = ({ chat, user, chatActive, onClick, userActive = false }) => {
 
 	const [avatar, setAvatar] = useState(null);
 
-	const selectUser = () => {
-		// history.push(`/chats/${user._id}`);
-	};
-
 	useEffect(async () => {
 		const res = await getAvatar(user._id);
 		dispatch(res);

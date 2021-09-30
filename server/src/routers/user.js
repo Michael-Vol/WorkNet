@@ -101,6 +101,7 @@ router.get('/', auth, async (req, res) => {
 				user.skills = isFriend ? user.skills.reverse() : user.skills.reverse().filter((skill) => skill.visible);
 			});
 		}
+
 		res.json({ users });
 	} catch (error) {
 		console.log(error);

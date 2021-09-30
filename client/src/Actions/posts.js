@@ -10,8 +10,8 @@ import {
 	LIKE_POST_ERROR,
 	GET_POST_LIKED_SUCCESS,
 	GET_POST_LIKED_ERROR,
-	GET_LIKES_COUNT_SUCCESS,
-	GET_LIKES_COUNT_ERROR,
+	GET_LIKES_SUCCESS,
+	GET_LIKES_ERROR,
 	GET_COMMENTS_SUCCESS,
 	GET_COMMENTS_ERROR,
 	POST_COMMENT_SUCCESS,
@@ -131,7 +131,7 @@ export const getPostLiked = async (postId) => {
 	}
 };
 
-export const getLikesCount = async (postId) => {
+export const getLikes = async (postId) => {
 	try {
 		const config = {
 			headers: {
@@ -140,12 +140,12 @@ export const getLikesCount = async (postId) => {
 		};
 		const res = await axios.get(`/posts/${postId}/likes`, config);
 		return {
-			type: GET_LIKES_COUNT_SUCCESS,
+			type: GET_LIKES_SUCCESS,
 			payload: res.data,
 		};
 	} catch (error) {
 		return {
-			type: GET_LIKES_COUNT_ERROR,
+			type: GET_LIKES_ERROR,
 			payload: error,
 		};
 	}

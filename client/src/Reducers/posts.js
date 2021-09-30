@@ -9,8 +9,8 @@ import {
 	LIKE_POST_ERROR,
 	GET_POST_LIKED_SUCCESS,
 	GET_POST_LIKED_ERROR,
-	GET_LIKES_COUNT_SUCCESS,
-	GET_LIKES_COUNT_ERROR,
+	GET_LIKES_SUCCESS,
+	GET_LIKES_ERROR,
 	GET_COMMENTS_SUCCESS,
 	GET_COMMENTS_ERROR,
 	POST_COMMENT_SUCCESS,
@@ -27,7 +27,7 @@ const initialState = {
 	error: null,
 	loading: true,
 	liked: null,
-	numLikes: null,
+	likes: null,
 	comments: null,
 	reactions: null,
 	reactionsUpdated: true,
@@ -102,15 +102,15 @@ const posts = function (state = initialState, action) {
 				liked: payload.liked,
 			};
 		}
-		case GET_LIKES_COUNT_SUCCESS: {
+		case GET_LIKES_SUCCESS: {
 			return {
 				...state,
 				error: null,
 				loading: false,
-				numLikes: payload.likes,
+				likes: payload.likes,
 			};
 		}
-		case GET_LIKES_COUNT_ERROR: {
+		case GET_LIKES_ERROR: {
 			return {
 				...state,
 				error: payload,

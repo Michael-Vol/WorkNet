@@ -15,6 +15,7 @@ const initialState = {
 	loading: true,
 	users: null,
 	connectedUsers: null,
+	connectedUsersLoading: true,
 	friends: null,
 	friendsLoading: true,
 };
@@ -53,7 +54,7 @@ const users = function (state = initialState, action) {
 		case GET_CONNECTED_USERS_SUCCESS: {
 			return {
 				...state,
-				loading: false,
+				connectedUsersLoading: false,
 				error: null,
 				connectedUsers: payload.users,
 			};
@@ -61,7 +62,7 @@ const users = function (state = initialState, action) {
 		case GET_CONNECTED_USERS_ERROR: {
 			return {
 				...state,
-				loading: false,
+				connectedUsersLoading: false,
 				connectedUsers: null,
 				error: payload,
 			};

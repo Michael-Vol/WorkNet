@@ -8,10 +8,10 @@
 	overflow-y: scroll;
 }
 .posts--container {
-	margin: 20px 20px 0px 50px;
+	margin: 20px;
 	border: 3px solid $color-base;
 	background-color: rgb(240, 242, 245);
-	border-radius: 5px;
+	border-radius: 8px;
 	overflow-y: scroll;
 	height: 90vh;
 	padding: 30px;
@@ -43,18 +43,12 @@
 	display: none; /* for Chrome, Safari, and Opera */
 }
 
-// .post--container:hover {
-// 	background-color: #0b4b6d !important;
-// 	color: white;
-// 	transition: ease-in 0.2s;
-// }
-
 .posts--header {
-	font-size: 36px;
+	font-size: 32px;
 	color: $color-base;
 }
 .posts--divider {
-	height: 5px;
+	height: 2px;
 	border-radius: 2px;
 	background-color: $color-base;
 	margin-top: 0px;
@@ -62,7 +56,6 @@
 
 .new--post--header {
 	font-size: 36px;
-	margin-bottom: 15px;
 	text-align: left;
 }
 
@@ -131,8 +124,9 @@
 
 .users--list--container {
 	background-color: rgb(240, 242, 245);
-	margin: 20px 20px 0px 0px;
+	margin: 20px 10px 0px 0px;
 	border: 3px solid $color-base;
+	border-radius: 8px;
 	padding: 20px;
 	height: 90vh;
 	overflow-y: scroll;
@@ -140,4 +134,10 @@
 
 .image--uploader {
 	margin-right: 10px;
+}
+
+.users--list--header {
+	font-size: 24px;
+	margin-bottom: 10px;
+	color: $color-base;
 }

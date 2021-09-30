@@ -2,24 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, Col, Row, Button, Badge, List, Input, InputGroup } from 'rsuite';
 import './PostItem.scss';
 import Moment from 'react-moment';
-import { getAvatar, likePost, getPostLiked, getLikesCount, getComments, postComment } from '../../Actions/posts';
+import { getAvatar, likePost, getPostLiked, getLikes, getComments, postComment } from '../../Actions/posts';
 import { useDispatch } from 'react-redux';
 import CommentItem from './CommentItem';
 import ReactPlayer from 'react-player/lazy';
+import LikeAvatarItem from './LikeAvatarItem';
 
 const PostItem = ({ post, index }) => {
 	const dispatch = useDispatch();
 	const [avatar, setAvatar] = useState([]);
 	const [imageConverted, setimageConverted] = useState(false);
 	const [liked, setliked] = useState(false);
-	const [numLikes, setNumLikes] = useState(0);
+	const [likes, setLikes] = useState(null);
+	const [fetchedLikeAvatars, setFetchedLikeAvatars] = useState(false);
 	const [viewComments, setViewComments] = useState(false);
 	const [comments, setComments] = useState([]);
 	const [newComment, setNewComment] = useState('');
+	const [likeAvatars, setLikeAvatars] = useState([]);
 	useEffect(async () => {
 		const res = await getAvatar(post.creator._id);
 		await postLiked();
-		await getNumLikes();
+		await fetchLikes();
 		await loadComments();
 
 		dispatch(res);
@@ -36,17 +39,23 @@ const PostItem = ({ post, index }) => {
 		setliked(postLikedRes.payload.liked);
 	};
 
-	const getNumLikes = async () => {
-		const numLikesRes = await getLikesCount(post._id);
-		dispatch(numLikesRes);
-		setNumLikes(numLikesRes.payload.likes);
+	const fetchLikes = async () => {
+		const res = await getLikes(post._id);
+		dispatch(res);
+		setLikes(res.payload.likes);
+		// await fetchAvatars(res.payload.likes);
+	};
+	const fetchAvatar = async (userId) => {
+		const res = await getAvatar(userId);
+		dispatch(res);
+		return res.payload;
 	};
 
 	const postLike = async () => {
 		const res = await likePost(post._id);
 		dispatch(res);
 		setliked(res.payload.liked);
-		await getNumLikes();
+		await fetchLikes();
 	};
 	const loadComments = async () => {
 		const res = await getComments(post._id);
@@ -100,9 +109,18 @@ const PostItem = ({ post, index }) => {
 					<Button appearance='ghost' className='like--btn' onClick={() => postLike()}>
 						<i className='fas fa-thumbs-up like--icon'></i>
 						{liked ? 'Unlike' : 'Like'}
-						<Badge className='likes--count' content={numLikes}></Badge>
+						<Badge className='likes--count' content={likes ? likes.length : 0}></Badge>
 					</Button>
 				</Col>
+				{likes && likes.length > 0 && (
+					<Col md={18} className='like--avatars'>
+						<Row>
+							{likes.map((like, index) => {
+								return <LikeAvatarItem userId={like.creator} key={index} />;
+							})}
+						</Row>
+					</Col>
+				)}
 				<Col>
 					<div className='comment--btn' onClick={() => setViewComments(!viewComments)}>
 						<i className='fas fa-comment comment--icon'></i>

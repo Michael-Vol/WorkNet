@@ -132,9 +132,11 @@ router.get('/personalized', auth, async (req, res) => {
 			}
 			return unique;
 		}, []);
+		posts = posts.sort((postA, postB) => (postB.createdAt > postA.createdAt ? 1 : -1));
+
 		res.json({ posts });
 	} catch (error) {
-		console.error(error.name);
+		console.error(error);
 		res.status(500).json({
 			message: 'Server Error',
 		});
@@ -303,7 +305,7 @@ router.post('/:post_id/likes', auth, async (req, res) => {
 
 /**
  * @name GET /{post_id}/likes
- * @desc Retrieves the number of likes of a specific post
+ * @desc Retrieves the likes of a specific post
  * @access public
  * @memberof post
  */
@@ -320,7 +322,7 @@ router.get('/:post_id/likes', async (req, res) => {
 			});
 		}
 
-		const likes = await Like.countDocuments({ post: postID });
+		const likes = await Like.find({ post: postID });
 		res.json({
 			likes,
 		});
