@@ -101,13 +101,17 @@ router.get('/personalized', auth, async (req, res) => {
 	try {
 		//get user-created posts
 		let posts = [];
-		const myPosts = await Post.find({ creator: req.user._id }).populate('creator').sort({ updatedAt: -1 });
+		const myPosts = await Post.find({ creator: req.user._id })
+			.populate('creator', '_id firstName lastName email phoneNumber')
+			.sort({ updatedAt: -1 });
 
 		posts.push(...myPosts);
 		//get friends' posts
 		await Promise.all(
-			req.user.friends.map(async (friendId) => {
-				const friendPosts = await Post.find({ creator: friendId }).populate('creator').sort({ updatedAt: -1 });
+			req.user.friends.map(async (friendId, index) => {
+				const friendPosts = await Post.find({ creator: friendId })
+					.populate('creator', '_id firstName lastName email phoneNumber')
+					.sort({ updatedAt: -1 });
 				posts.push(...friendPosts);
 
 				//get posts of non connected users that friends have liked
@@ -117,7 +121,9 @@ router.get('/personalized', auth, async (req, res) => {
 
 				const likedPosts = await Promise.all(
 					likedPostIds.map(async (postId) => {
-						const post = await Post.findById(postId).populate('creator').sort({ updatedAt: -1 });
+						const post = await Post.findById(postId)
+							.populate('creator', '_id firstName lastName email phoneNumber')
+							.sort({ updatedAt: -1 });
 						return post;
 					})
 				);
@@ -322,8 +328,7 @@ router.get('/:post_id/likes', async (req, res) => {
 			});
 		}
 
-		const likes = await Like.find({ post: postID }).populate('creator');
-		console.log(likes);
+		const likes = await Like.find({ post: postID }).populate('creator', '_id firstName lastName email phoneNumber');
 		res.json({
 			likes,
 		});

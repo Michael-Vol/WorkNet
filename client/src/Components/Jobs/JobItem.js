@@ -23,7 +23,7 @@ const JobItem = ({ job }) => {
 	const fetchAvatar = async (userId) => {
 		const res = await getAvatar(userId);
 		dispatch(res);
-		setAvatar(res.payload);
+		setAvatar(res.payload.avatar);
 	};
 	const fetchApplicationStatus = async (jobId) => {
 		if (!ownPost) {

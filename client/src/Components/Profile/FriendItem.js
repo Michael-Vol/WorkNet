@@ -13,7 +13,7 @@ const FriendItem = ({ friend }) => {
 	const fetchAvatar = async () => {
 		const res = await getAvatar(friend._id);
 		dispatch(res);
-		setAvatar(res.payload);
+		setAvatar(res.payload.avatar);
 	};
 
 	useEffect(() => {

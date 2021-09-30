@@ -7,12 +7,12 @@ import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 const NotificationItem = ({ notification }) => {
 	const dispatch = useDispatch();
-	const [avatar, setavatar] = useState(null);
+	const [avatar, setAvatar] = useState(null);
 	const [redirect, setRedirect] = useState(false);
 	const fetchAvatar = async (userId) => {
 		const res = await getAvatar(userId);
 		dispatch(res);
-		setavatar(res.payload);
+		setAvatar(res.payload.avatar);
 	};
 
 	const respondToRequest = async (accept) => {

@@ -5,6 +5,7 @@ import {
 	ADD_POST_ERROR,
 	GET_USER_AVATAR_ERROR,
 	GET_USER_AVATAR_SUCCESS,
+	GET_USER_AVATAR_IN_STATE,
 	LIKE_POST_SUCCESS,
 	LIKE_POST_ERROR,
 	GET_POST_LIKED_SUCCESS,
@@ -31,6 +32,7 @@ const initialState = {
 	comments: null,
 	reactions: null,
 	reactionsUpdated: true,
+	avatars: [],
 };
 
 const posts = function (state = initialState, action) {
@@ -65,11 +67,18 @@ const posts = function (state = initialState, action) {
 				error: payload,
 				loading: false,
 			};
+		case GET_USER_AVATAR_IN_STATE:
+			return {
+				...state,
+				error: null,
+				loading: false,
+			};
 		case GET_USER_AVATAR_SUCCESS:
 			return {
 				...state,
 				error: null,
 				loading: false,
+				avatars: [...state.avatars, { avatar: payload.avatar, userId: payload.userId }],
 			};
 		case GET_USER_AVATAR_ERROR:
 			return {

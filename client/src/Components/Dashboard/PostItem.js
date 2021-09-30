@@ -26,7 +26,7 @@ const PostItem = ({ post, index }) => {
 		await loadComments();
 
 		dispatch(res);
-		setAvatar(res.payload);
+		setAvatar(res.payload.avatar);
 		if (post.image && post.image.data) {
 			post.image.data = Buffer.from(post.image.data).toString('base64');
 			setimageConverted(true);

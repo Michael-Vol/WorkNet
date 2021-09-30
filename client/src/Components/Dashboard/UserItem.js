@@ -12,7 +12,7 @@ const UserItem = ({ user }) => {
 		const res = await getAvatar(user._id);
 		dispatch(res);
 		if (res.status !== 400) {
-			setAvatar(res.payload);
+			setAvatar(res.payload.avatar);
 		}
 	}, []);
 	return (

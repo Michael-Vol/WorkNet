@@ -16,7 +16,7 @@ const UserItem = ({ chat, user, chatActive, onClick, userActive = false }) => {
 	useEffect(async () => {
 		const res = await getAvatar(user._id);
 		dispatch(res);
-		setAvatar(res.payload);
+		setAvatar(res.payload.avatar);
 	}, []);
 
 	const activeClass = chatActive ? 'user--active' : '';

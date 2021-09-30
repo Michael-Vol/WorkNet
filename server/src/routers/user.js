@@ -83,12 +83,12 @@ router.get('/me', auth, async (req, res) => {
 router.get('/', auth, async (req, res) => {
 	try {
 		req.query.personalInfo
-			? (selectFields = 'firstName lastName email workExperience education skills avatar phoneNumber')
+			? (selectFields = 'firstName lastName email workExperience education skills phoneNumber')
 			: (selectFields = 'firstName lastName email avatar phoneNumber');
 
 		const users = await User.find({}).select(selectFields);
 		if (req.query.personalInfo) {
-			users.forEach((user) => {
+			users.forEach((user, index) => {
 				//check if connected with user to allow private visibility
 				const isFriend = req.user.friends.includes(user._id);
 
@@ -438,26 +438,28 @@ router.post('/:user_id/connect', auth, validateUserID, async (req, res) => {
 
 router.get('/me/connected_users', auth, async (req, res) => {
 	try {
-		const acceptedRequests = await ConnectRequest.find({
-			$or: [{ sender: req.user._id }, { receiver: req.user._id }],
-			status: 'Accepted',
-		});
-		const users = await Promise.all(
-			acceptedRequests.map(async (request) => {
-				let userId = '';
-				if (!req.user._id.equals(request.sender)) {
-					userId = request.sender;
-				} else {
-					userId = request.receiver;
-				}
+		// const acceptedRequests = await ConnectRequest.find({
+		// 	$or: [{ sender: req.user._id }, { receiver: req.user._id }],
+		// 	status: 'Accepted',
+		// });
+		// const users = await Promise.all(
+		// 	acceptedRequests.map(async (request) => {
+		// 		let userId = '';
+		// 		if (!req.user._id.equals(request.sender)) {
+		// 			userId = request.sender;
+		// 		} else {
+		// 			userId = request.receiver;
+		// 		}
 
-				const user = await User.findById(userId);
-				return user;
-			})
-		);
-		return res.json({ users });
+		// 		const user = await User.findById(userId);
+		// 		return user;
+		// 	})
+		// );
+		// console.log(users);
+		const connectedUsers = await req.user.populate('friends', '_id firstName lastName email phoneNumber').execPopulate();
+		return res.json({ users: connectedUsers.friends });
 	} catch (error) {
-		console.error(error.name);
+		console.error(error);
 		return res.json({
 			message: 'Server Error',
 		});

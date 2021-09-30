@@ -36,7 +36,7 @@ const ImageCell = ({ rowData, dataKey, ...props }) => {
 
 	const fetchAvatar = async (id) => {
 		const res = await getAvatar(id);
-		setAvatar(res.payload);
+		setAvatar(res.payload.avatar);
 	};
 	useEffect(async () => {
 		await fetchAvatar(rowData[dataKey]);

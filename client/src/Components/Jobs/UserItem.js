@@ -11,7 +11,7 @@ const UserItem = ({ user, job }) => {
 	const fetchAvatar = async () => {
 		const res = await getAvatar(user._id);
 		dispatch(res);
-		setAvatar(res.payload);
+		setAvatar(res.payload.avatar);
 	};
 	const chooseApplicant = async () => {
 		const res = await selectApplicant(job._id, user._id);

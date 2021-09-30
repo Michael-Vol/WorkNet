@@ -12,7 +12,7 @@ const UserItem = ({ user, id }) => {
 	useEffect(async () => {
 		const res = await getAvatar(user._id);
 		dispatch(res);
-		setAvatar(res.payload);
+		setAvatar(res.payload.avatar);
 	}, []);
 
 	const forwardToProfile = () => {

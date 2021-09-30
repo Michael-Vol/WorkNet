@@ -6,6 +6,7 @@ import {
 	ADD_POST_SUCCESS,
 	GET_USER_AVATAR_ERROR,
 	GET_USER_AVATAR_SUCCESS,
+	GET_USER_AVATAR_IN_STATE,
 	LIKE_POST_SUCCESS,
 	LIKE_POST_ERROR,
 	GET_POST_LIKED_SUCCESS,
@@ -21,7 +22,7 @@ import {
 	READ_REACTION_SUCCESS,
 	READ_REACTION_ERROR,
 } from './types';
-
+import store from '../store';
 export const getPosts = async () => {
 	try {
 		const config = {
@@ -72,6 +73,14 @@ export const addPost = async (textFields, image) => {
 
 export const getAvatar = async (userID) => {
 	try {
+		const avatars = store.getState().posts.avatars;
+		const avatarIndex = avatars.findIndex((avatar) => avatar.userId === userID);
+		if (avatarIndex > -1) {
+			return {
+				type: GET_USER_AVATAR_IN_STATE,
+				payload: { avatar: avatars[avatarIndex].avatar, userId: avatars[avatarIndex].userId },
+			};
+		}
 		const config = {
 			responseType: 'arraybuffer',
 		};
@@ -79,7 +88,7 @@ export const getAvatar = async (userID) => {
 		const avatar = Buffer.from(res.data).toString('base64');
 		return {
 			type: GET_USER_AVATAR_SUCCESS,
-			payload: avatar,
+			payload: { avatar, userId: userID },
 		};
 	} catch (error) {
 		return {

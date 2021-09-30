@@ -12,7 +12,7 @@ const CommentItem = ({ comment }) => {
 	useEffect(async () => {
 		const res = await getAvatar(comment.creator._id);
 		dispatch(res);
-		setAvatar(res.payload);
+		setAvatar(res.payload.avatar);
 	}, []);
 
 	return (

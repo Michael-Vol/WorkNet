@@ -7,11 +7,11 @@ const LikeAvatarItem = ({ userId }) => {
 
 	const fetchAvatar = async () => {
 		const res = await getAvatar(userId);
-		setAvatar(res.payload);
+		setAvatar(res.payload.avatar);
 	};
 	useEffect(async () => {
 		await fetchAvatar();
-	});
+	}, []);
 	return <Avatar circle className='like--avatar' src={`data:image/png;base64,${avatar}`} size='xs' />;
 };
 

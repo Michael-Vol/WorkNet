@@ -34,6 +34,7 @@ const Dashboard = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
 	const users = useSelector((state) => state.users.connectedUsers);
+	console.log(users);
 	const usersLoading = useSelector((state) => state.users.connectedUsersLoading);
 	let posts = useSelector((state) => state.posts.posts);
 
@@ -286,7 +287,7 @@ const Dashboard = () => {
 							</Col>
 						</div>
 					) : (
-						users.map((user, index) => <UserItem user={user} key={index} />)
+						users && users.map((user, index) => <UserItem user={user} key={index} />)
 					)}
 				</FlexboxGrid.Item>
 			</FlexboxGrid>
