@@ -8,6 +8,8 @@
 
 [WorkNet](https://michaelvol-worknet.herokuapp.com/) is a JavaScript Project built in ReactJS and NodeJS (using the ExpressJS framework) designed to provide a business-oriented social-networking experience. Users can create posts sharing their thoughts on the Dashboard, connect with other users,provide their Work Experience,Education and Skills in their own Personal Info Page, chat with their connected users, create Job Posts and many more...
 
+![Landing Page](media/LandingPage.png)
+
 ### :hammer_and_wrench: Installation & Setup
 
 ---
