@@ -16,15 +16,16 @@ const generateChat = require('./chat/socket');
 connectDB();
 
 //Generate Chat Socket
-const server = process.env.CERTIFICATE_REQUIRED
-	? https.createServer(
-			{
-				cert: fs.readFileSync('server/server.crt'),
-				key: fs.readFileSync('server/server.key'),
-			},
-			app
-	  )
-	: http.createServer(app);
+const server =
+	process.env.CERTIFICATE_REQUIRED == 'true'
+		? https.createServer(
+				{
+					cert: fs.readFileSync('server/server.crt'),
+					key: fs.readFileSync('server/server.key'),
+				},
+				app
+		  )
+		: http.createServer(app);
 generateChat(server);
 
 const PORT = process.env.PORT || 5000;
