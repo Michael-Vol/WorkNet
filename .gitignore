@@ -7,3 +7,5 @@ server/server.crt
 server/server.key
 readme.pdf
 .DS_Store
+info.txt
+.vscode
