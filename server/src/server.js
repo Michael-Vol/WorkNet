@@ -7,6 +7,8 @@ const chatRouter = require('./routers/chat');
 const jobsRouter = require('./routers/jobs');
 const cors = require('cors');
 const http = require('http');
+const fs = require('fs');
+const https = require('https');
 const path = require('path');
 const generateChat = require('./chat/socket');
 
@@ -14,7 +16,13 @@ const generateChat = require('./chat/socket');
 connectDB();
 
 //Generate Chat Socket
-const server = http.createServer(app);
+const server = https.createServer(
+	{
+		cert: fs.readFileSync('server/server.crt'),
+		key: fs.readFileSync('server/server.key'),
+	},
+	app
+);
 generateChat(server);
 
 const PORT = process.env.PORT || 5000;
