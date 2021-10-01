@@ -20,7 +20,7 @@
 cd server && npm install
 ```
 
-2. Go to the client directory and install the frontend dependency (with the --legacy-peer-deeps option due to dependency conflicts)
+2. Go to the client directory and install the frontend dependency (with the --legacy-peer-deps option due to dependency conflicts)
 
 ```[bash]
 cd ../client && npm install --legacy-peer-deps
