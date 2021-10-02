@@ -8,6 +8,7 @@ import {
 	ADD_NEW_MESSAGE_ERROR,
 	GET_MESSAGES_SUCCESS,
 	GET_MESSAGES_ERROR,
+	RESET_CHAT_MESSAGES,
 } from './types';
 
 export const createNewChat = async (user) => {
@@ -95,4 +96,11 @@ export const getMessages = async (chatId, skip = 0) => {
 			payload: error,
 		};
 	}
+};
+
+export const resetChatMessages = () => {
+	return {
+		type: RESET_CHAT_MESSAGES,
+		payload: null,
+	};
 };

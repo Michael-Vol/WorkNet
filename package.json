@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/src/server.js",
+    "dev": "concurrently \"nodemon ./server/src/server.js\" \" npm start --prefix client/ \"",
     "heroku-postbuild": " cd server && npm install && cd ../client && npm install && npm run build"
   },
   "repository": {
@@ -17,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/Michael-Vol/WorkNet/issues"
   },
-  "homepage": "https://github.com/Michael-Vol/WorkNet#readme"
+  "homepage": "https://github.com/Michael-Vol/WorkNet#readme",
+  "dependencies": {
+    "concurrently": "^6.2.2",
+    "nodemon": "^2.0.13"
+  }
 }

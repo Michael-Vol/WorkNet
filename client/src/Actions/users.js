@@ -83,7 +83,7 @@ export const getFriends = async (userId) => {
 			},
 		};
 		const res = await axios.get(`/users/${userId}/friends`, config);
-
+		console.log(res.payload);
 		return {
 			type: GET_FRIENDS_SUCCESS,
 			payload: res.data,

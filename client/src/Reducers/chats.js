@@ -7,6 +7,7 @@ import {
 	ADD_NEW_MESSAGE_ERROR,
 	GET_MESSAGES_SUCCESS,
 	GET_MESSAGES_ERROR,
+	RESET_CHAT_MESSAGES,
 } from '../Actions/types';
 
 const initialState = {
@@ -17,6 +18,7 @@ const initialState = {
 	chats: null,
 	newMessage: null,
 	messages: null,
+	loadingMessages: true,
 };
 
 const chats = function (state = initialState, action) {
@@ -75,7 +77,7 @@ const chats = function (state = initialState, action) {
 		case GET_MESSAGES_SUCCESS: {
 			return {
 				...state,
-				loading: false,
+				loadingMessages: false,
 				error: null,
 				messages: state.messages ? payload.messages.concat(state.messages) : payload.messages,
 			};
@@ -83,8 +85,17 @@ const chats = function (state = initialState, action) {
 		case GET_MESSAGES_ERROR: {
 			return {
 				...state,
+				loadingMessages: false,
 				loading: false,
 				error: payload,
+				messages: null,
+			};
+		}
+		case RESET_CHAT_MESSAGES: {
+			console.log('reset');
+			return {
+				...state,
+				loadingMessages: true,
 				messages: null,
 			};
 		}

@@ -654,7 +654,7 @@ router.get('/:user_id/friends', auth, async (req, res) => {
 				friends: [],
 			});
 		}
-		user = await req.user.populate('friends', '_id firstName lastName email phoneNumber').execPopulate();
+		user = await user.populate('friends', '_id firstName lastName email phoneNumber').execPopulate();
 		return res.json({ friends: user.friends });
 	} catch (error) {
 		console.error(error);
