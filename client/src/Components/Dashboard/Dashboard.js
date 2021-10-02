@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import {
 	Container,
 	ButtonToolbar,
@@ -26,12 +26,14 @@ import { addPost } from '../../Actions/posts';
 import PostItem from './PostItem';
 import { getConnectedUsers } from '../../Actions/users';
 import UserItem from './UserItem';
-
+import { SocketContext } from '../../Utils/socket';
 import AWS from 'aws-sdk';
 
 const Dashboard = () => {
 	const formRef = useRef();
 	const dispatch = useDispatch();
+	const socket = useContext(SocketContext);
+
 	const user = useSelector((state) => state.auth.user);
 	const users = useSelector((state) => state.users.connectedUsers);
 	const usersLoading = useSelector((state) => state.users.connectedUsersLoading);
@@ -42,6 +44,7 @@ const Dashboard = () => {
 		title: '',
 		body: '',
 	});
+	const [onlineUsers, setOnlineUsers] = useState([]);
 	const [formImage, setFormImage] = useState({});
 	const [formVideo, setFormVideo] = useState(null);
 	const [videoUploadPercentage, setVideoUploadPercentage] = useState(0);
@@ -93,8 +96,17 @@ const Dashboard = () => {
 			}, 1000);
 		}
 	});
+
 	useEffect(async () => {
 		if (user) {
+			if (socket) {
+				socket.on('userOnline', (receivedOnlineUsers) => {
+					setOnlineUsers(receivedOnlineUsers);
+				});
+				socket.on('userOffline', (receivedOnlineUsers) => {
+					setOnlineUsers(receivedOnlineUsers);
+				});
+			}
 			await fetchPosts();
 			await fetchUsers();
 
@@ -286,7 +298,14 @@ const Dashboard = () => {
 							</Col>
 						</div>
 					) : (
-						users && users.map((user, index) => <UserItem user={user} key={index} />)
+						users &&
+						users.map((user, index) => (
+							<UserItem
+								user={user}
+								active={onlineUsers.find((onlineUser) => onlineUser === user._id)}
+								key={index}
+							/>
+						))
 					)}
 				</FlexboxGrid.Item>
 			</FlexboxGrid>

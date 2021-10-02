@@ -1,3 +1,4 @@
+@import '../../Styles/main';
 .users--list--user {
 	background-color: white;
 	padding: 10px;
@@ -19,4 +20,12 @@
 .users--user--avatar {
 	max-width: 100%;
 	max-height: 100%;
+}
+
+.user--online {
+	background-color: rgb(1, 201, 134);
+}
+
+.user--offline {
+	background-color: $color-grey;
 }

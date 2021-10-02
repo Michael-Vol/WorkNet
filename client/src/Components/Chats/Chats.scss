@@ -130,6 +130,12 @@
 		}
 	}
 }
+.messages--loader {
+	display: grid;
+	place-items: center;
+	align-items: center;
+	height: 80%;
+}
 
 @keyframes blink {
 	50% {

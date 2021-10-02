@@ -1,33 +1,33 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './Chats.scss';
-import { Row, Col, FlexboxGrid, Avatar, Button, Input, InputGroup, Modal, Container } from 'rsuite';
+import { Row, Col, FlexboxGrid, Avatar, Button, Input, InputGroup, Modal, Loader } from 'rsuite';
 import UserItem from './UserItem';
 import Message from './Message';
 import { useSelector } from 'react-redux';
-import { io } from 'socket.io-client';
 import moment from 'moment';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { getConnectedUsers } from '../../Actions/users';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import SelectUserItem from './SelectUserItem';
-import { getChats, addNewMessage, getMessages } from '../../Actions/chat';
+import { getChats, addNewMessage, getMessages, resetChatMessages } from '../../Actions/chat';
 import { getAvatar } from '../../Actions/posts';
 import { Link } from 'react-router-dom';
-
+import { SocketContext } from '../../Utils/socket';
 const Chats = () => {
 	const dispatch = useDispatch();
-	const history = useHistory();
+	const socket = useContext(SocketContext);
 
 	const user = useSelector((state) => state.auth.user);
 	const connectedUsers = useSelector((state) => state.users.connectedUsers);
 	const chatId = useSelector((state) => state.chats.chatId);
 	const userId = useSelector((state) => state.chats.userId);
 	const chats = useSelector((state) => state.chats.chats);
+	const loadingMessages = useSelector((state) => state.chats.loadingMessages);
 
 	const [message, setMessage] = useState('');
 	const [previousMessages, setPreviousMessages] = useState([]);
 	const [messages, setMessages] = useState([]);
+	const [onlineUsers, setOnlineUsers] = useState([]);
 	const [createChat, setCreateChat] = useState(false);
 	const [activeChat, setActiveChat] = useState(null);
 	const [activeUser, setActiveUser] = useState(null);
@@ -35,11 +35,9 @@ const Chats = () => {
 	const [activeUserAvatar, setActiveUserAvatar] = useState(null);
 	const [noPreviousMessages, setNoPreviousMessages] = useState(false);
 	const [activeUserId, setActiveUserId] = useState('');
-	const [onlineUsers, setOnlineUsers] = useState([]);
 	const [typingTimer, setTypingTimer] = useState(null);
 	const [amTyping, setAmTyping] = useState(false);
 	const [friendTyping, setFriendTyping] = useState(false);
-	const socketRef = useRef();
 
 	const fetchConnectedUsers = async () => {
 		const res = await getConnectedUsers();
@@ -70,7 +68,7 @@ const Chats = () => {
 			const newMessage = { message, creator: 'me', timestamp: moment() };
 			setMessages([...messages, newMessage]);
 			setMessage('');
-			socketRef.current.emit('sendMessage', { message: newMessage, receiver: activeUserId }, (error) => {
+			socket.emit('sendMessage', { message: newMessage, receiver: activeUserId }, (error) => {
 				console.log(error);
 			});
 			const res = await addNewMessage(newMessage.message, activeChat._id);
@@ -97,21 +95,25 @@ const Chats = () => {
 			setAmTyping(true);
 		}
 	};
+
 	useEffect(() => {
-		if (socketRef.current) {
+		if (socket) {
 			if (amTyping) {
-				socketRef.current.emit('amTyping', { receiver: activeUserId }, (error) => console.log(error));
+				socket.emit('amTyping', { receiver: activeUserId }, (error) => console.log(error));
 			} else {
-				socketRef.current.emit('amNotTyping', { receiver: activeUserId }, (error) => console.log(error));
+				socket.emit('amNotTyping', { receiver: activeUserId }, (error) => console.log(error));
 			}
 		}
 	}, [amTyping]);
 	const changeActiveUser = (id) => {
-		setPreviousMessages([]);
-		setMessages([]);
-		setSkippedMessages(0);
-		setNoPreviousMessages(false);
-		setActiveUserId(id);
+		if (activeUserId !== id) {
+			dispatch(resetChatMessages());
+			setPreviousMessages([]);
+			setMessages([]);
+			setSkippedMessages(0);
+			setNoPreviousMessages(false);
+			setActiveUserId(id);
+		}
 	};
 
 	useEffect(async () => {
@@ -126,7 +128,7 @@ const Chats = () => {
 		if (activeUser) {
 			const res = await getAvatar(activeUser._id);
 			dispatch(res);
-			setActiveUserAvatar(res.payload);
+			setActiveUserAvatar(res.payload.avatar);
 		}
 	}, [activeUser]);
 
@@ -148,8 +150,8 @@ const Chats = () => {
 	}, [activeUserId]);
 
 	useEffect(async () => {
-		if (user && socketRef.current) {
-			socketRef.current.on('message', (receivedMessage) => {
+		if (user && socket) {
+			socket.on('message', (receivedMessage) => {
 				setMessages([
 					...messages,
 					{
@@ -164,26 +166,20 @@ const Chats = () => {
 
 	useEffect(async () => {
 		if (user) {
-			let newSocket;
-			process.env.REACT_APP_WEBSOCKET_URL
-				? (newSocket = io(process.env.REACT_APP_WEBSOCKET_URL, { transports: ['websocket'] }))
-				: (newSocket = io({ transports: ['websocket'] }));
-			socketRef.current = newSocket;
-			socketRef.current.emit('join', { userId: user._id }, (error) => {
-				console.log(error);
-			});
-			socketRef.current.on('userOnline', (receivedOnlineUsers) => {
-				setOnlineUsers(receivedOnlineUsers);
-			});
-			socketRef.current.on('userOffline', (receivedOnlineUsers) => {
-				setOnlineUsers(receivedOnlineUsers);
-			});
-			socketRef.current.on('isTyping', () => {
-				setFriendTyping(true);
-			});
-			socketRef.current.on('isNotTyping', () => {
-				setFriendTyping(false);
-			});
+			if (socket) {
+				socket.on('userOnline', (receivedOnlineUsers) => {
+					setOnlineUsers(receivedOnlineUsers);
+				});
+				socket.on('userOffline', (receivedOnlineUsers) => {
+					setOnlineUsers(receivedOnlineUsers);
+				});
+				socket.on('isTyping', () => {
+					setFriendTyping(true);
+				});
+				socket.on('isNotTyping', () => {
+					setFriendTyping(false);
+				});
+			}
 			await fetchConnectedUsers();
 			await fetchChats();
 		}
@@ -229,13 +225,13 @@ const Chats = () => {
 					</Col>
 					<Col md={4} className='visit--profile'>
 						<Button appearance='ghost' className='visit--profile--btn'>
-							<Link to={`/users/${activeUserId}/profile`}>Visit Profile</Link>
+							{activeUserId && <Link to={`/users/${activeUserId}/profile`}>Visit Profile</Link>}
 						</Button>
 					</Col>
 				</Row>
 				<ScrollToBottom className='chat--body--container'>
 					{!noPreviousMessages && (
-						<Link className='load--more--container'>
+						<Link to='#' className='load--more--container'>
 							<Row
 								onClick={() => {
 									fetchMessages(activeChat._id, skippedMessages + 10);
@@ -246,10 +242,14 @@ const Chats = () => {
 							</Row>
 						</Link>
 					)}
-					{previousMessages &&
+					{loadingMessages ? (
+						<Loader size='lg' content='Fetching Messages' className='messages--loader' />
+					) : (
+						previousMessages &&
 						previousMessages.map((message, index) => {
 							return <Message previous message={message} key={index} mine={message.sender === user._id} />;
-						})}
+						})
+					)}{' '}
 					{messages &&
 						messages.map((message, index) => {
 							return <Message message={message} key={index} mine={message.creator === 'me'} />;
