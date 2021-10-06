@@ -68,8 +68,8 @@ const Chats = () => {
 			const newMessage = { message, creator: 'me', timestamp: moment() };
 			setMessages([...messages, newMessage]);
 			setMessage('');
-			socket.emit('sendMessage', { message: newMessage, receiver: activeUserId }, (error) => {
-				console.log(error);
+			socket.emit('sendMessage', { message: newMessage, receiver: activeUserId }, (res) => {
+				console.log('Got message');
 			});
 			const res = await addNewMessage(newMessage.message, activeChat._id);
 			dispatch(res);
@@ -249,7 +249,7 @@ const Chats = () => {
 						previousMessages.map((message, index) => {
 							return <Message previous message={message} key={index} mine={message.sender === user._id} />;
 						})
-					)}{' '}
+					)}
 					{messages &&
 						messages.map((message, index) => {
 							return <Message message={message} key={index} mine={message.creator === 'me'} />;

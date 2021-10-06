@@ -17,6 +17,7 @@ const generateChat = (server) => {
 		socket.on('sendMessage', ({ message, receiver }, callback) => {
 			const userSocketId = getSocket(receiver);
 			socket.broadcast.to(userSocketId).emit('message', message);
+			callback();
 		});
 		socket.on('amTyping', ({ receiver }) => {
 			const userSocketId = getSocket(receiver);
