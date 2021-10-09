@@ -57,11 +57,12 @@ const Chats = () => {
 	};
 	const fetchMessages = async (chatId, skip) => {
 		const res = await getMessages(chatId, skip);
-		if (res.payload.messages.length > 0) {
-			setPreviousMessages((state) => [...res.payload.messages, ...state]);
-			return dispatch(res);
+		if (res.payload.messages.length === 0) {
+			setNoPreviousMessages(true);
 		}
-		setNoPreviousMessages(true);
+		setPreviousMessages((state) => [...res.payload.messages, ...state]);
+		console.log(res.payload);
+		return dispatch(res);
 	};
 	const sendMessage = async () => {
 		if (message !== '') {
