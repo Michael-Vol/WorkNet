@@ -92,7 +92,6 @@ const chats = function (state = initialState, action) {
 			};
 		}
 		case RESET_CHAT_MESSAGES: {
-			console.log('reset');
 			return {
 				...state,
 				loadingMessages: true,
