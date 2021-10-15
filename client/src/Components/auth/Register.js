@@ -85,9 +85,9 @@ const Register = (props) => {
 		} else {
 			const [firstName, lastName] = name.split(' ');
 			if (!lastName) {
-				setSubmitted(false);
 				return toast.error('Please provide a Full Name separated by spaces');
 			}
+			setSubmitted(true);
 			const res = await registerUser({ firstName, lastName, email, password, phone, avatar });
 			dispatch(res);
 		}
@@ -184,7 +184,6 @@ const Register = (props) => {
 										type='submit'
 										loading={submitted}
 										onClick={() => {
-											setSubmitted(true);
 											handleSubmit();
 										}}
 										appearance='primary'>

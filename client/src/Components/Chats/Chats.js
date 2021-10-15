@@ -47,7 +47,7 @@ const Chats = () => {
 	const fetchChats = async () => {
 		const res = await getChats();
 		dispatch(res);
-		if (activeUserId === '' && res.payload.chats.length > 0) {
+		if (activeUserId === '' && res.payload.chats && res.payload.chats.length > 0) {
 			setActiveUserId(
 				typeof res.payload.chats[0].userOne === 'string'
 					? res.payload.chats[0].userTwo._id
@@ -61,7 +61,6 @@ const Chats = () => {
 			setNoPreviousMessages(true);
 		}
 		setPreviousMessages((state) => [...res.payload.messages, ...state]);
-		console.log(res.payload);
 		return dispatch(res);
 	};
 	const sendMessage = async () => {
@@ -147,6 +146,7 @@ const Chats = () => {
 				setActiveUser(user);
 				await fetchMessages(newActiveChat._id, skippedMessages);
 			}
+		} else {
 		}
 	}, [activeUserId]);
 
@@ -216,79 +216,103 @@ const Chats = () => {
 						);
 					})}
 			</FlexboxGrid.Item>
-			<FlexboxGrid.Item colspan={19} className='chats--flex--container'>
-				<Row className='chat--header--container'>
-					<Col md={2} className='header--avatar--container'>
-						<Avatar circle src={`data:image/png;base64,${activeUserAvatar}`} className='active--user--avatar' />
-					</Col>
-					<Col md={18} className='header--info--container'>
-						<span>{activeUser && activeUser.firstName.concat(' ').concat(activeUser.lastName)} </span>
-					</Col>
-					<Col md={4} className='visit--profile'>
-						<Button appearance='ghost' className='visit--profile--btn'>
-							{activeUserId && <Link to={`/users/${activeUserId}/profile`}>Visit Profile</Link>}
-						</Button>
-					</Col>
-				</Row>
-				<ScrollToBottom className='chat--body--container'>
-					{!noPreviousMessages && (
-						<Link to='#' className='load--more--container'>
-							<Row
-								onClick={() => {
-									fetchMessages(activeChat._id, skippedMessages + 10);
-									setSkippedMessages(skippedMessages + 10);
-								}}>
-								<i className='fas fa-chevron-up load--more--icon'></i>
-								<span className='load--more--link'>Load More</span>
-							</Row>
-						</Link>
-					)}
-					{loadingMessages ? (
-						<Loader size='lg' content='Fetching Messages' className='messages--loader' />
-					) : (
-						previousMessages &&
-						previousMessages.map((message, index) => {
-							return <Message previous message={message} key={index} mine={message.sender === user._id} />;
-						})
-					)}
-					{messages &&
-						messages.map((message, index) => {
-							return <Message message={message} key={index} mine={message.creator === 'me'} />;
-						})}
-					{previousMessages.length > 0 && friendTyping && (
-						<div className='typing-indicator clearfix'>
-							<span></span>
-							<span></span>
-							<span></span>
-						</div>
-					)}
-				</ScrollToBottom>
+			{chats &&
+				(chats.length === 0 ? (
+					<FlexboxGrid.Item colspan={19} className='no-chats--flex--container'>
+						<Row className='no-chats--container'>
+							<Col>
+								<i className='fas fa-meh fa-3x'></i>
+								<div className='no-chats--text'>No Chats</div>
+								<div>
+									<Button
+										className='no-chats--chat--btn'
+										appearance='primary'
+										onClick={() => setCreateChat(true)}>
+										Chat with a Friend
+									</Button>
+								</div>
+							</Col>
+						</Row>
+					</FlexboxGrid.Item>
+				) : (
+					<FlexboxGrid.Item colspan={19} className='chats--flex--container'>
+						<Row className='chat--header--container'>
+							<Col md={2} className='header--avatar--container'>
+								<Avatar
+									circle
+									src={`data:image/png;base64,${activeUserAvatar}`}
+									className='active--user--avatar'
+								/>
+							</Col>
+							<Col md={18} className='header--info--container'>
+								<span>{activeUser && activeUser.firstName.concat(' ').concat(activeUser.lastName)} </span>
+							</Col>
+							<Col md={4} className='visit--profile'>
+								<Button appearance='ghost' className='visit--profile--btn'>
+									{activeUserId && <Link to={`/users/${activeUserId}/profile`}>Visit Profile</Link>}
+								</Button>
+							</Col>
+						</Row>
+						<ScrollToBottom className='chat--body--container'>
+							{!noPreviousMessages && (
+								<Link to='#' className='load--more--container'>
+									<Row
+										onClick={() => {
+											fetchMessages(activeChat._id, skippedMessages + 10);
+											setSkippedMessages(skippedMessages + 10);
+										}}>
+										<i className='fas fa-chevron-up load--more--icon'></i>
+										<span className='load--more--link'>Load More</span>
+									</Row>
+								</Link>
+							)}
+							{chats && chats.length > 0 && loadingMessages ? (
+								<Loader size='lg' content='Fetching Messages' className='messages--loader' />
+							) : (
+								previousMessages &&
+								previousMessages.map((message, index) => {
+									return <Message previous message={message} key={index} mine={message.sender === user._id} />;
+								})
+							)}
+							{messages &&
+								messages.map((message, index) => {
+									return <Message message={message} key={index} mine={message.creator === 'me'} />;
+								})}
+							{previousMessages.length > 0 && friendTyping && (
+								<div className='typing-indicator clearfix'>
+									<span></span>
+									<span></span>
+									<span></span>
+								</div>
+							)}
+						</ScrollToBottom>
 
-				<Row className='chat--footer--container'>
-					<Col className='text--input--container'>
-						<InputGroup className='text--input--group'>
-							<Input
-								className='text--input'
-								value={message}
-								placeholder='Write a message...'
-								onChange={(value) => setMessage(value)}
-								onKeyDown={(e) => handleKeyDown(e)}
-								onKeyPress={(e) => handleKeyPress(e)}
-								onKeyUp={(e) => handleKeyUp(e)}
-							/>
-							<Button
-								className='send--message--btn'
-								appearance='primary'
-								onClick={() => {
-									sendMessage();
-								}}>
-								Send
-								<i className='fas fa-paper-plane send--icon'></i>
-							</Button>
-						</InputGroup>
-					</Col>
-				</Row>
-			</FlexboxGrid.Item>
+						<Row className='chat--footer--container'>
+							<Col className='text--input--container'>
+								<InputGroup className='text--input--group'>
+									<Input
+										className='text--input'
+										value={message}
+										placeholder='Write a message...'
+										onChange={(value) => setMessage(value)}
+										onKeyDown={(e) => handleKeyDown(e)}
+										onKeyPress={(e) => handleKeyPress(e)}
+										onKeyUp={(e) => handleKeyUp(e)}
+									/>
+									<Button
+										className='send--message--btn'
+										appearance='primary'
+										onClick={() => {
+											sendMessage();
+										}}>
+										Send
+										<i className='fas fa-paper-plane send--icon'></i>
+									</Button>
+								</InputGroup>
+							</Col>
+						</Row>
+					</FlexboxGrid.Item>
+				))}
 		</FlexboxGrid>
 	);
 };
