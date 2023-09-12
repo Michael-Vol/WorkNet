@@ -28,7 +28,7 @@ const server =
 		: http.createServer(app);
 generateChat(server);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 6000;
 
 //Serve up React Static Files
 app.use(express.static(path.join(__dirname, '..', '..', 'client/build')));
