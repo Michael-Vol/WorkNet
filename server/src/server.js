@@ -11,6 +11,7 @@ const fs = require('fs');
 const https = require('https');
 const path = require('path');
 const generateChat = require('./chat/socket');
+import serverless from 'serverless-http';
 
 //Connect to Database
 connectDB();
@@ -50,3 +51,5 @@ app.get('*', (req, res) => {
 server.listen(PORT, () => {
   console.log(`Server is up on port ${PORT}`);
 });
+
+export const handler = serverless(app);
