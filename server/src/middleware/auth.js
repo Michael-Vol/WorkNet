@@ -9,9 +9,13 @@ dotenv.config({
 
 const auth = async (req, res, next) => {
 	try {
-		const token = req.header('Authorization').replace('Bearer ', '');
-		const decoded = jwt.verify(token, process.env.JWT_SECRET);
-		// console.log(`User ${decoded.id} is authenticated`);
+    if (!req.header('Authorization')) {
+      return res.status(401).json({
+        message: 'No token, authorization denied',
+      });
+    }
+    const token = req.header('Authorization').replace('Bearer ', '');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 		const user = await User.findOne({
 			_id: decoded.id,
 		});

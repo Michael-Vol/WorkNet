@@ -23,7 +23,8 @@ import { socket, SocketContext } from './Utils/socket';
 import './App.scss';
 
 const App = (props) => {
-	axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || 'https://michaelvol-worknet.herokuapp.com/api';
+	axios.defaults.baseURL =
+    process.env.REACT_APP_BASE_URL || 'https://worknet.netlify.app/api';
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.auth.user);
 	const fetchUser = async () => {

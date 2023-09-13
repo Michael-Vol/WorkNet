@@ -273,22 +273,22 @@ router.get('/:user_id/personal-info', auth, async (req, res) => {
  */
 router.post('/login', async (req, res) => {
 	try {
-		const { email, password } = req.body;
-		const user = await User.findByCredentials(email, password);
+    const { email, password } = req.body;
+    const user = await User.findByCredentials(email, password);
 
-		const token = await user.generateAuthToken();
-		res.send({ user, token });
-	} catch (error) {
-		console.error(error.message);
-		if (error.message === 'Unable to login') {
-			return res.status(400).json({
-				message: 'Unable to login - Wrong Credentials',
-			});
-		}
-		res.status(500).json({
-			message: 'Server Error',
-		});
-	}
+    const token = await user.generateAuthToken();
+    res.send({ user, token });
+  } catch (error) {
+    console.error(error);
+    if (error.message === 'Unable to login') {
+      return res.status(400).json({
+        message: 'Unable to login - Wrong Credentials',
+      });
+    }
+    res.status(500).json({
+      message: 'Server Error',
+    });
+  }
 });
 
 /**

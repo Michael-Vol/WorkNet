@@ -6,7 +6,7 @@
 
 ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white) ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Socket.io](https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101) ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 
-[WorkNet](https://michaelvol-worknet.herokuapp.com/) is a JavaScript Project built in ReactJS and NodeJS (using the ExpressJS framework) designed to provide a business-oriented social-networking experience. Users can create posts sharing their thoughts on the Dashboard, connect with other users,provide their Work Experience,Education and Skills in their own Personal Info Page, chat with their connected users, create Job Posts and many more...
+[WorkNet](https://worknet.netlify.app) is a JavaScript Project built in ReactJS and NodeJS (using the ExpressJS framework) designed to provide a business-oriented social-networking experience. Users can create posts sharing their thoughts on the Dashboard, connect with other users,provide their Work Experience,Education and Skills in their own Personal Info Page, chat with their connected users, create Job Posts and many more...
 
 ![Landing Page](media/LandingPage.png)
 

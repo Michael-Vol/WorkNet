@@ -128,19 +128,18 @@ userSchema.methods.generateAuthToken = async function () {
 };
 
 userSchema.statics.findByCredentials = async (email, password) => {
-	const user = await User.findOne({ email }); //check if user with given email exists
+  const user = await User.findOne({ email }); //check if user with given email exists
+  if (!user) {
+    throw new Error('Unable to login');
+  }
 
-	if (!user) {
-		throw new Error('Unable to login');
-	}
+  //check if password given is same with hashed password
+  const userIsMatch = await bcrypt.compare(password, user.password);
 
-	//check if password given is same with hashed password
-	const userIsMatch = await bcrypt.compare(password, user.password);
-
-	if (!userIsMatch) {
-		throw new Error('Unable to login');
-	}
-	return user;
+  if (!userIsMatch) {
+    throw new Error('Unable to login');
+  }
+  return user;
 };
 
 //Hash user's password before saving
