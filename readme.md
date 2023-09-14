@@ -38,7 +38,7 @@ npm run build
 cd ../ && npm run start
 ```
 
-The server will start (defaults at port 5000) and will serve both the backend API and the frontend production code statically.
+The server will start (defaults at port 4000) and will serve both the backend API and the frontend production code statically.
 
 ### :package: Packages, Services and Frameworks
 
