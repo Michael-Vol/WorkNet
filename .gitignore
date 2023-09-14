@@ -9,3 +9,5 @@ readme.pdf
 .DS_Store
 info.txt
 .vscode
+# Local Netlify folder
+.netlify
